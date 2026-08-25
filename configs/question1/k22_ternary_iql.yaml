@@ -1,0 +1,14 @@
+# Question 1 extended variant: ternary K_{2,2} under primary IQL (Section 4.6.6).
+extends: ../default.yaml
+
+experiment:
+  name: q1_k22_ternary_iql
+  num_runs: 30
+
+environment:
+  graph: K2,2
+  item_space: ternary            # x_j in {0,1,2}; 9 configs, 512 mappings
+  item_prior: uniform
+
+algorithm:
+  name: iql

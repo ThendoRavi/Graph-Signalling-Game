@@ -1,0 +1,8 @@
+# Noisy channel baseline (Section 4.5.3). Frozen policies, binary symmetric
+# channel. Robust if R at p=0.2 stays >= 0.75.
+baseline:
+  name: noisy_channel
+  flip_probabilities: [0.0, 0.1, 0.2, 0.3]
+environment:
+  graph: K2,2
+  item_space: binary

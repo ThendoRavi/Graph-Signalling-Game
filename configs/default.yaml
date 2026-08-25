@@ -1,0 +1,20 @@
+# Default shared settings. Experiment configs inherit/override these.
+# Fixed training hyperparameters (Table 4.1).
+training:
+  episodes_per_run: 500000        # 5e5
+  batch_size: 64
+  replay_buffer_size: 50000       # 5e4
+  learning_rate: 0.001            # 1e-3
+  target_update_interval: 500     # steps
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay_steps: 250000     # linear over 2.5e5 steps
+  discount_factor: 0.0            # gamma = 0 (single-step)
+
+network:
+  hidden_layers: [64, 64]
+  activation: relu
+
+evaluation:
+  final_window_episodes: 10000    # 1e4 (convergence + IT metrics window)
+  convergence_reward_threshold: 0.90

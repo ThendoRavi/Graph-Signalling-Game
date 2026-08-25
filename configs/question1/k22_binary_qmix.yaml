@@ -1,0 +1,14 @@
+# Question 1 alternative algorithm: QMIX on binary K_{2,2} (Section 4.4.1).
+extends: ../default.yaml
+
+experiment:
+  name: q1_k22_binary_qmix
+  num_runs: 30
+
+environment:
+  graph: K2,2
+  item_space: binary
+  item_prior: 0.5
+
+algorithm:
+  name: qmix

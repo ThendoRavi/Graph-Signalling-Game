@@ -1,0 +1,6 @@
+# No-communication baseline (Section 4.5.2). Signaller outputs zeroed; R = 0.50.
+baseline:
+  name: no_comm
+environment:
+  graph: K2,2
+  item_space: binary

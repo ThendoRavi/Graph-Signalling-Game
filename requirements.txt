@@ -1,0 +1,18 @@
+# Core
+numpy
+torch
+networkx
+pyyaml
+
+# Multi-agent RL API (optional -- only needed by
+# src/gsg/environment/pettingzoo_env.py)
+gymnasium
+pettingzoo
+
+# Analysis & plotting
+pandas
+scipy
+matplotlib
+
+# Testing
+pytest

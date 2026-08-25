@@ -1,0 +1,7 @@
+# Oracle baseline (Section 4.5.4). Hand-coded S1->G1, S2->G2; ceiling R = 1.00.
+baseline:
+  name: oracle
+  guesser: optimal               # or: trained
+environment:
+  graph: K2,2
+  item_space: binary

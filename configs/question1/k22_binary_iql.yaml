@@ -1,0 +1,15 @@
+# Question 1 primary configuration (R1): IQL on binary K_{2,2}.
+# Sections 4.4.1, 4.6.1, 4.6.4.
+extends: ../default.yaml
+
+experiment:
+  name: q1_k22_binary_iql
+  num_runs: 30                    # P = 30 independent seeds
+
+environment:
+  graph: K2,2                     # 2 signallers, 2 guessers (complete bipartite)
+  item_space: binary             # x_j in {0,1}
+  item_prior: 0.5
+
+algorithm:
+  name: iql

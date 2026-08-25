@@ -1,0 +1,6 @@
+# Random baseline (Section 4.5.1). Expected R = 0.50 (performance floor).
+baseline:
+  name: random
+environment:
+  graph: K2,2
+  item_space: binary
