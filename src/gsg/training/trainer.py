@@ -1,27 +1,38 @@
-"""Single-run trainer for shared-parameter IQL (Section 4.6.4, Table 4.1).
+"""Single-run trainers for all three IQL parameter-sharing variants (Section
+4.6.4, Table 4.1).
 
 Ties together everything the other new modules define:
 
     environment/graphs.py       -- SignallingGraph (any shape, incl.
                                     from_adjacency_matrix())
     environment/*_game.py       -- GraphSignallingGame / GraphSignallingParallelEnv
-    agents/networks.py          -- SharedQNetwork + GraphEncoding + ActionLayout
+    agents/networks.py          -- SharedQNetwork + GraphEncoding/ActionLayout
+                                    (one brain), RoleEncoding (two brains),
+                                    or encode_observation (one brain/agent)
     agents/replay_buffer.py     -- ReplayBuffer
-    algorithms/iql.py           -- IQLSignaller / IQLGuesser / train_step()
+    algorithms/iql.py           -- IQLSignaller/IQLGuesser (one brain),
+                                    TwoBrainIQLSignaller/TwoBrainIQLGuesser
+                                    (two brains), IndependentIQLSignaller/
+                                    IndependentIQLGuesser (one brain per
+                                    agent), train_step()
 
-Nothing here hard-codes a graph shape or an item count: :func:`train_shared_iql`
-derives the network's input/output sizes from ``env.graph`` and
-``env.item_space`` (via ``GraphEncoding``/``ActionLayout``) and builds one
-agent per node id, however many the graph has. Swapping the graph (or
-``num_item_values``) is entirely the caller's job -- pick a different
-``SignallingGraph`` factory, or a different number, when building ``env``;
-this module never needs to change.
+Three entry points, mirroring the three variants in algorithms/iql.py:
+:func:`train_shared_iql` (one network for every agent), :func:`train_two_brain_iql`
+(a separate network per role), and :func:`train_independent_iql` (a separate
+network per *agent* -- the most literal reading of Section 4.4.1). Nothing
+in any of the three hard-codes a graph shape or an item count: all derive
+the relevant network(s)' input/output sizes from ``env.graph`` and
+``env.item_space``, and build one agent per node id, however many the graph
+has. Swapping the graph (or ``num_item_values``) is entirely the caller's
+job -- pick a different ``SignallingGraph`` factory, or a different number,
+when building ``env``; none of the three trainers needs to change.
 
 The loop itself is plain and short once those pieces exist: play an episode
 (which, since ``run_episode()`` calls ``observe_reward()``, automatically
-records a transition for every agent into the shared buffer), occasionally
-sample a minibatch and take one gradient step, and decay epsilon from
-"always explore" to "mostly exploit" over training.
+records a transition for every agent into the relevant buffer), occasionally
+sample a minibatch and take one gradient step per network that exists (one,
+two, or as many as there are agents, depending on the variant), and decay
+epsilon from "always explore" to "mostly exploit" over training.
 """
 
 from __future__ import annotations
@@ -31,9 +42,17 @@ from typing import Callable, Dict, List, Optional
 
 import torch
 
-from ..agents.networks import ActionLayout, GraphEncoding, SharedQNetwork
+from ..agents.networks import ActionLayout, GraphEncoding, RoleEncoding, SharedQNetwork
 from ..agents.replay_buffer import ReplayBuffer
-from ..algorithms.iql import IQLGuesser, IQLSignaller, train_step
+from ..algorithms.iql import (
+    IndependentIQLGuesser,
+    IndependentIQLSignaller,
+    IQLGuesser,
+    IQLSignaller,
+    TwoBrainIQLGuesser,
+    TwoBrainIQLSignaller,
+    train_step,
+)
 from ..environment.graph_signalling_game import EpisodeRecord
 
 
@@ -62,14 +81,14 @@ def linear_epsilon(episode: int, decay_episodes: int, start: float = 1.0, end: f
     return start + fraction * (end - start)
 
 
-def _all_agents(signaller_agents: Dict[int, IQLSignaller], guesser_agents: Dict[int, IQLGuesser]) -> List:
+def _all_agents(signaller_agents: Dict[int, object], guesser_agents: Dict[int, object]) -> List:
     return list(signaller_agents.values()) + list(guesser_agents.values())
 
 
 def play_greedy_example(
     env,
-    signaller_agents: Dict[int, IQLSignaller],
-    guesser_agents: Dict[int, IQLGuesser],
+    signaller_agents: Dict[int, object],
+    guesser_agents: Dict[int, object],
 ) -> EpisodeRecord:
     """Play one episode fully greedy (epsilon=0) across *every* agent,
     without it counting as training data, then restore every agent's
@@ -82,6 +101,12 @@ def play_greedy_example(
     could just be random exploration rather than every agent's actual best
     guess, and (b) push that example into the replay buffer as if it were
     ordinary training data, which it isn't meant to be.
+
+    Works unchanged for either IQL variant (:func:`train_shared_iql` or
+    :func:`train_two_brain_iql`) -- it only ever touches ``.epsilon``/
+    ``.recording``, which both ``IQLSignaller``/``IQLGuesser`` and
+    ``TwoBrainIQLSignaller``/``TwoBrainIQLGuesser`` expose identically, so
+    nothing here needs to know which variant's agents it was handed.
     """
     agents = _all_agents(signaller_agents, guesser_agents)
     saved = [(a.epsilon, a.recording) for a in agents]
@@ -202,3 +227,239 @@ def train_shared_iql(
             rewards_since_last_log = []
 
     return network, signaller_agents, guesser_agents, history
+
+
+#: Like LogCallback, but for train_two_brain_iql() -- called with *two*
+#: networks (signaller_network, guesser_network) instead of one, since
+#: there are two brains to report on.
+TwoBrainLogCallback = Callable[
+    [int, List[float], SharedQNetwork, SharedQNetwork, Dict[int, TwoBrainIQLSignaller], Dict[int, TwoBrainIQLGuesser]],
+    None,
+]
+
+
+def train_two_brain_iql(
+    env,
+    num_episodes: int = 1500,
+    epsilon_decay_episodes: int = 800,
+    batch_size: int = 64,
+    learning_rate: float = 1e-3,
+    buffer_capacity: int = 50_000,
+    train_every: int = 1,
+    log_every: Optional[int] = None,
+    on_log: Optional[TwoBrainLogCallback] = None,
+    seed: Optional[int] = None,
+) -> tuple[SharedQNetwork, SharedQNetwork, Dict[int, TwoBrainIQLSignaller], Dict[int, TwoBrainIQLGuesser], TrainingHistory]:
+    """Train a *two-brain* IQL population on ``env``: one network shared
+    across all signallers, a separate network shared across all guessers.
+
+    Contrast with :func:`train_shared_iql`, which uses one network for
+    every agent regardless of role. The loop shape here is otherwise the
+    same -- same epsilon schedule, same "play an episode, occasionally take
+    a gradient step" structure -- the only real difference is that *two*
+    independent networks/buffers/optimizers exist instead of one, and each
+    episode now takes two calls to :func:`train_step` (one per brain)
+    instead of one.
+
+    Returns ``(signaller_network, guesser_network, signaller_agents,
+    guesser_agents, history)``. As with :func:`train_shared_iql`, hand the
+    agent dicts straight to ``gsg.evaluation.metrics.evaluate()`` afterwards
+    (with every agent's ``.epsilon`` set to 0 for a purely greedy evaluation).
+    """
+    if seed is not None:
+        torch.manual_seed(seed)
+
+    # Each brain gets its own encoding, scoped to just its own role's
+    # agents and neighbourhood sizes -- see RoleEncoding's docstring for why
+    # that's narrower (and therefore usually smaller) than GraphEncoding.
+    signaller_encoding = RoleEncoding.for_signallers(env.graph)
+    guesser_encoding = RoleEncoding.for_guessers(env.graph)
+    num_item_values = env.item_space.n
+
+    # A signaller's action count is always 2 (the channel is always binary);
+    # a guesser's is the item space's size -- see TwoBrainIQLGuesser.
+    signaller_network = SharedQNetwork(signaller_encoding.input_dim, 2)
+    guesser_network = SharedQNetwork(guesser_encoding.input_dim, num_item_values)
+
+    # Separate buffers, not one shared buffer -- see this module's/iql.py's
+    # docstrings for why mixing the two roles' transitions into one buffer
+    # would break ReplayBuffer.sample()'s torch.stack() the moment the two
+    # roles' input vectors aren't the same length.
+    signaller_buffer = ReplayBuffer(capacity=buffer_capacity)
+    guesser_buffer = ReplayBuffer(capacity=buffer_capacity)
+
+    signaller_optimizer = torch.optim.Adam(signaller_network.parameters(), lr=learning_rate)
+    guesser_optimizer = torch.optim.Adam(guesser_network.parameters(), lr=learning_rate)
+
+    # One agent instance per node id, same reasoning as train_shared_iql().
+    signaller_agents: Dict[int, TwoBrainIQLSignaller] = {
+        s: TwoBrainIQLSignaller(s, signaller_encoding, signaller_network, signaller_buffer, epsilon=1.0)
+        for s in env.graph.signallers
+    }
+    guesser_agents: Dict[int, TwoBrainIQLGuesser] = {
+        g: TwoBrainIQLGuesser(
+            g, guesser_encoding, guesser_network, guesser_buffer, num_item_values, epsilon=1.0
+        )
+        for g in env.graph.guessers
+    }
+    all_agents = _all_agents(signaller_agents, guesser_agents)
+
+    history = TrainingHistory()
+    rewards_since_last_log: List[float] = []
+
+    for episode in range(num_episodes):
+        epsilon = linear_epsilon(episode, epsilon_decay_episodes)
+        for agent in all_agents:
+            agent.epsilon = epsilon
+
+        record = env.run_episode(signaller_agents, guesser_agents)
+        history.episode_rewards.append(record.reward)
+        rewards_since_last_log.append(record.reward)
+
+        if episode % train_every == 0:
+            signaller_loss = train_step(signaller_network, signaller_buffer, signaller_optimizer, batch_size)
+            guesser_loss = train_step(guesser_network, guesser_buffer, guesser_optimizer, batch_size)
+            # Combined into one number purely for a single progress metric --
+            # the two losses come from two different networks/objectives, so
+            # this sum isn't meaningful beyond "roughly how much is either
+            # brain still adjusting."
+            if signaller_loss is not None and guesser_loss is not None:
+                history.losses.append(signaller_loss + guesser_loss)
+
+        episodes_so_far = episode + 1
+        if log_every and on_log is not None and episodes_so_far % log_every == 0:
+            on_log(
+                episodes_so_far, rewards_since_last_log,
+                signaller_network, guesser_network,
+                signaller_agents, guesser_agents,
+            )
+            rewards_since_last_log = []
+
+    return signaller_network, guesser_network, signaller_agents, guesser_agents, history
+
+
+#: Like LogCallback/TwoBrainLogCallback, but for train_independent_iql() --
+#: called with *dicts* of networks ({node_id: SharedQNetwork}) for both
+#: roles, since there's one brain per agent, not one or two brains total.
+IndependentLogCallback = Callable[
+    [
+        int, List[float],
+        Dict[int, SharedQNetwork], Dict[int, SharedQNetwork],
+        Dict[int, IndependentIQLSignaller], Dict[int, IndependentIQLGuesser],
+    ],
+    None,
+]
+
+
+def train_independent_iql(
+    env,
+    num_episodes: int = 1500,
+    epsilon_decay_episodes: int = 800,
+    batch_size: int = 64,
+    learning_rate: float = 1e-3,
+    buffer_capacity: int = 50_000,
+    train_every: int = 1,
+    log_every: Optional[int] = None,
+    on_log: Optional[IndependentLogCallback] = None,
+    seed: Optional[int] = None,
+) -> tuple[
+    Dict[int, SharedQNetwork], Dict[int, SharedQNetwork],
+    Dict[int, IndependentIQLSignaller], Dict[int, IndependentIQLGuesser],
+    TrainingHistory,
+]:
+    """Train a *fully independent* IQL population on ``env``: every single
+    agent gets its own private network, its own replay buffer, and its own
+    optimizer -- the most literal reading of Section 4.4.1's stated
+    algorithm ("each agent maintains its own Q-function").
+
+    Contrast with :func:`train_shared_iql` (one network, every agent) and
+    :func:`train_two_brain_iql` (one network per role): here there are as
+    many networks as there are agents in the graph, none of them sharing a
+    single weight with any other. The loop shape is otherwise the same;
+    the only structural difference is that a training step now means one
+    :func:`train_step` call *per agent*, however many that is, instead of
+    one or two.
+
+    Returns ``(signaller_networks, guesser_networks, signaller_agents,
+    guesser_agents, history)`` -- the first two are ``{node_id:
+    SharedQNetwork}`` dicts, one entry per agent (not a single shared
+    network like the other two trainers return). Hand the agent dicts
+    straight to ``gsg.evaluation.metrics.evaluate()`` afterwards (with every
+    agent's ``.epsilon`` set to 0 for a purely greedy evaluation).
+    """
+    if seed is not None:
+        torch.manual_seed(seed)
+
+    num_item_values = env.item_space.n
+    graph = env.graph
+
+    # Each network is sized to exactly this one agent's own neighbourhood --
+    # no padding, because (unlike GraphEncoding/RoleEncoding) no *other*
+    # agent will ever share this network, so there's no other agent's
+    # neighbourhood size to accommodate.
+    signaller_networks: Dict[int, SharedQNetwork] = {}
+    signaller_buffers: Dict[int, ReplayBuffer] = {}
+    signaller_optimizers: Dict[int, torch.optim.Optimizer] = {}
+    signaller_agents: Dict[int, IndependentIQLSignaller] = {}
+    for s in graph.signallers:
+        network = SharedQNetwork(graph.out_degree(s), 2)
+        buffer = ReplayBuffer(capacity=buffer_capacity)
+        signaller_networks[s] = network
+        signaller_buffers[s] = buffer
+        signaller_optimizers[s] = torch.optim.Adam(network.parameters(), lr=learning_rate)
+        signaller_agents[s] = IndependentIQLSignaller(network, buffer, epsilon=1.0)
+
+    guesser_networks: Dict[int, SharedQNetwork] = {}
+    guesser_buffers: Dict[int, ReplayBuffer] = {}
+    guesser_optimizers: Dict[int, torch.optim.Optimizer] = {}
+    guesser_agents: Dict[int, IndependentIQLGuesser] = {}
+    for g in graph.guessers:
+        network = SharedQNetwork(graph.in_degree(g), num_item_values)
+        buffer = ReplayBuffer(capacity=buffer_capacity)
+        guesser_networks[g] = network
+        guesser_buffers[g] = buffer
+        guesser_optimizers[g] = torch.optim.Adam(network.parameters(), lr=learning_rate)
+        guesser_agents[g] = IndependentIQLGuesser(network, buffer, num_item_values, epsilon=1.0)
+
+    all_agents = _all_agents(signaller_agents, guesser_agents)
+
+    history = TrainingHistory()
+    rewards_since_last_log: List[float] = []
+
+    for episode in range(num_episodes):
+        epsilon = linear_epsilon(episode, epsilon_decay_episodes)
+        for agent in all_agents:
+            agent.epsilon = epsilon
+
+        record = env.run_episode(signaller_agents, guesser_agents)
+        history.episode_rewards.append(record.reward)
+        rewards_since_last_log.append(record.reward)
+
+        if episode % train_every == 0:
+            # One train_step() call per agent -- each agent's network,
+            # buffer, and optimizer are entirely its own.
+            step_losses = []
+            for s in graph.signallers:
+                loss = train_step(signaller_networks[s], signaller_buffers[s], signaller_optimizers[s], batch_size)
+                if loss is not None:
+                    step_losses.append(loss)
+            for g in graph.guessers:
+                loss = train_step(guesser_networks[g], guesser_buffers[g], guesser_optimizers[g], batch_size)
+                if loss is not None:
+                    step_losses.append(loss)
+            # Summed across every agent's own gradient step -- same "rough
+            # single progress number, not a meaningful combined loss" caveat
+            # as train_two_brain_iql().
+            if step_losses:
+                history.losses.append(sum(step_losses))
+
+        episodes_so_far = episode + 1
+        if log_every and on_log is not None and episodes_so_far % log_every == 0:
+            on_log(
+                episodes_so_far, rewards_since_last_log,
+                signaller_networks, guesser_networks,
+                signaller_agents, guesser_agents,
+            )
+            rewards_since_last_log = []
+
+    return signaller_networks, guesser_networks, signaller_agents, guesser_agents, history
