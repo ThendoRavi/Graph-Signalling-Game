@@ -48,6 +48,15 @@ from gsg.evaluation.metrics import evaluate
 from gsg.training.trainer import train_independent_iql, train_shared_iql, train_two_brain_iql
 
 NUM_SEEDS = 30
+# SEED_START lets a rerun use a genuinely fresh, independent batch of seeds
+# rather than replaying the same ones. Note this matters: every seed here
+# deterministically controls both torch's weight initialisation and the
+# environment's episode sampling (see train_shared_iql()'s
+# `torch.manual_seed(seed)` and GraphSignallingParallelEnv's `seed=seed`),
+# so rerunning with the *same* seed range would reproduce bit-identical
+# results -- that verifies the code is reproducible, not that a result
+# holds up. A different seed range is what actually tests robustness.
+SEED_START = 30
 NUM_EPISODES = 4000
 EPSILON_DECAY_EPISODES = 2500
 EVAL_EPISODES = 1000
@@ -109,8 +118,8 @@ def main() -> None:
     print("=" * 64)
     print("Multi-seed comparison: shared-brain vs. two-brain vs. independent")
     print("IQL on K_{2,2}")
-    print(f"{NUM_SEEDS} seeds each, {NUM_EPISODES} training episodes, "
-          f"{EVAL_EPISODES} eval episodes per seed")
+    print(f"{NUM_SEEDS} seeds each (seeds {SEED_START}-{SEED_START + NUM_SEEDS - 1}), "
+          f"{NUM_EPISODES} training episodes, {EVAL_EPISODES} eval episodes per seed")
     print("=" * 64)
 
     shared_rewards: list[float] = []
@@ -118,7 +127,8 @@ def main() -> None:
     independent_rewards: list[float] = []
     start = time.time()
 
-    for seed in range(NUM_SEEDS):
+    for offset in range(NUM_SEEDS):
+        seed = SEED_START + offset
         print(f"\n--- seed {seed} ---", flush=True)
 
         r_shared = run_shared_brain(seed)
@@ -134,7 +144,7 @@ def main() -> None:
         print(f"  independent  final reward: {r_indep:.3f}", flush=True)
 
         elapsed = time.time() - start
-        done = seed + 1
+        done = offset + 1
         eta = elapsed / done * (NUM_SEEDS - done)
         print(f"  ({done}/{NUM_SEEDS} seeds done, elapsed {elapsed:.0f}s, "
               f"eta {eta:.0f}s)", flush=True)

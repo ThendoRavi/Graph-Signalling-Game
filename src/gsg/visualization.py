@@ -1,6 +1,7 @@
 """Visualisation of the Graph Signalling Game.
 
-Two renderers, so you can "see" the environment at two levels of effort:
+Three renderers, so you can "see" the environment and its learned
+conventions at different levels of detail:
 
 * :func:`render_text` -- a zero-dependency ASCII view (the room-analogy light
   switches). Always available; great for quick terminal sanity checks.
@@ -8,15 +9,21 @@ Two renderers, so you can "see" the environment at two levels of effort:
   graph, with signallers on the left and guessers on the right, coloured by the
   current episode's items / signals / guesses. Requires matplotlib (optional);
   the function raises a clear message if it is missing.
+* :func:`render_policy_heatmap` -- a small grid heatmap per agent showing its
+  *entire* greedy policy (every possible observation -> its action), not just
+  one played episode -- this is what actually shows "the convention," as
+  opposed to one sample from it. Pairs with
+  :func:`gsg.evaluation.conventions.extract_all_policies`.
 
-Both take a :class:`~gsg.environment.graphs.SignallingGraph` and, optionally, an
-:class:`~gsg.environment.graph_signalling_game.EpisodeRecord`. With a record they
-show a concrete played episode; without one they just show the topology.
+The first two take a :class:`~gsg.environment.graphs.SignallingGraph` and,
+optionally, an :class:`~gsg.environment.graph_signalling_game.EpisodeRecord`.
+With a record they show a concrete played episode; without one they just show
+the topology.
 """
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Dict, Optional, Tuple
 
 from .environment.graph_signalling_game import EpisodeRecord
 from .environment.graphs import SignallingGraph
@@ -208,3 +215,101 @@ def _top(pos) -> float:
 
 def _bottom(pos) -> float:
     return min((y for _, y in pos.values()), default=0.0)
+
+
+# ---------------------------------------------------------------------------
+# Policy heatmap (optional dependency) -- convergence analysis
+# ---------------------------------------------------------------------------
+
+def render_policy_heatmap(
+    policies: Dict[str, Dict[Tuple[int, int], int]],
+    title: Optional[str] = None,
+    save_path: Optional[str] = None,
+):
+    """Render every agent's *entire* greedy policy as a small 2x2 grid --
+    one heatmap per agent, arranged in a row.
+
+    ``policies`` is the output of
+    :func:`gsg.evaluation.conventions.extract_all_policies`: ``{"S0": {(0,
+    0): 1, (0, 1): 0, ...}, "G0": {...}, ...}``. Each cell shows what that
+    agent does for one possible pair of observed values -- for a signaller,
+    whether it emits Light Switch ON/OFF; for a guesser, whether it guesses
+    CAT/DOG. Reading a whole row of these side by side is the fastest way to
+    see whether two signallers (or two guessers) converged to the *same*
+    rule or to *different, complementary* ones -- exactly the question
+    Section 4.6.3's "convention" definition is asking, made visible instead
+    of inferred from a reward number.
+
+    Only supports 2-neighbour, binary-observation agents (K_{2,2}'s uniform
+    structure) -- a 2x2 grid doesn't generalise to other neighbourhood
+    sizes without a different layout. Requires matplotlib; raises
+    ``ImportError`` with guidance if unavailable.
+    """
+    try:
+        import matplotlib.pyplot as plt
+    except ImportError as exc:  # pragma: no cover - environment dependent
+        raise ImportError(
+            "render_policy_heatmap needs matplotlib. Install it with "
+            "`pip install matplotlib`."
+        ) from exc
+
+    # Signallers first (numeric order), then guessers -- reads the same
+    # left-to-right order as render_text()'s "Signallers: / Guessers:" split.
+    labels = sorted(policies.keys(), key=lambda label: (label[0] != "S", int(label[1:])))
+
+    fig, axes = plt.subplots(1, len(labels), figsize=(2.6 * len(labels), 3.2))
+    if len(labels) == 1:
+        axes = [axes]
+
+    for ax, label in zip(axes, labels):
+        policy = policies[label]
+        obs_keys = sorted(policy.keys())
+        values = sorted({v for obs in obs_keys for v in obs})
+        if len(values) != 2 or any(len(obs) != 2 for obs in obs_keys):
+            raise ValueError(
+                f"render_policy_heatmap only supports 2-neighbour, binary-valued "
+                f"policies; {label}'s policy has observations {obs_keys}"
+            )
+
+        is_signaller = label.startswith("S")
+        if is_signaller:
+            action_colors = {0: "#cccccc", 1: "#ffd23f"}   # off / on (light bulb)
+            action_text = {0: "OFF", 1: "ON"}
+            axis_name = _item_name    # a signaller observes items
+            role_word = "sees items"
+        else:
+            action_colors = {0: "#9ecae1", 1: "#fdae61"}   # cat / dog (guess)
+            action_text = {0: "CAT", 1: "DOG"}
+            axis_name = _signal_name  # a guesser observes signals
+            role_word = "hears signals"
+
+        for r_idx, r in enumerate(values):
+            for c_idx, c in enumerate(values):
+                action = policy[(r, c)]
+                ax.add_patch(plt.Rectangle(
+                    (c_idx, 1 - r_idx), 1, 1,
+                    facecolor=action_colors.get(action, "#dddddd"),
+                    edgecolor="black", linewidth=1.0,
+                ))
+                ax.text(c_idx + 0.5, 1 - r_idx + 0.5, action_text.get(action, str(action)),
+                        ha="center", va="center", fontsize=9, fontweight="bold")
+
+        ax.set_xlim(0, 2)
+        ax.set_ylim(0, 2)
+        ax.set_xticks([0.5, 1.5])
+        ax.set_yticks([0.5, 1.5])
+        ax.set_xticklabels([axis_name(v) for v in values], fontsize=8)
+        ax.set_yticklabels([axis_name(v) for v in reversed(values)], fontsize=8)
+        ax.set_xlabel("neighbour 1", fontsize=7)
+        ax.set_ylabel("neighbour 0", fontsize=7)
+        ax.set_title(f"{label}\n({role_word})", fontsize=9)
+        ax.set_aspect("equal")
+
+    if title:
+        fig.suptitle(title, fontsize=11)
+    fig.tight_layout()
+
+    if save_path is not None:
+        fig.savefig(save_path, bbox_inches="tight", dpi=130)
+
+    return fig

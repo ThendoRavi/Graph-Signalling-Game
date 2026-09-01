@@ -2,42 +2,57 @@
 IQL (Section 4.4.2).
 
 Three points on the parameter-sharing spectrum live in this file, all built
-from the same ``SharedQNetwork`` (a plain feedforward net -- see below),
-just wired up with different amounts of sharing:
+from the same ``SharedQNetwork`` (a plain feedforward net -- see below) and
+-- this is deliberate, see "controlled input" below -- the same
+:class:`GraphEncoding` input scheme:
 
-* **One brain for everyone** (:class:`GraphEncoding` + :class:`ActionLayout`,
-  used by ``IQLSignaller``/``IQLGuesser`` in ``algorithms/iql.py``): a single
-  network plays *every* agent, of both roles, restricted per-call to that
-  role's own actions via masking. This is the least conventional choice --
-  see the section below for why it works at all.
-* **One brain per role** (:class:`RoleEncoding`, used by
-  ``TwoBrainIQLSignaller``/``TwoBrainIQLGuesser``): signallers share one
-  network, guessers share a *separate* network. This is the more standard
-  MARL choice -- parameter sharing *within* a homogeneous group of agents,
-  not across fundamentally different roles -- and needs no output masking
-  at all, since a role-exclusive network's output already only has slots
-  for that role's own actions.
-* **One brain per agent** (:func:`encode_observation`, used by
-  ``IndependentIQLSignaller``/``IndependentIQLGuesser``): no sharing at
-  all -- every single agent gets its own private network, its own replay
-  buffer, its own optimizer. This is the most literal reading of Section
-  4.4.1's "each agent maintains its own Q-function Q_i(o_i, a_i; phi_i)".
+* **One brain for everyone** (``IQLSignaller``/``IQLGuesser`` in
+  ``algorithms/iql.py``): a single network plays *every* agent, of both
+  roles, restricted per-call to that role's own actions via
+  :func:`masked_q_values` and :class:`ActionLayout`. This is the least
+  conventional choice -- see the section below for why it works at all.
+* **One brain per role** (``TwoBrainIQLSignaller``/``TwoBrainIQLGuesser``):
+  signallers share one network, guessers share a *separate* network. The
+  more standard MARL choice -- parameter sharing *within* a homogeneous
+  group of agents, not across fundamentally different roles.
+* **One brain per agent** (``IndependentIQLSignaller``/
+  ``IndependentIQLGuesser``): no sharing at all -- every single agent gets
+  its own private network, its own replay buffer, its own optimizer. The
+  most literal reading of Section 4.4.1's "each agent maintains its own
+  Q-function Q_i(o_i, a_i; phi_i)".
 
-Moving along that spectrum toward less sharing removes bookkeeping, not
-adds it: the fully-shared design needs an identity one-hot (to tell agents
-apart), observation padding (so one input layer fits every agent's
-neighbourhood size), *and* output masking (so one output layer only lets
-each agent choose its own actions). One-brain-per-role still needs identity
-and padding, but not masking (the output width already is that role's
-actions). One-brain-per-agent needs *none* of the three -- each network's
-input is already sized to exactly this one agent's own observation, and its
-output already is exactly this one agent's own actions, because nothing
-else was ever going to be asked of it. What you gain going the other way
-(more sharing) is faster learning through shared experience across agents;
-what you gain going this way (less sharing) is that every agent's policy is
-free to specialise without any cross-agent interference at all -- the
-tradeoff the multi-seed K_{2,2} comparison between the first two variants
-was built to start examining.
+Controlled input: all three variants see the same thing
+-------------------------------------------------------------
+Early versions of the last two variants used smaller, role-scoped or
+identity-free inputs, on the reasoning that a role-exclusive or
+agent-exclusive network doesn't strictly *need* an identity flag to
+disambiguate itself (that's implicit in which network it is). That was a
+mistake for the purpose of *comparing* the three variants: it meant a
+convergence-rate difference between them could have been caused by "how
+much information this agent's input contains," not just by "how much this
+agent's network is shared with others" -- two different things tangled into
+one number. All three variants now build their input the same way, via
+:class:`GraphEncoding` -- the *same* per-node identity one-hot spanning
+every agent in the graph, padded to the *same* graph-wide largest
+neighbourhood size -- regardless of whether the network reading that input
+is shared by everyone, shared within a role, or private to one agent. For a
+role- or agent-exclusive network this makes part of the input constant
+(e.g. an independent signaller's identity slice never changes, since that
+network is only ever called for that one node), which costs nothing but a
+few always-the-same input dimensions -- the point is to hold input
+information fixed and vary *only* the thing actually being studied: how
+many agents share one network.
+
+What still legitimately differs between the three is *output width*, and
+that is not a confound to control away: a role- or agent-exclusive
+network's output only needs slots for the actions that specific network
+will ever be asked about (2 for a signaller, ``num_item_values`` for a
+guesser) -- giving it the shared-brain's full masked, combined output width
+would just add permanently-unused, never-trained output neurons for no
+reason. Only the fully-shared design needs :class:`ActionLayout`'s combined
+layout and :func:`masked_q_values`'s masking at all, because it's the only
+one where a single network's output must represent more than one role's
+actions at once.
 
 **None of the three designs hard-code a particular graph or item count** --
 that's what makes "just change the graph" or "just change num_item_values"
@@ -154,7 +169,12 @@ class ActionLayout:
 
 @dataclass(frozen=True)
 class GraphEncoding:
-    """Describes the shared network's *input*: per-node identity + padding.
+    """Describes the *input* every IQL variant in this codebase uses:
+    per-node identity + padded observation. Used identically by all three
+    parameter-sharing variants (see the module docstring's "controlled
+    input" section) -- what differs between them is which network(s) get
+    called with this input and how many other agents share a reference to
+    that network, never the shape or content of the input itself.
 
     Built once from a graph via :meth:`from_graph`; everything else in this
     module (and in ``algorithms/iql.py``) is driven by the resulting sizes,
@@ -215,79 +235,6 @@ class GraphEncoding:
         observed = [float(v) for v in observed_values] + padding
 
         return torch.tensor(identity + observed, dtype=torch.float32)
-
-
-@dataclass(frozen=True)
-class RoleEncoding:
-    """Like :class:`GraphEncoding`, but scoped to *one role's own agents* --
-    the input spec for the two-brain variant (``TwoBrainIQLSignaller`` /
-    ``TwoBrainIQLGuesser`` in ``algorithms/iql.py``), where signallers and
-    guessers each get their own separate network.
-
-    The difference from ``GraphEncoding`` is exactly the difference between
-    the two designs: ``GraphEncoding`` builds one identity space spanning
-    *both* roles, because one shared brain needs to tell a signaller from a
-    guesser as well as tell same-role agents apart. A role-exclusive brain
-    never needs to distinguish role -- that's implicit in which network you
-    ask -- so it only needs identity among its *own* role's agents, and its
-    observation padding only needs to cover its *own* role's neighbourhood
-    sizes (a signaller's out-degree, or a guesser's in-degree -- these can
-    differ across a graph, so each brain is sized to just what it needs).
-    """
-
-    node_ids: Tuple[int, ...]
-    max_neighbourhood: int
-
-    @classmethod
-    def for_signallers(cls, graph: SignallingGraph) -> "RoleEncoding":
-        ids = tuple(graph.signallers)
-        max_out = max((graph.out_degree(s) for s in ids), default=0)
-        return cls(ids, max(max_out, 1))
-
-    @classmethod
-    def for_guessers(cls, graph: SignallingGraph) -> "RoleEncoding":
-        ids = tuple(graph.guessers)
-        max_in = max((graph.in_degree(g) for g in ids), default=0)
-        return cls(ids, max(max_in, 1))
-
-    @property
-    def num_agents(self) -> int:
-        return len(self.node_ids)
-
-    @property
-    def input_dim(self) -> int:
-        return self.num_agents + self.max_neighbourhood
-
-    def encode_input(self, node_id: int, observed_values: Sequence[int]) -> torch.Tensor:
-        """Build ``[identity one-hot over this role's agents] + [padded observation]``."""
-        identity = [0.0] * self.num_agents
-        identity[self.node_ids.index(node_id)] = 1.0
-
-        if len(observed_values) > self.max_neighbourhood:
-            raise ValueError(
-                f"observation of length {len(observed_values)} exceeds this "
-                f"encoding's max_neighbourhood={self.max_neighbourhood}"
-            )
-        padding = [PAD_VALUE] * (self.max_neighbourhood - len(observed_values))
-        observed = [float(v) for v in observed_values] + padding
-
-        return torch.tensor(identity + observed, dtype=torch.float32)
-
-
-def encode_observation(observed_values: Sequence[int]) -> torch.Tensor:
-    """Build the input for a fully-independent (one-brain-per-agent) network:
-    just the raw observed values, nothing else.
-
-    No identity flag, because a private network never needs to be told
-    apart from any other agent's -- there's nothing else feeding it. No
-    padding, because a private network's input layer is sized to exactly
-    this one agent's own neighbourhood (see how ``input_dim`` is computed
-    per-agent in ``training/trainer.py``'s ``train_independent_iql()``),
-    so there's no larger shape to pad up to. This is the payoff of having
-    no sharing at all: the input is exactly what the agent actually sees,
-    nothing more.
-    """
-    return torch.tensor([float(v) for v in observed_values], dtype=torch.float32)
 
 
 class SharedQNetwork(nn.Module):

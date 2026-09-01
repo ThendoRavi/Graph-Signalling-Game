@@ -6,9 +6,10 @@ Ties together everything the other new modules define:
     environment/graphs.py       -- SignallingGraph (any shape, incl.
                                     from_adjacency_matrix())
     environment/*_game.py       -- GraphSignallingGame / GraphSignallingParallelEnv
-    agents/networks.py          -- SharedQNetwork + GraphEncoding/ActionLayout
-                                    (one brain), RoleEncoding (two brains),
-                                    or encode_observation (one brain/agent)
+    agents/networks.py          -- SharedQNetwork, GraphEncoding (the input
+                                    scheme all three variants share), and
+                                    ActionLayout (the shared-brain variant's
+                                    combined, masked output layout)
     agents/replay_buffer.py     -- ReplayBuffer
     algorithms/iql.py           -- IQLSignaller/IQLGuesser (one brain),
                                     TwoBrainIQLSignaller/TwoBrainIQLGuesser
@@ -19,13 +20,18 @@ Ties together everything the other new modules define:
 Three entry points, mirroring the three variants in algorithms/iql.py:
 :func:`train_shared_iql` (one network for every agent), :func:`train_two_brain_iql`
 (a separate network per role), and :func:`train_independent_iql` (a separate
-network per *agent* -- the most literal reading of Section 4.4.1). Nothing
-in any of the three hard-codes a graph shape or an item count: all derive
-the relevant network(s)' input/output sizes from ``env.graph`` and
-``env.item_space``, and build one agent per node id, however many the graph
-has. Swapping the graph (or ``num_item_values``) is entirely the caller's
-job -- pick a different ``SignallingGraph`` factory, or a different number,
-when building ``env``; none of the three trainers needs to change.
+network per *agent* -- the most literal reading of Section 4.4.1). All three
+build their network(s)' *input* the same way, via ``GraphEncoding`` derived
+from ``env.graph`` -- deliberately, so comparing the three isolates the
+effect of how much a network is shared, not also how much input information
+each variant's agents were given (see ``agents/networks.py``'s "controlled
+input" note). Only network *output* width, and how many separate network
+objects exist, differ between the three -- both of those are intrinsic to
+what each variant actually is, not confounds to control away. Nothing in
+any of the three hard-codes a graph shape or an item count: swapping the
+graph (or ``num_item_values``) is entirely the caller's job -- pick a
+different ``SignallingGraph`` factory, or a different number, when building
+``env``; none of the three trainers needs to change.
 
 The loop itself is plain and short once those pieces exist: play an episode
 (which, since ``run_episode()`` calls ``observe_reward()``, automatically
@@ -42,7 +48,7 @@ from typing import Callable, Dict, List, Optional
 
 import torch
 
-from ..agents.networks import ActionLayout, GraphEncoding, RoleEncoding, SharedQNetwork
+from ..agents.networks import ActionLayout, GraphEncoding, SharedQNetwork
 from ..agents.replay_buffer import ReplayBuffer
 from ..algorithms.iql import (
     IndependentIQLGuesser,
@@ -102,11 +108,11 @@ def play_greedy_example(
     guess, and (b) push that example into the replay buffer as if it were
     ordinary training data, which it isn't meant to be.
 
-    Works unchanged for either IQL variant (:func:`train_shared_iql` or
-    :func:`train_two_brain_iql`) -- it only ever touches ``.epsilon``/
-    ``.recording``, which both ``IQLSignaller``/``IQLGuesser`` and
-    ``TwoBrainIQLSignaller``/``TwoBrainIQLGuesser`` expose identically, so
-    nothing here needs to know which variant's agents it was handed.
+    Works unchanged for all three IQL variants (:func:`train_shared_iql`,
+    :func:`train_two_brain_iql`, or :func:`train_independent_iql`) -- it
+    only ever touches ``.epsilon``/``.recording``, which every agent class
+    in ``algorithms/iql.py`` exposes identically, so nothing here needs to
+    know which variant's agents it was handed.
     """
     agents = _all_agents(signaller_agents, guesser_agents)
     saved = [(a.epsilon, a.recording) for a in agents]
@@ -269,17 +275,21 @@ def train_two_brain_iql(
     if seed is not None:
         torch.manual_seed(seed)
 
-    # Each brain gets its own encoding, scoped to just its own role's
-    # agents and neighbourhood sizes -- see RoleEncoding's docstring for why
-    # that's narrower (and therefore usually smaller) than GraphEncoding.
-    signaller_encoding = RoleEncoding.for_signallers(env.graph)
-    guesser_encoding = RoleEncoding.for_guessers(env.graph)
+    # Same GraphEncoding as train_shared_iql() -- both brains here see the
+    # same identity-one-hot-plus-padded-observation input the shared-brain
+    # variant does, deliberately, so the comparison between variants isolates
+    # how much the *network* is shared rather than also comparing how much
+    # *input information* each variant's agents were given. See
+    # agents/networks.py's "controlled input" note.
+    encoding = GraphEncoding.from_graph(env.graph)
     num_item_values = env.item_space.n
 
     # A signaller's action count is always 2 (the channel is always binary);
-    # a guesser's is the item space's size -- see TwoBrainIQLGuesser.
-    signaller_network = SharedQNetwork(signaller_encoding.input_dim, 2)
-    guesser_network = SharedQNetwork(guesser_encoding.input_dim, num_item_values)
+    # a guesser's is the item space's size -- see TwoBrainIQLGuesser. Output
+    # width is the one thing that legitimately still differs from the
+    # shared-brain network -- see the module docstring in agents/networks.py.
+    signaller_network = SharedQNetwork(encoding.input_dim, 2)
+    guesser_network = SharedQNetwork(encoding.input_dim, num_item_values)
 
     # Separate buffers, not one shared buffer -- see this module's/iql.py's
     # docstrings for why mixing the two roles' transitions into one buffer
@@ -293,12 +303,12 @@ def train_two_brain_iql(
 
     # One agent instance per node id, same reasoning as train_shared_iql().
     signaller_agents: Dict[int, TwoBrainIQLSignaller] = {
-        s: TwoBrainIQLSignaller(s, signaller_encoding, signaller_network, signaller_buffer, epsilon=1.0)
+        s: TwoBrainIQLSignaller(s, encoding, signaller_network, signaller_buffer, epsilon=1.0)
         for s in env.graph.signallers
     }
     guesser_agents: Dict[int, TwoBrainIQLGuesser] = {
         g: TwoBrainIQLGuesser(
-            g, guesser_encoding, guesser_network, guesser_buffer, num_item_values, epsilon=1.0
+            g, encoding, guesser_network, guesser_buffer, num_item_values, epsilon=1.0
         )
         for g in env.graph.guessers
     }
@@ -393,33 +403,41 @@ def train_independent_iql(
     num_item_values = env.item_space.n
     graph = env.graph
 
-    # Each network is sized to exactly this one agent's own neighbourhood --
-    # no padding, because (unlike GraphEncoding/RoleEncoding) no *other*
-    # agent will ever share this network, so there's no other agent's
-    # neighbourhood size to accommodate.
+    # Same GraphEncoding as the other two trainers -- every one of these
+    # private networks still sees the identity-one-hot-plus-padded-
+    # observation input the shared-brain variant uses, even though a
+    # private network's own identity slice never varies across calls (it's
+    # only ever asked about one node). That constancy costs nothing but a
+    # few always-the-same input dimensions, and it's what keeps this
+    # variant's comparison against the other two isolated to "how much is
+    # the network shared" rather than "how much input information did each
+    # variant's agents get" -- see agents/networks.py's "controlled input"
+    # note.
+    encoding = GraphEncoding.from_graph(graph)
+
     signaller_networks: Dict[int, SharedQNetwork] = {}
     signaller_buffers: Dict[int, ReplayBuffer] = {}
     signaller_optimizers: Dict[int, torch.optim.Optimizer] = {}
     signaller_agents: Dict[int, IndependentIQLSignaller] = {}
     for s in graph.signallers:
-        network = SharedQNetwork(graph.out_degree(s), 2)
+        network = SharedQNetwork(encoding.input_dim, 2)
         buffer = ReplayBuffer(capacity=buffer_capacity)
         signaller_networks[s] = network
         signaller_buffers[s] = buffer
         signaller_optimizers[s] = torch.optim.Adam(network.parameters(), lr=learning_rate)
-        signaller_agents[s] = IndependentIQLSignaller(network, buffer, epsilon=1.0)
+        signaller_agents[s] = IndependentIQLSignaller(s, encoding, network, buffer, epsilon=1.0)
 
     guesser_networks: Dict[int, SharedQNetwork] = {}
     guesser_buffers: Dict[int, ReplayBuffer] = {}
     guesser_optimizers: Dict[int, torch.optim.Optimizer] = {}
     guesser_agents: Dict[int, IndependentIQLGuesser] = {}
     for g in graph.guessers:
-        network = SharedQNetwork(graph.in_degree(g), num_item_values)
+        network = SharedQNetwork(encoding.input_dim, num_item_values)
         buffer = ReplayBuffer(capacity=buffer_capacity)
         guesser_networks[g] = network
         guesser_buffers[g] = buffer
         guesser_optimizers[g] = torch.optim.Adam(network.parameters(), lr=learning_rate)
-        guesser_agents[g] = IndependentIQLGuesser(network, buffer, num_item_values, epsilon=1.0)
+        guesser_agents[g] = IndependentIQLGuesser(g, encoding, network, buffer, num_item_values, epsilon=1.0)
 
     all_agents = _all_agents(signaller_agents, guesser_agents)
 

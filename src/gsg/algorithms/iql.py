@@ -10,24 +10,41 @@ much gets shared*:
 
 * :class:`IQLSignaller` / :class:`IQLGuesser` -- **one brain for everyone**.
   Every agent's Q-values come out of the *same* ``SharedQNetwork``
-  instance, whichever role it plays, distinguished by an identity flag in
-  the input and a mask on the output (see ``agents/networks.py``).
+  instance, whichever role it plays, distinguished at the output by a mask
+  (see :func:`masked_q_values`).
 * :class:`TwoBrainIQLSignaller` / :class:`TwoBrainIQLGuesser` -- **one brain
   per role**. Signallers share one ``SharedQNetwork``; guessers share a
   *separate* one. The more conventional MARL choice -- parameter sharing
   within a homogeneous group of agents (all signallers are doing the "same
   kind" of job as each other), not across two roles doing opposite jobs
-  (encode vs. decode). Because each network here is exclusively one role's,
-  its raw output is already restricted to that role's own actions -- there's
-  nothing to mask, because there's nothing else in the output *to* mask.
+  (encode vs. decode).
 * :class:`IndependentIQLSignaller` / :class:`IndependentIQLGuesser` -- **one
   brain per agent**. No sharing at all: every agent gets its own private
-  network, its own replay buffer, its own optimizer. This is the most
-  literal reading of Section 4.4.1's stated algorithm -- "each agent
-  maintains its own Q-function" -- and needs neither an identity flag nor
-  output masking nor observation padding, for the same reason: a private
-  network was never going to be asked to represent any agent but this one,
-  so there's nothing else to distinguish it from or restrict it to.
+  network, its own replay buffer, its own optimizer. The most literal
+  reading of Section 4.4.1's stated algorithm -- "each agent maintains its
+  own Q-function."
+
+All three use the *same* input scheme (:class:`~gsg.agents.networks.GraphEncoding`
+-- a per-node identity one-hot spanning every agent in the graph, plus
+observation padded to the graph's largest neighbourhood), and the same
+underlying network architecture (``SharedQNetwork``). This is deliberate,
+not incidental: the whole reason to compare these three variants is to
+isolate the effect of *how much a network is shared*, and that comparison
+would be confounded the moment one variant's agents also had access to more
+or less input information than another's. See
+``agents/networks.py``'s "controlled input" note for the fuller version of
+this argument. The two role-/agent-exclusive variants (:class:`TwoBrainIQLSignaller`
+et al.) don't strictly *need* the identity flag for themselves (a network
+that's already private to one role or one agent has no one else to be
+confused with) -- they carry it anyway, so that a convergence-rate
+difference between variants can only be attributed to the sharing scheme,
+never to a difference in what each agent was told.
+
+Only the fully-shared variant needs output masking -- see
+:func:`masked_q_values`'s docstring and :class:`_SharedIQLAgent`. The other
+two variants' networks are already restricted to their own role's actions
+by construction (nothing else was ever going to call them), so
+:class:`_UnmaskedIQLAgent` -- the shared base for both -- needs none.
 
 In the first two variants, "one brain" means one Python object referenced
 from every agent sharing it, not a separately-created copy per agent. This
@@ -37,25 +54,16 @@ the moment any one of them was updated by its own optimizer step -- they'd
 stop being "shared" after the very first gradient update. A shared
 *reference* is what keeps them permanently tied to the same weights,
 updated by one optimizer, for the lifetime of training. The third variant
-has no such reference to share in the first place -- see
-:class:`_IndependentIQLAgent` below.
-
-Every agent in the first two variants still needs its own *identity* (which
-specific node it is, not just which role) so agents sharing a brain can
-still be told apart even when they observe the same thing -- see
-``agents/networks.py``'s module docstring for why that's essential once a
-graph has more than one agent per role. The third variant needs no identity
-at all, for the same "nothing else to distinguish it from" reason above.
+has no such reference to share in the first place.
 
 One correctness note that applies to *both* the two-brain and fully-
-independent variants: whenever two agents' input/output shapes can genuinely
-differ (a guesser's action count depends on ``num_item_values``; different
-agents' neighbourhood sizes can differ across a graph), they also need
-*separate* replay buffers -- mixing differently-shaped transitions into one
-buffer would break ``ReplayBuffer.sample()``'s ``torch.stack()`` the moment
-the input vectors aren't all the same length. See ``training/trainer.py``'s
-``train_two_brain_iql()`` and ``train_independent_iql()`` for where that
-separation happens.
+independent variants: whenever two agents' output shapes can genuinely
+differ (a guesser's action count depends on ``num_item_values``), they also
+need *separate* replay buffers -- mixing differently-shaped transitions
+into one buffer would break ``ReplayBuffer.sample()``'s ``torch.stack()``
+the moment the input vectors aren't all the same length. See
+``training/trainer.py``'s ``train_two_brain_iql()`` and
+``train_independent_iql()`` for where that separation happens.
 
 Training itself (the episode loop, epsilon schedule, when to call
 :func:`train_step`) lives in ``training/trainer.py`` -- this module only
@@ -72,14 +80,7 @@ import torch
 import torch.nn.functional as F
 
 from ..agents.base_agent import GuesserAgent, Observation, SignallerAgent
-from ..agents.networks import (
-    ActionLayout,
-    GraphEncoding,
-    RoleEncoding,
-    SharedQNetwork,
-    encode_observation,
-    masked_q_values,
-)
+from ..agents.networks import ActionLayout, GraphEncoding, SharedQNetwork, masked_q_values
 from ..agents.replay_buffer import ReplayBuffer, Transition
 
 
@@ -229,32 +230,52 @@ class IQLGuesser(_SharedIQLAgent, GuesserAgent):
         _SharedIQLAgent.__init__(self, node_id, encoding, layout, network, buffer, epsilon)
 
 
-class _RoleIQLAgent:
-    """Shared logic between :class:`TwoBrainIQLSignaller` and
-    :class:`TwoBrainIQLGuesser` -- the two-brain counterpart to
-    :class:`_SharedIQLAgent` above.
+class _UnmaskedIQLAgent:
+    """Shared logic between the two-brain variant (:class:`TwoBrainIQLSignaller`,
+    :class:`TwoBrainIQLGuesser`) and the fully-independent variant
+    (:class:`IndependentIQLSignaller`, :class:`IndependentIQLGuesser`).
 
-    Structurally almost identical to ``_SharedIQLAgent`` (same epsilon-greedy
-    / buffer-recording shape), with one simplification worth noticing: no
-    masking anywhere. ``_SharedIQLAgent`` needs ``masked_q_values()`` because
-    its one shared network's output has slots for *both* roles' actions, and
-    only half of them are legal for any given agent. Here, each agent's
-    network is exclusively its own role's brain -- its output width *is*
-    exactly that role's action count, so there is no "other role's slots" to
-    mask out, and a combined-action-space index/offset (like
+    These two variants turn out to need *identical* per-agent decision logic
+    -- same input encoding, same "no masking needed" reasoning, same
+    epsilon-greedy/buffer-recording shape -- once both use the same
+    :class:`~gsg.agents.networks.GraphEncoding` input as the shared-brain
+    variant (see that module's "controlled input" note for why). The only
+    thing that actually distinguishes "one brain per role" from "one brain
+    per agent" is which agents share a reference to the same ``network``/
+    ``buffer`` objects -- a question this class has no opinion on, because
+    it's answered entirely by *how many times* ``training/trainer.py``
+    constructs a network and hands the *same* one to multiple agents
+    (``train_two_brain_iql()``) versus a fresh one per agent
+    (``train_independent_iql()``). One shared base here is the honest
+    reflection of that: there is nothing left for two separate classes to
+    disagree about at the level of a single agent's own decision-making.
+
+    No masking anywhere, unlike ``_SharedIQLAgent``: that class needs
+    ``masked_q_values()`` because its one shared network's output has slots
+    for *both* roles' actions, and only half are legal for any given agent.
+    Here, whichever network this agent was handed -- role-exclusive or
+    agent-exclusive -- was never going to be asked about any action outside
+    this agent's own role, so its output width already *is* exactly this
+    agent's own action count, and a combined-action-space offset (like
     ``ActionLayout.combined_action_index``) is unnecessary too: the
     network's own output index already *is* the environment action.
     """
 
+    #: Overridden by the subclasses: True for a signaller, False for a guesser.
+    is_signaller: bool
+
     def __init__(
         self,
         node_id: int,
-        encoding: RoleEncoding,
+        encoding: GraphEncoding,
         num_actions: int,
         network: SharedQNetwork,
         buffer: ReplayBuffer,
         epsilon: float = 0.0,
     ) -> None:
+        # Still carried even for the fully-independent variant, where this
+        # agent's own network only ever sees one identity -- see the module
+        # docstring's "controlled input" note for why that's deliberate.
         self.node_id = node_id
         self.encoding = encoding
         self.num_actions = num_actions
@@ -267,13 +288,13 @@ class _RoleIQLAgent:
         self._last_action_index: Optional[int] = None
 
     def act(self, observation: Observation) -> int:
-        x = self.encoding.encode_input(self.node_id, observation)
+        x = self.encoding.encode_input(self.is_signaller, self.node_id, observation)
 
         if random.random() < self.epsilon:
             action = random.randrange(self.num_actions)
         else:
             with torch.no_grad():
-                q = self.network(x.unsqueeze(0)).squeeze(0)  # already exactly this role's actions
+                q = self.network(x.unsqueeze(0)).squeeze(0)  # already exactly this agent's own actions
                 action = int(torch.argmax(q).item())
 
         self._last_input = x
@@ -296,30 +317,32 @@ class _RoleIQLAgent:
         self._last_action_index = None
 
     def q_preview(self, observation: Observation) -> torch.Tensor:
-        """The network's current Q-values for a given observation.
+        """This agent's network's current Q-values for a given observation.
 
         Named ``q_preview``, not ``masked_q_preview`` like the shared-brain
         agent's version -- nothing needs masking here (see class docstring),
         so calling it "masked" would claim a step that doesn't happen.
         """
-        x = self.encoding.encode_input(self.node_id, observation)
+        x = self.encoding.encode_input(self.is_signaller, self.node_id, observation)
         with torch.no_grad():
             return self.network(x.unsqueeze(0)).squeeze(0)
 
 
-class TwoBrainIQLSignaller(_RoleIQLAgent, SignallerAgent):
+class TwoBrainIQLSignaller(_UnmaskedIQLAgent, SignallerAgent):
     """A signaller whose policy comes from the signaller-only brain.
 
     Base-class order matters here for the same reason as
-    :class:`IQLSignaller`: ``_RoleIQLAgent`` must come *before*
+    :class:`IQLSignaller`: ``_UnmaskedIQLAgent`` must come *before*
     ``SignallerAgent`` so Python's method resolution order finds
-    ``_RoleIQLAgent.act`` before ``Agent``'s still-abstract one.
+    ``_UnmaskedIQLAgent.act`` before ``Agent``'s still-abstract one.
     """
+
+    is_signaller = True
 
     def __init__(
         self,
         node_id: int,
-        encoding: RoleEncoding,
+        encoding: GraphEncoding,
         network: SharedQNetwork,
         buffer: ReplayBuffer,
         epsilon: float = 0.0,
@@ -327,20 +350,22 @@ class TwoBrainIQLSignaller(_RoleIQLAgent, SignallerAgent):
         # A signaller's action space is always binary (the channel is
         # always one bit, regardless of num_item_values) -- so num_actions
         # is fixed at 2 here, unlike the guesser below.
-        _RoleIQLAgent.__init__(self, node_id, encoding, 2, network, buffer, epsilon)
+        _UnmaskedIQLAgent.__init__(self, node_id, encoding, 2, network, buffer, epsilon)
 
 
-class TwoBrainIQLGuesser(_RoleIQLAgent, GuesserAgent):
+class TwoBrainIQLGuesser(_UnmaskedIQLAgent, GuesserAgent):
     """A guesser whose policy comes from the guesser-only brain.
 
-    See :class:`TwoBrainIQLSignaller` for why ``_RoleIQLAgent`` must be
+    See :class:`TwoBrainIQLSignaller` for why ``_UnmaskedIQLAgent`` must be
     listed first in the base classes.
     """
+
+    is_signaller = False
 
     def __init__(
         self,
         node_id: int,
-        encoding: RoleEncoding,
+        encoding: GraphEncoding,
         network: SharedQNetwork,
         buffer: ReplayBuffer,
         num_item_values: int,
@@ -351,114 +376,55 @@ class TwoBrainIQLGuesser(_RoleIQLAgent, GuesserAgent):
         # 2, which is exactly why it's passed in here rather than hard-coded
         # (the same num_item_values generality the one-brain variant gets
         # from ActionLayout).
-        _RoleIQLAgent.__init__(self, node_id, encoding, num_item_values, network, buffer, epsilon)
+        _UnmaskedIQLAgent.__init__(self, node_id, encoding, num_item_values, network, buffer, epsilon)
 
 
-class _IndependentIQLAgent:
-    """Shared logic between :class:`IndependentIQLSignaller` and
-    :class:`IndependentIQLGuesser` -- the fully-independent counterpart to
-    :class:`_SharedIQLAgent` and :class:`_RoleIQLAgent` above.
-
-    This is the simplest of the three agent bases, and it's simpler for a
-    real reason, not just less code: every piece of bookkeeping the other
-    two need exists to let several agents safely share one network without
-    stepping on each other. ``_SharedIQLAgent`` needs an identity flag
-    *and* masking (many agents, many roles, one network). ``_RoleIQLAgent``
-    still needs an identity flag (many agents, one network per role). Here,
-    ``self.network`` is never handed to any other agent -- it was
-    constructed for this one node id and nothing else will ever call it --
-    so there's no one else to be told apart from, and no other role's
-    actions ever occupy its output to mask out.
-    """
-
-    def __init__(
-        self,
-        num_actions: int,
-        network: SharedQNetwork,
-        buffer: ReplayBuffer,
-        epsilon: float = 0.0,
-    ) -> None:
-        self.num_actions = num_actions
-        self.network = network
-        self.buffer = buffer
-        self.epsilon = epsilon
-        # Same purpose as in _SharedIQLAgent -- see that class for why.
-        self.recording = True
-        self._last_input: Optional[torch.Tensor] = None
-        self._last_action_index: Optional[int] = None
-
-    def act(self, observation: Observation) -> int:
-        x = encode_observation(observation)
-
-        if random.random() < self.epsilon:
-            action = random.randrange(self.num_actions)
-        else:
-            with torch.no_grad():
-                q = self.network(x.unsqueeze(0)).squeeze(0)  # already exactly this agent's own actions
-                action = int(torch.argmax(q).item())
-
-        self._last_input = x
-        self._last_action_index = action
-        return action
-
-    def observe_reward(self, reward: float) -> None:
-        if not self.recording:
-            return
-        if self._last_input is None or self._last_action_index is None:
-            return
-        self.buffer.add(Transition(
-            input_vector=self._last_input,
-            action_index=self._last_action_index,
-            reward=reward,
-        ))
-
-    def reset_episode(self) -> None:
-        self._last_input = None
-        self._last_action_index = None
-
-    def q_preview(self, observation: Observation) -> torch.Tensor:
-        """This agent's own network's current Q-values for a given observation."""
-        x = encode_observation(observation)
-        with torch.no_grad():
-            return self.network(x.unsqueeze(0)).squeeze(0)
-
-
-class IndependentIQLSignaller(_IndependentIQLAgent, SignallerAgent):
+class IndependentIQLSignaller(_UnmaskedIQLAgent, SignallerAgent):
     """A signaller with its own private network -- no parameters shared
     with any other agent, of either role.
 
-    Base-class order matters here for the same reason as
-    :class:`IQLSignaller`: ``_IndependentIQLAgent`` must come *before*
-    ``SignallerAgent`` so Python's method resolution order finds
-    ``_IndependentIQLAgent.act`` before ``Agent``'s still-abstract one.
+    Structurally identical to :class:`TwoBrainIQLSignaller` (same base
+    class, same constructor) -- see :class:`_UnmaskedIQLAgent`'s docstring
+    for why: the only thing distinguishing this variant from the two-brain
+    one is whether ``training/trainer.py`` hands this same ``network``
+    object to any other agent (``train_two_brain_iql()`` does; here,
+    ``train_independent_iql()`` never does), not anything about how this
+    class itself decides what to do.
     """
 
     is_signaller = True
 
-    def __init__(self, network: SharedQNetwork, buffer: ReplayBuffer, epsilon: float = 0.0) -> None:
-        # Always 2 -- the channel is always binary, regardless of num_item_values.
-        _IndependentIQLAgent.__init__(self, 2, network, buffer, epsilon)
+    def __init__(
+        self,
+        node_id: int,
+        encoding: GraphEncoding,
+        network: SharedQNetwork,
+        buffer: ReplayBuffer,
+        epsilon: float = 0.0,
+    ) -> None:
+        _UnmaskedIQLAgent.__init__(self, node_id, encoding, 2, network, buffer, epsilon)
 
 
-class IndependentIQLGuesser(_IndependentIQLAgent, GuesserAgent):
+class IndependentIQLGuesser(_UnmaskedIQLAgent, GuesserAgent):
     """A guesser with its own private network -- no parameters shared with
     any other agent, of either role.
 
-    See :class:`IndependentIQLSignaller` for why ``_IndependentIQLAgent``
-    must be listed first in the base classes.
+    See :class:`IndependentIQLSignaller` for why this is structurally
+    identical to :class:`TwoBrainIQLGuesser`.
     """
 
     is_signaller = False
 
     def __init__(
         self,
+        node_id: int,
+        encoding: GraphEncoding,
         network: SharedQNetwork,
         buffer: ReplayBuffer,
         num_item_values: int,
         epsilon: float = 0.0,
     ) -> None:
-        # The item space's size -- see TwoBrainIQLGuesser for the same reasoning.
-        _IndependentIQLAgent.__init__(self, num_item_values, network, buffer, epsilon)
+        _UnmaskedIQLAgent.__init__(self, node_id, encoding, num_item_values, network, buffer, epsilon)
 
 
 def train_step(
