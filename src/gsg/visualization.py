@@ -1,6 +1,6 @@
 """Visualisation of the Graph Signalling Game.
 
-Three renderers, so you can "see" the environment and its learned
+Four renderers, so you can "see" the environment and its learned
 conventions at different levels of detail:
 
 * :func:`render_text` -- a zero-dependency ASCII view (the room-analogy light
@@ -14,6 +14,14 @@ conventions at different levels of detail:
   one played episode -- this is what actually shows "the convention," as
   opposed to one sample from it. Pairs with
   :func:`gsg.evaluation.conventions.extract_all_policies`.
+* :func:`render_action_response_matrix` -- for each edge in the graph, a
+  small heatmap of how often the signaller's actual emitted signal
+  co-occurred with the guesser's actual produced guess, across many real
+  sampled episodes. Where ``render_policy_heatmap`` shows what a policy
+  *would* do for every input (assuming it's a fixed rule), this shows what
+  it actually *did*, empirically -- the distinction matters most for
+  agents that aren't cleanly deterministic. Pairs with
+  :func:`gsg.evaluation.conventions.all_edges_action_response_frequencies`.
 
 The first two take a :class:`~gsg.environment.graphs.SignallingGraph` and,
 optionally, an :class:`~gsg.environment.graph_signalling_game.EpisodeRecord`.
@@ -311,5 +319,90 @@ def render_policy_heatmap(
 
     if save_path is not None:
         fig.savefig(save_path, bbox_inches="tight", dpi=130)
+
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# Action-response matrix (optional dependency) -- empirical, sampled behaviour
+# ---------------------------------------------------------------------------
+
+def render_action_response_matrix(
+    frequencies: Dict[Tuple[int, int], Dict[Tuple[int, int], float]],
+    title: Optional[str] = None,
+    save_path: Optional[str] = None,
+):
+    """Render one heatmap per (signaller, guesser) edge, showing how often
+    the signaller's actual emitted signal co-occurred with the guesser's
+    actual produced guess across many real sampled episodes.
+
+    ``frequencies`` is the output of
+    :func:`gsg.evaluation.conventions.all_edges_action_response_frequencies`:
+    ``{(0, 0): {(0, 0): 0.24, (0, 1): 0.01, (1, 0): 0.02, (1, 1): 0.23}, ...}``.
+
+    Unlike :func:`render_policy_heatmap` (a category per cell: which action
+    a fixed rule *would* take for a given input), this is a genuine
+    continuous heatmap: each cell's colour and annotated percentage is how
+    much of the real, sampled probability mass landed there. Rows are the
+    signaller's action (Light OFF / Light ON), columns are the guesser's
+    response (guessed CAT / guessed DOG). A pair that has converged on a
+    working, information-carrying convention concentrates most of its mass
+    into a diagonal-like pattern of one or two cells; a pair with no real
+    correlation between action and response -- a random policy, or an edge
+    that's structurally present but not actually load-bearing in a
+    converged run -- spreads close to an even 25% across all four.
+
+    Requires matplotlib; raises ``ImportError`` with guidance if unavailable.
+    """
+    try:
+        import matplotlib.pyplot as plt
+    except ImportError as exc:  # pragma: no cover - environment dependent
+        raise ImportError(
+            "render_action_response_matrix needs matplotlib. Install it with "
+            "`pip install matplotlib`."
+        ) from exc
+
+    edges = sorted(frequencies.keys())
+    # Extra width reserved for a dedicated colorbar axis added manually below --
+    # mixing tight_layout() with fig.colorbar(ax=<list of axes>) fights over the
+    # same space and clips the rightmost panel, so layout is handled by hand
+    # instead (subplots_adjust + a fixed-position colorbar axis).
+    fig, axes = plt.subplots(1, len(edges), figsize=(2.8 * len(edges) + 0.7, 3.4))
+    if len(edges) == 1:
+        axes = [axes]
+
+    action_labels = ["Light OFF", "Light ON"]         # row 0, row 1
+    response_labels = ["Guessed CAT", "Guessed DOG"]  # col 0, col 1
+
+    im = None
+    for ax, edge in zip(axes, edges):
+        s, g = edge
+        freq = frequencies[edge]
+        grid = [[freq[(a, r)] * 100 for r in (0, 1)] for a in (0, 1)]
+
+        im = ax.imshow(grid, cmap="Blues", vmin=0, vmax=100, aspect="equal")
+        for a in (0, 1):
+            for r in (0, 1):
+                pct = grid[a][r]
+                text_color = "white" if pct > 55 else "black"
+                ax.text(r, a, f"{pct:.1f}%", ha="center", va="center",
+                        fontsize=9, fontweight="bold", color=text_color)
+
+        ax.set_xticks([0, 1])
+        ax.set_xticklabels(response_labels, fontsize=7)
+        ax.set_yticks([0, 1])
+        ax.set_yticklabels(action_labels, fontsize=7)
+        ax.set_title(f"S{s} -> G{g}", fontsize=10)
+
+    if title:
+        fig.suptitle(title, fontsize=11)
+
+    fig.subplots_adjust(left=0.08, right=0.88, top=0.80, bottom=0.15, wspace=0.5)
+    if im is not None:
+        cbar_ax = fig.add_axes((0.90, 0.25, 0.02, 0.5))
+        fig.colorbar(im, cax=cbar_ax, label="% of sampled episodes")
+
+    if save_path is not None:
+        fig.savefig(save_path, dpi=130)
 
     return fig

@@ -43,6 +43,7 @@ epsilon from "always explore" to "mostly exploit" over training.
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass, field
 from typing import Callable, Dict, List, Optional
 
@@ -136,6 +137,15 @@ LogCallback = Callable[
     [int, List[float], SharedQNetwork, Dict[int, IQLSignaller], Dict[int, IQLGuesser]], None
 ]
 
+#: Called *every* episode, if provided, with (episode_index, EpisodeRecord)
+#: -- the record from the episode that was just played, with exploration
+#: still on and epsilon at whatever the schedule currently says. Lets a
+#: caller instrument the actual *learning* behaviour (e.g. tally an
+#: action-response matrix from real training play), rather than only the
+#: settled greedy policy you'd get by evaluating afterward. Accepted by all
+#: three trainers.
+EpisodeCallback = Callable[[int, EpisodeRecord], None]
+
 
 def train_shared_iql(
     env,
@@ -147,6 +157,7 @@ def train_shared_iql(
     train_every: int = 1,
     log_every: Optional[int] = None,
     on_log: Optional[LogCallback] = None,
+    on_episode: Optional[EpisodeCallback] = None,
     seed: Optional[int] = None,
 ) -> tuple[SharedQNetwork, Dict[int, IQLSignaller], Dict[int, IQLGuesser], TrainingHistory]:
     """Train one shared-parameter IQL population on ``env``.
@@ -171,7 +182,17 @@ def train_shared_iql(
     (with every agent's ``.epsilon`` set to 0 for a purely greedy evaluation).
     """
     if seed is not None:
+        # Seed *both* sources of randomness the training loop draws on:
+        # torch (network initialisation) and Python's `random` module
+        # (epsilon-greedy exploration in agents/iql.py, and minibatch
+        # sampling in replay_buffer.py). Seeding only torch -- as this code
+        # used to -- left exploration and replay sampling uncontrolled, so
+        # "the same seed" produced materially different training runs,
+        # especially for runs that don't cleanly converge. The environment's
+        # item sampling has its own seeded `random.Random` instance and is
+        # handled separately, at env construction.
         torch.manual_seed(seed)
+        random.seed(seed)
 
     # These two specs are the entire reason changing the graph or the item
     # count is a one-line change: they're derived from env.graph/env.item_space
@@ -217,6 +238,8 @@ def train_shared_iql(
         record = env.run_episode(signaller_agents, guesser_agents)
         history.episode_rewards.append(record.reward)
         rewards_since_last_log.append(record.reward)
+        if on_episode is not None:
+            on_episode(episode, record)
 
         if episode % train_every == 0:
             loss = train_step(network, buffer, optimizer, batch_size)
@@ -254,6 +277,7 @@ def train_two_brain_iql(
     train_every: int = 1,
     log_every: Optional[int] = None,
     on_log: Optional[TwoBrainLogCallback] = None,
+    on_episode: Optional[EpisodeCallback] = None,
     seed: Optional[int] = None,
 ) -> tuple[SharedQNetwork, SharedQNetwork, Dict[int, TwoBrainIQLSignaller], Dict[int, TwoBrainIQLGuesser], TrainingHistory]:
     """Train a *two-brain* IQL population on ``env``: one network shared
@@ -273,7 +297,17 @@ def train_two_brain_iql(
     (with every agent's ``.epsilon`` set to 0 for a purely greedy evaluation).
     """
     if seed is not None:
+        # Seed *both* sources of randomness the training loop draws on:
+        # torch (network initialisation) and Python's `random` module
+        # (epsilon-greedy exploration in agents/iql.py, and minibatch
+        # sampling in replay_buffer.py). Seeding only torch -- as this code
+        # used to -- left exploration and replay sampling uncontrolled, so
+        # "the same seed" produced materially different training runs,
+        # especially for runs that don't cleanly converge. The environment's
+        # item sampling has its own seeded `random.Random` instance and is
+        # handled separately, at env construction.
         torch.manual_seed(seed)
+        random.seed(seed)
 
     # Same GraphEncoding as train_shared_iql() -- both brains here see the
     # same identity-one-hot-plus-padded-observation input the shared-brain
@@ -325,6 +359,8 @@ def train_two_brain_iql(
         record = env.run_episode(signaller_agents, guesser_agents)
         history.episode_rewards.append(record.reward)
         rewards_since_last_log.append(record.reward)
+        if on_episode is not None:
+            on_episode(episode, record)
 
         if episode % train_every == 0:
             signaller_loss = train_step(signaller_network, signaller_buffer, signaller_optimizer, batch_size)
@@ -371,6 +407,7 @@ def train_independent_iql(
     train_every: int = 1,
     log_every: Optional[int] = None,
     on_log: Optional[IndependentLogCallback] = None,
+    on_episode: Optional[EpisodeCallback] = None,
     seed: Optional[int] = None,
 ) -> tuple[
     Dict[int, SharedQNetwork], Dict[int, SharedQNetwork],
@@ -398,7 +435,17 @@ def train_independent_iql(
     agent's ``.epsilon`` set to 0 for a purely greedy evaluation).
     """
     if seed is not None:
+        # Seed *both* sources of randomness the training loop draws on:
+        # torch (network initialisation) and Python's `random` module
+        # (epsilon-greedy exploration in agents/iql.py, and minibatch
+        # sampling in replay_buffer.py). Seeding only torch -- as this code
+        # used to -- left exploration and replay sampling uncontrolled, so
+        # "the same seed" produced materially different training runs,
+        # especially for runs that don't cleanly converge. The environment's
+        # item sampling has its own seeded `random.Random` instance and is
+        # handled separately, at env construction.
         torch.manual_seed(seed)
+        random.seed(seed)
 
     num_item_values = env.item_space.n
     graph = env.graph
@@ -452,6 +499,8 @@ def train_independent_iql(
         record = env.run_episode(signaller_agents, guesser_agents)
         history.episode_rewards.append(record.reward)
         rewards_since_last_log.append(record.reward)
+        if on_episode is not None:
+            on_episode(episode, record)
 
         if episode % train_every == 0:
             # One train_step() call per agent -- each agent's network,

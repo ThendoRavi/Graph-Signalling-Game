@@ -2,20 +2,36 @@
 
 This is the machinery behind "what convention did this run actually
 converge to" -- not a reward number, but the literal lookup table each
-agent settled on. Two levels of detail:
+agent settled on. Two different methods, answering two different questions:
 
-* :func:`greedy_policy` / :func:`extract_all_policies` -- extract *one
-  agent's* (or every agent's) greedy mapping from observation to action,
-  by directly querying ``agent.act()`` for every possible observation with
-  exploration turned off. This is the concrete form of a signaller's
-  ``pi_s`` or a guesser's ``pi_g`` (Section 4.6.3).
-* :func:`exhaustive_joint_table` -- walk through *every possible episode*
-  (every combination of hidden items) and report exactly what the whole
-  trained population does for each, deterministically. This works because,
-  with exploration off, a trained population's behaviour is a pure function
-  of the items -- there's no need to sample episodes and hope to see every
-  case; K_{2,2}'s state space is small enough to enumerate completely
-  (Section 4.6.1's whole point).
+* :func:`greedy_policy` / :func:`extract_all_policies` / :func:`exhaustive_joint_table`
+  -- **what would the agent do, for every possible input, assuming it's
+  deterministic?** Extracted by directly querying ``agent.act()`` with
+  exploration forced off, for every possible observation -- the concrete
+  form of a signaller's ``pi_s`` or a guesser's ``pi_g`` (Section 4.6.3).
+  This is exact and exhaustive, but it assumes the policy *is* a fixed
+  function of the observation -- which is true for a converged, greedy IQL
+  agent, but not for a genuinely stochastic one (a policy still exploring,
+  or a random baseline that never looks at its input at all). For those,
+  querying each input once can show a "clean-looking" result purely by
+  luck of the draw, not because a real rule exists.
+* :func:`all_edges_action_response_frequencies` / :class:`ActionResponseTally`
+  -- **what did the agent actually do, how often, across real play?** Built
+  empirically by *playing* real episodes (sampling items the normal way,
+  not enumerating them) and tallying how often each (signaller's signal,
+  guesser's guess) pair actually occurred, per edge. This is the "Action
+  Response Matrix" idea (in the spirit of the cross-play matrices in the
+  other-play / any-play literature): a converged, information-carrying edge
+  concentrates most of its probability mass into one or two cells; an edge
+  carrying no real information spreads close to an even 25% across all four
+  -- and because it's built from many samples rather than one query per
+  cell, that flatness shows up robustly instead of looking accidentally
+  "clean" the way a single-query table can. The *function* runs its own
+  dedicated batch with exploration forced off (the settled greedy policy);
+  the *class* is fed episodes from outside -- e.g. a trainer's ``on_episode``
+  hook -- so it can measure behaviour *while the agent is still learning*,
+  exploration and all, which is what makes a like-for-like comparison
+  against a (also-stochastic) random baseline meaningful.
 
 :func:`canonical_id` turns a policy table into a single stable integer, so
 two runs can be compared for having converged to the *literal same*
@@ -33,6 +49,7 @@ from typing import Dict, List, Tuple
 from ..environment.graphs import SignallingGraph
 
 Observation = Tuple[int, ...]
+Edge = Tuple[int, int]
 
 
 def greedy_policy(agent, value_range: int, neighbourhood_size: int) -> Dict[Observation, int]:
@@ -179,3 +196,122 @@ def convention_summary(outcomes: List[WorldOutcome]) -> str:
     if mean_reward <= 0.751:
         return f"single-bit ceiling ({mean_reward:.3f})"
     return f"exploiting joint channel ({mean_reward:.3f})"
+
+
+def all_edges_action_response_frequencies(
+    env,
+    signaller_agents: Dict[int, object],
+    guesser_agents: Dict[int, object],
+    num_episodes: int = 1000,
+) -> Dict[Edge, Dict[Tuple[int, int], float]]:
+    """Play ``num_episodes`` *real* episodes and, for every (signaller,
+    guesser) edge in ``env.graph``, tally how often each (signal, guess)
+    pair actually occurred -- built from one shared batch of episodes, so
+    every edge's table reflects the same underlying sample rather than
+    independently-resampled runs.
+
+    This is the empirical "Action Response Matrix": not what a fixed policy
+    *would* do for a given input (see :func:`exhaustive_joint_table`), but
+    what actually came out, how often, across genuine play. Forces every
+    agent greedy (``epsilon=0``) and non-recording first, restoring both
+    afterward, for the same reason :func:`greedy_policy` does -- this
+    measures the *settled* behaviour, not a mix of exploration and
+    exploitation, and it must not pollute any agent's replay buffer with
+    these measurement episodes. Baseline agents with no ``epsilon`` (the
+    oracle, or a genuinely random policy that never looks at its input at
+    all) are left exactly as they are -- there's no "settled" state to force
+    for them, which is itself the point: a random baseline's table will
+    stay close to a flat 25% in every cell no matter how long you sample it,
+    because there was never a rule to settle into.
+
+    Returns ``{(signaller_id, guesser_id): {(signal, guess): fraction}}``,
+    each inner dict's four fractions summing to 1.0.
+    """
+    edges = env.graph.edges
+    tallies: Dict[Edge, Dict[Tuple[int, int], int]] = {
+        edge: {(a, r): 0 for a in (0, 1) for r in (0, 1)} for edge in edges
+    }
+
+    all_agents = list(signaller_agents.values()) + list(guesser_agents.values())
+    saved = [(getattr(a, "epsilon", None), getattr(a, "recording", None)) for a in all_agents]
+    for a in all_agents:
+        if hasattr(a, "epsilon"):
+            a.epsilon = 0.0
+        if hasattr(a, "recording"):
+            a.recording = False
+    try:
+        for _ in range(num_episodes):
+            record = env.run_episode(signaller_agents, guesser_agents)
+            for s, g in edges:
+                tallies[(s, g)][(record.signals[s], record.guesses[g])] += 1
+    finally:
+        for a, (epsilon, recording) in zip(all_agents, saved):
+            if epsilon is not None:
+                a.epsilon = epsilon
+            if recording is not None:
+                a.recording = recording
+
+    return {
+        edge: {key: count / num_episodes for key, count in tally.items()}
+        for edge, tally in tallies.items()
+    }
+
+
+def edge_action_response_frequencies(
+    env,
+    signaller_id: int,
+    guesser_id: int,
+    signaller_agents: Dict[int, object],
+    guesser_agents: Dict[int, object],
+    num_episodes: int = 1000,
+) -> Dict[Tuple[int, int], float]:
+    """Like :func:`all_edges_action_response_frequencies`, for a single
+    (``signaller_id``, ``guesser_id``) edge only."""
+    return all_edges_action_response_frequencies(
+        env, signaller_agents, guesser_agents, num_episodes
+    )[(signaller_id, guesser_id)]
+
+
+class ActionResponseTally:
+    """Accumulates (signaller's signal, guesser's guess) counts per edge,
+    one episode at a time.
+
+    Where :func:`all_edges_action_response_frequencies` runs its own
+    dedicated batch of episodes with exploration forced *off* (measuring the
+    settled greedy policy), this is fed :class:`EpisodeRecord`\\ s from
+    *outside* -- e.g. from a trainer's ``on_episode`` hook, one per training
+    episode, with exploration still on and epsilon at whatever the schedule
+    currently says. That's the difference between "what did the converged
+    agent do" and "what did the agent do *while it was still learning*" --
+    and the latter is what makes a like-for-like comparison against a
+    (also-stochastic) random baseline meaningful.
+
+    :meth:`frequencies` returns the same ``{edge: {(signal, guess):
+    fraction}}`` shape the batch function does, ready to hand straight to
+    :func:`gsg.visualization.render_action_response_matrix`.
+    """
+
+    def __init__(self, graph: SignallingGraph) -> None:
+        self._edges: List[Edge] = list(graph.edges)
+        self._counts: Dict[Edge, Dict[Tuple[int, int], int]] = {
+            edge: {(a, r): 0 for a in (0, 1) for r in (0, 1)} for edge in self._edges
+        }
+        self._total = 0
+
+    def add(self, record) -> None:
+        """Fold one played episode's record into the running tally."""
+        for s, g in self._edges:
+            self._counts[(s, g)][(record.signals[s], record.guesses[g])] += 1
+        self._total += 1
+
+    @property
+    def num_episodes(self) -> int:
+        return self._total
+
+    def frequencies(self) -> Dict[Edge, Dict[Tuple[int, int], float]]:
+        if self._total == 0:
+            raise ValueError("frequencies() called before any episodes were add()ed")
+        return {
+            edge: {key: count / self._total for key, count in counts.items()}
+            for edge, counts in self._counts.items()
+        }

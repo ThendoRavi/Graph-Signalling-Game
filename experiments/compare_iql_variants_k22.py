@@ -48,15 +48,13 @@ from gsg.evaluation.metrics import evaluate
 from gsg.training.trainer import train_independent_iql, train_shared_iql, train_two_brain_iql
 
 NUM_SEEDS = 30
-# SEED_START lets a rerun use a genuinely fresh, independent batch of seeds
-# rather than replaying the same ones. Note this matters: every seed here
-# deterministically controls both torch's weight initialisation and the
-# environment's episode sampling (see train_shared_iql()'s
-# `torch.manual_seed(seed)` and GraphSignallingParallelEnv's `seed=seed`),
-# so rerunning with the *same* seed range would reproduce bit-identical
-# results -- that verifies the code is reproducible, not that a result
-# holds up. A different seed range is what actually tests robustness.
-SEED_START = 30
+# SEED_START offsets the whole batch. Since the reproducibility fix
+# (trainer.py now seeds Python's `random` alongside torch and the env), a
+# given seed maps to a single, stable outcome -- so rerunning the *same*
+# range reproduces the exact same numbers (the canonical result for that
+# range), and a *different* range is an independent robustness check.
+# SEED_START = 0 is the primary batch; the earlier verification run used 30.
+SEED_START = 0
 NUM_EPISODES = 4000
 EPSILON_DECAY_EPISODES = 2500
 EVAL_EPISODES = 1000
