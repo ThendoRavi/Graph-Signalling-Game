@@ -18,7 +18,9 @@
 #
 # Works both under SLURM (`sbatch train.sh`) and as a plain script
 # (`bash train.sh`) on any SSH box -- the #SBATCH lines above are just
-# comments when run without SLURM.
+# comments when run without SLURM. Submit it FROM the repo root
+# (`cd <repo> && sbatch train.sh`); under SLURM that submit dir is how the
+# repo is located (the script itself runs from a read-only spool copy).
 #
 # Outputs:
 #   results/question1/figures/action_response_K{m}x{m}_{variant}.png
@@ -27,9 +29,25 @@
 
 set -euo pipefail
 
-# --- locate the repo root (dir containing this script) --------------------
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# --- locate the repo root ------------------------------------------------
+# Under SLURM the script is run from a read-only spool copy, so
+# ${BASH_SOURCE[0]} / $0 points there, not at the repo. SLURM_SUBMIT_DIR is
+# the directory `sbatch` was called from -- submit this script from the repo
+# root (as with the previous train.py setup) and that's the repo root.
+# Outside SLURM, fall back to the directory this script lives in.
+if [ -n "${SLURM_SUBMIT_DIR:-}" ]; then
+    REPO_ROOT="$SLURM_SUBMIT_DIR"
+else
+    REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
 cd "$REPO_ROOT"
+
+if [ ! -f experiments/action_response_matrix_sweep.py ]; then
+    echo "ERROR: $REPO_ROOT is not the repo root" >&2
+    echo "       (no experiments/action_response_matrix_sweep.py found there)." >&2
+    echo "       Submit train.sh from the repository root:  cd <repo> && sbatch train.sh" >&2
+    exit 1
+fi
 
 mkdir -p results/question1/figures results/question1/logs
 
