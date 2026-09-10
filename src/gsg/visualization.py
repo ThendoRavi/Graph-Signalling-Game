@@ -343,14 +343,21 @@ def render_action_response_matrix(
     Unlike :func:`render_policy_heatmap` (a category per cell: which action
     a fixed rule *would* take for a given input), this is a genuine
     continuous heatmap: each cell's colour and annotated percentage is how
-    much of the real, sampled probability mass landed there. Rows are the
-    signaller's action (Light OFF / Light ON), columns are the guesser's
-    response (guessed CAT / guessed DOG). A pair that has converged on a
-    working, information-carrying convention concentrates most of its mass
-    into a diagonal-like pattern of one or two cells; a pair with no real
-    correlation between action and response -- a random policy, or an edge
-    that's structurally present but not actually load-bearing in a
-    converged run -- spreads close to an even 25% across all four.
+    much of the real, sampled probability mass landed there. Within each
+    edge's little 2x2 panel, rows are the signaller's action (Light OFF /
+    Light ON) and columns are the guesser's response (guessed CAT / guessed
+    DOG). A pair that has converged on a working, information-carrying
+    convention concentrates most of its mass into a diagonal-like pattern of
+    one or two cells; a pair with no real correlation between action and
+    response -- a random policy, or an edge that's structurally present but
+    not actually load-bearing in a converged run -- spreads close to an even
+    25% across all four.
+
+    The panels are laid out as a **signaller (row) x guesser (column)
+    grid**, one panel per edge, so a complete bipartite graph K_{m,m} reads
+    as a clean m x m block and a large graph (K_{6,6} = 36 edges) stays
+    legible instead of becoming an unreadable single strip. Any (signaller,
+    guesser) pair with no edge in the graph is left blank.
 
     Requires matplotlib; raises ``ImportError`` with guidance if unavailable.
     """
@@ -363,21 +370,36 @@ def render_action_response_matrix(
         ) from exc
 
     edges = sorted(frequencies.keys())
-    # Extra width reserved for a dedicated colorbar axis added manually below --
-    # mixing tight_layout() with fig.colorbar(ax=<list of axes>) fights over the
-    # same space and clips the rightmost panel, so layout is handled by hand
-    # instead (subplots_adjust + a fixed-position colorbar axis).
-    fig, axes = plt.subplots(1, len(edges), figsize=(2.8 * len(edges) + 0.7, 3.4))
-    if len(edges) == 1:
-        axes = [axes]
+    signaller_ids = sorted({s for s, _ in edges})
+    guesser_ids = sorted({g for _, g in edges})
+    row_of = {s: i for i, s in enumerate(signaller_ids)}
+    col_of = {g: j for j, g in enumerate(guesser_ids)}
+    n_rows, n_cols = len(signaller_ids), len(guesser_ids)
 
-    action_labels = ["Light OFF", "Light ON"]         # row 0, row 1
-    response_labels = ["Guessed CAT", "Guessed DOG"]  # col 0, col 1
+    action_labels = ["Light OFF", "Light ON"]         # panel row 0, row 1
+    response_labels = ["Guess CAT", "Guess DOG"]      # panel col 0, col 1
+
+    # Manual layout (subplots_adjust + a fixed-position colorbar axis) rather
+    # than tight_layout(): mixing tight_layout() with fig.colorbar(ax=<list
+    # of axes>) makes the two fight over the same space and clips the
+    # rightmost panel.
+    fig, axes = plt.subplots(
+        n_rows, n_cols,
+        figsize=(2.7 * n_cols + 1.0, 2.7 * n_rows + 0.6),
+        squeeze=False,
+    )
+
+    # Blank everything first; only cells that correspond to a real edge get
+    # drawn back in below.
+    for r in range(n_rows):
+        for c in range(n_cols):
+            axes[r][c].axis("off")
 
     im = None
-    for ax, edge in zip(axes, edges):
-        s, g = edge
-        freq = frequencies[edge]
+    for s, g in edges:
+        ax = axes[row_of[s]][col_of[g]]
+        ax.axis("on")
+        freq = frequencies[(s, g)]
         grid = [[freq[(a, r)] * 100 for r in (0, 1)] for a in (0, 1)]
 
         im = ax.imshow(grid, cmap="Blues", vmin=0, vmax=100, aspect="equal")
@@ -385,19 +407,20 @@ def render_action_response_matrix(
             for r in (0, 1):
                 pct = grid[a][r]
                 text_color = "white" if pct > 55 else "black"
-                ax.text(r, a, f"{pct:.1f}%", ha="center", va="center",
-                        fontsize=9, fontweight="bold", color=text_color)
+                ax.text(r, a, f"{pct:.0f}%", ha="center", va="center",
+                        fontsize=8, fontweight="bold", color=text_color)
 
         ax.set_xticks([0, 1])
-        ax.set_xticklabels(response_labels, fontsize=7)
+        ax.set_xticklabels(response_labels, fontsize=6)
         ax.set_yticks([0, 1])
-        ax.set_yticklabels(action_labels, fontsize=7)
-        ax.set_title(f"S{s} -> G{g}", fontsize=10)
+        ax.set_yticklabels(action_labels, fontsize=6)
+        ax.set_title(f"S{s} -> G{g}", fontsize=9)
 
     if title:
-        fig.suptitle(title, fontsize=11)
+        fig.suptitle(title, fontsize=12)
 
-    fig.subplots_adjust(left=0.08, right=0.88, top=0.80, bottom=0.15, wspace=0.5)
+    fig.subplots_adjust(left=0.09, right=0.87, top=0.88, bottom=0.08,
+                        wspace=0.55, hspace=0.55)
     if im is not None:
         cbar_ax = fig.add_axes((0.90, 0.25, 0.02, 0.5))
         fig.colorbar(im, cax=cbar_ax, label="% of sampled episodes")
