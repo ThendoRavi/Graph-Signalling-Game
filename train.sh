@@ -12,9 +12,13 @@
 #
 # Runs experiments/action_response_matrix_sweep.py, which for each graph
 # K_{3,3}, K_{4,4}, K_{5,5}, K_{6,6} trains all three IQL variants
-# (shared-brain, two-brain, independent) plus the random baseline, then
-# saves one action-response matrix figure per (graph, variant) and prints a
-# full text summary.
+# (shared-brain, two-brain, independent) plus the random baseline, and
+# builds each variant's action-response matrix LIVE from the training
+# episodes themselves -- exploration on, epsilon decaying naturally, not a
+# frozen post-training greedy snapshot -- with random played for the same
+# number of episodes so every variant sits on the same episode axis. Saves
+# one action-response figure per (graph, variant) and prints a full text
+# summary.
 #
 # Works both under SLURM (`sbatch train.sh`) and as a plain script
 # (`bash train.sh`) on any SSH box -- the #SBATCH lines above are just
@@ -23,7 +27,8 @@
 # repo is located (the script itself runs from a read-only spool copy).
 #
 # Outputs:
-#   results/question1/figures/action_response_K{m}x{m}_{variant}.png
+#   results/question1/figures/k{m}x{m}/action_response_{variant}.png
+#   results/question1/figures/k{m}x{m}/graph_topology.png
 #   results/question1/logs/action_response_sweep_<timestamp>.log   (tee'd stdout)
 #   gsg_arm_sweep_<jobid>.log  (SLURM only, in the submit dir)
 
