@@ -1,0 +1,478 @@
+Started at:   Tue Sep 15 12:52:22 PM UTC 2026
+Repo root:    /home-mscluster/travhengani/Graph-Signalling-Game
+Python:       Python 3.13.5 (/home-mscluster/travhengani/miniconda3/bin/python3)
+Run log:      results/question1/logs/action_response_sweep_20260915_125222.log
+LETS COOOK IT UPPP
+
+========================================================================
+Action-response matrix sweep: graph sizes x IQL variants (LIVE)
+graphs      : K3x3, K4x4, K5x5, K6x6
+variants    : random, shared, two_brain, independent
+measurement : tallied from every episode of the training run itself
+              (exploration ON, epsilon decaying naturally); random
+              is played for the same number of episodes for a fair
+              apples-to-apples comparison
+train seed  : 0
+========================================================================
+
+########################################################################
+# K3x3  (3 signallers, 3 guessers, 9 edges)
+#   training schedule: 5000 episodes, epsilon decay over 3200
+#   output directory: /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k3x3
+########################################################################
+  topology saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k3x3/graph_topology.png
+
+  --- K3x3 / random ---
+      5000 live episodes tallied (exploration on) in    0.2s
+      team reward: 0.5063  [at floor (no convention)]
+      S0->G0: peak ON /CAT =  25.5%
+      S0->G1: peak OFF/CAT =  25.7%
+      S0->G2: peak ON /DOG =  25.6%
+      S1->G0: peak OFF/CAT =  26.0%
+      S1->G1: peak OFF/CAT =  26.3%
+      S1->G2: peak OFF/CAT =  25.9%
+      S2->G0: peak OFF/DOG =  25.8%
+      S2->G1: peak ON /CAT =  26.0%
+      S2->G2: peak OFF/CAT =  25.4%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k3x3/action_response_random.png
+
+  --- K3x3 / shared ---
+      5000 live episodes tallied (exploration on) in   24.8s
+      settled greedy team reward: 0.8312  [exploiting joint channel]
+      S0->G0: peak ON /CAT =  32.2%
+      S0->G1: peak ON /CAT =  34.0%
+      S0->G2: peak ON /CAT =  37.7%
+      S1->G0: peak ON /CAT =  34.2%
+      S1->G1: peak ON /CAT =  34.4%
+      S1->G2: peak OFF/DOG =  38.7%
+      S2->G0: peak ON /CAT =  33.8%
+      S2->G1: peak ON /CAT =  33.3%
+      S2->G2: peak ON /CAT =  39.5%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k3x3/action_response_shared.png
+
+  --- K3x3 / two_brain ---
+      5000 live episodes tallied (exploration on) in   12.6s
+      settled greedy team reward: 0.9178  [exploiting joint channel]
+      S0->G0: peak ON /CAT =  32.7%
+      S0->G1: peak ON /DOG =  47.6%
+      S0->G2: peak ON /DOG =  35.7%
+      S1->G0: peak ON /DOG =  29.5%
+      S1->G1: peak ON /CAT =  30.7%
+      S1->G2: peak ON /CAT =  42.5%
+      S2->G0: peak OFF/CAT =  40.7%
+      S2->G1: peak OFF/DOG =  29.1%
+      S2->G2: peak ON /CAT =  29.9%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k3x3/action_response_two_brain.png
+
+  --- K3x3 / independent ---
+      5000 live episodes tallied (exploration on) in   32.3s
+      settled greedy team reward: 0.8775  [exploiting joint channel]
+      S0->G0: peak ON /DOG =  32.8%
+      S0->G1: peak ON /CAT =  32.2%
+      S0->G2: peak ON /CAT =  39.6%
+      S1->G0: peak OFF/DOG =  31.5%
+      S1->G1: peak OFF/CAT =  26.6%
+      S1->G2: peak ON /CAT =  39.0%
+      S2->G0: peak ON /DOG =  30.8%
+      S2->G1: peak ON /DOG =  39.5%
+      S2->G2: peak ON /DOG =  31.9%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k3x3/action_response_independent.png
+
+########################################################################
+# K4x4  (4 signallers, 4 guessers, 16 edges)
+#   training schedule: 7000 episodes, epsilon decay over 4500
+#   output directory: /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k4x4
+########################################################################
+  topology saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k4x4/graph_topology.png
+
+  --- K4x4 / random ---
+      7000 live episodes tallied (exploration on) in    0.5s
+      team reward: 0.4933  [at floor (no convention)]
+      S0->G0: peak ON /CAT =  25.8%
+      S0->G1: peak ON /CAT =  25.7%
+      S0->G2: peak ON /DOG =  25.6%
+      S0->G3: peak ON /CAT =  26.0%
+      S1->G0: peak OFF/CAT =  26.0%
+      S1->G1: peak OFF/CAT =  26.2%
+      S1->G2: peak OFF/CAT =  26.0%
+      S1->G3: peak OFF/CAT =  26.3%
+      S2->G0: peak ON /CAT =  26.0%
+      S2->G1: peak ON /CAT =  25.8%
+      S2->G2: peak OFF/CAT =  25.2%
+      S2->G3: peak ON /CAT =  25.6%
+      S3->G0: peak OFF/DOG =  25.3%
+      S3->G1: peak OFF/CAT =  25.5%
+      S3->G2: peak OFF/CAT =  25.3%
+      S3->G3: peak OFF/CAT =  26.1%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k4x4/action_response_random.png
+
+  --- K4x4 / shared ---
+      7000 live episodes tallied (exploration on) in   12.4s
+      settled greedy team reward: 0.7802  [single-bit ceiling]
+      S0->G0: peak OFF/DOG =  34.1%
+      S0->G1: peak OFF/DOG =  34.8%
+      S0->G2: peak ON /CAT =  34.8%
+      S0->G3: peak OFF/DOG =  38.8%
+      S1->G0: peak ON /CAT =  29.0%
+      S1->G1: peak ON /CAT =  30.0%
+      S1->G2: peak OFF/CAT =  34.1%
+      S1->G3: peak ON /CAT =  36.5%
+      S2->G0: peak OFF/DOG =  39.0%
+      S2->G1: peak OFF/DOG =  38.4%
+      S2->G2: peak ON /CAT =  36.6%
+      S2->G3: peak OFF/DOG =  34.4%
+      S3->G0: peak OFF/DOG =  37.7%
+      S3->G1: peak ON /CAT =  37.5%
+      S3->G2: peak ON /CAT =  38.4%
+      S3->G3: peak OFF/DOG =  34.8%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k4x4/action_response_shared.png
+
+  --- K4x4 / two_brain ---
+      7000 live episodes tallied (exploration on) in   18.9s
+      settled greedy team reward: 0.8922  [exploiting joint channel]
+      S0->G0: peak ON /DOG =  35.9%
+      S0->G1: peak OFF/CAT =  37.5%
+      S0->G2: peak OFF/DOG =  31.1%
+      S0->G3: peak OFF/DOG =  28.4%
+      S1->G0: peak ON /DOG =  40.1%
+      S1->G1: peak OFF/CAT =  34.3%
+      S1->G2: peak ON /DOG =  26.7%
+      S1->G3: peak ON /DOG =  27.4%
+      S2->G0: peak OFF/DOG =  34.8%
+      S2->G1: peak OFF/CAT =  34.3%
+      S2->G2: peak OFF/DOG =  38.2%
+      S2->G3: peak OFF/DOG =  31.9%
+      S3->G0: peak OFF/DOG =  27.1%
+      S3->G1: peak ON /CAT =  39.8%
+      S3->G2: peak OFF/DOG =  32.5%
+      S3->G3: peak OFF/CAT =  33.7%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k4x4/action_response_two_brain.png
+
+  --- K4x4 / independent ---
+      7000 live episodes tallied (exploration on) in   61.2s
+      settled greedy team reward: 0.8624  [exploiting joint channel]
+      S0->G0: peak OFF/CAT =  32.7%
+      S0->G1: peak ON /CAT =  29.0%
+      S0->G2: peak OFF/DOG =  35.7%
+      S0->G3: peak OFF/DOG =  30.7%
+      S1->G0: peak ON /DOG =  30.0%
+      S1->G1: peak ON /CAT =  43.4%
+      S1->G2: peak ON /CAT =  37.7%
+      S1->G3: peak ON /DOG =  29.7%
+      S2->G0: peak ON /CAT =  35.7%
+      S2->G1: peak OFF/CAT =  32.4%
+      S2->G2: peak ON /DOG =  37.8%
+      S2->G3: peak ON /CAT =  31.3%
+      S3->G0: peak OFF/DOG =  29.6%
+      S3->G1: peak OFF/CAT =  32.5%
+      S3->G2: peak OFF/DOG =  28.9%
+      S3->G3: peak ON /CAT =  37.2%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k4x4/action_response_independent.png
+
+########################################################################
+# K5x5  (5 signallers, 5 guessers, 25 edges)
+#   training schedule: 9000 episodes, epsilon decay over 6000
+#   output directory: /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k5x5
+########################################################################
+  topology saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k5x5/graph_topology.png
+
+  --- K5x5 / random ---
+      9000 live episodes tallied (exploration on) in    0.8s
+      team reward: 0.5017  [at floor (no convention)]
+      S0->G0: peak ON /CAT =  25.4%
+      S0->G1: peak ON /DOG =  25.4%
+      S0->G2: peak OFF/CAT =  25.3%
+      S0->G3: peak ON /CAT =  25.7%
+      S0->G4: peak ON /CAT =  25.7%
+      S1->G0: peak OFF/CAT =  25.8%
+      S1->G1: peak OFF/CAT =  26.0%
+      S1->G2: peak OFF/CAT =  25.9%
+      S1->G3: peak OFF/CAT =  26.1%
+      S1->G4: peak OFF/CAT =  25.5%
+      S2->G0: peak ON /CAT =  25.8%
+      S2->G1: peak ON /CAT =  25.4%
+      S2->G2: peak ON /CAT =  25.5%
+      S2->G3: peak ON /CAT =  25.9%
+      S2->G4: peak OFF/CAT =  25.2%
+      S3->G0: peak ON /CAT =  25.2%
+      S3->G1: peak ON /CAT =  25.3%
+      S3->G2: peak ON /CAT =  25.6%
+      S3->G3: peak ON /CAT =  25.6%
+      S3->G4: peak OFF/CAT =  25.5%
+      S4->G0: peak OFF/DOG =  26.1%
+      S4->G1: peak OFF/DOG =  25.9%
+      S4->G2: peak OFF/CAT =  25.8%
+      S4->G3: peak OFF/CAT =  26.1%
+      S4->G4: peak OFF/CAT =  26.2%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k5x5/action_response_random.png
+
+  --- K5x5 / shared ---
+      9000 live episodes tallied (exploration on) in   17.7s
+      settled greedy team reward: 0.7585  [single-bit ceiling]
+      S0->G0: peak OFF/CAT =  30.7%
+      S0->G1: peak ON /CAT =  39.6%
+      S0->G2: peak ON /CAT =  36.8%
+      S0->G3: peak ON /CAT =  36.4%
+      S0->G4: peak ON /CAT =  36.5%
+      S1->G0: peak OFF/CAT =  27.4%
+      S1->G1: peak ON /CAT =  37.5%
+      S1->G2: peak ON /CAT =  39.3%
+      S1->G3: peak ON /CAT =  37.2%
+      S1->G4: peak ON /CAT =  38.8%
+      S2->G0: peak OFF/DOG =  30.0%
+      S2->G1: peak OFF/CAT =  33.4%
+      S2->G2: peak OFF/DOG =  33.7%
+      S2->G3: peak OFF/DOG =  34.1%
+      S2->G4: peak OFF/DOG =  34.6%
+      S3->G0: peak OFF/CAT =  44.6%
+      S3->G1: peak ON /CAT =  30.3%
+      S3->G2: peak OFF/DOG =  29.8%
+      S3->G3: peak OFF/DOG =  33.1%
+      S3->G4: peak OFF/CAT =  29.7%
+      S4->G0: peak OFF/CAT =  35.7%
+      S4->G1: peak ON /CAT =  32.5%
+      S4->G2: peak ON /CAT =  35.8%
+      S4->G3: peak OFF/DOG =  37.5%
+      S4->G4: peak OFF/DOG =  32.5%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k5x5/action_response_shared.png
+
+  --- K5x5 / two_brain ---
+      9000 live episodes tallied (exploration on) in   25.6s
+      settled greedy team reward: 0.8395  [exploiting joint channel]
+      S0->G0: peak ON /DOG =  29.8%
+      S0->G1: peak ON /DOG =  32.5%
+      S0->G2: peak ON /CAT =  32.0%
+      S0->G3: peak ON /CAT =  29.8%
+      S0->G4: peak OFF/CAT =  30.7%
+      S1->G0: peak ON /DOG =  26.7%
+      S1->G1: peak OFF/DOG =  30.2%
+      S1->G2: peak ON /CAT =  40.0%
+      S1->G3: peak ON /DOG =  25.3%
+      S1->G4: peak ON /CAT =  30.3%
+      S2->G0: peak OFF/DOG =  29.8%
+      S2->G1: peak OFF/DOG =  34.5%
+      S2->G2: peak OFF/CAT =  31.1%
+      S2->G3: peak OFF/CAT =  32.7%
+      S2->G4: peak ON /CAT =  29.5%
+      S3->G0: peak ON /CAT =  38.7%
+      S3->G1: peak OFF/DOG =  32.1%
+      S3->G2: peak ON /CAT =  30.0%
+      S3->G3: peak ON /CAT =  33.6%
+      S3->G4: peak OFF/CAT =  34.9%
+      S4->G0: peak OFF/CAT =  29.8%
+      S4->G1: peak OFF/CAT =  29.3%
+      S4->G2: peak OFF/DOG =  29.9%
+      S4->G3: peak OFF/DOG =  29.5%
+      S4->G4: peak OFF/CAT =  33.7%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k5x5/action_response_two_brain.png
+
+  --- K5x5 / independent ---
+      9000 live episodes tallied (exploration on) in   99.8s
+      settled greedy team reward: 0.8532  [exploiting joint channel]
+      S0->G0: peak OFF/DOG =  33.6%
+      S0->G1: peak OFF/DOG =  33.1%
+      S0->G2: peak OFF/CAT =  30.8%
+      S0->G3: peak OFF/DOG =  36.0%
+      S0->G4: peak OFF/DOG =  33.1%
+      S1->G0: peak OFF/DOG =  40.2%
+      S1->G1: peak ON /CAT =  27.4%
+      S1->G2: peak OFF/DOG =  32.9%
+      S1->G3: peak OFF/DOG =  31.6%
+      S1->G4: peak ON /DOG =  32.0%
+      S2->G0: peak OFF/DOG =  31.1%
+      S2->G1: peak ON /CAT =  26.3%
+      S2->G2: peak OFF/DOG =  29.3%
+      S2->G3: peak OFF/DOG =  32.1%
+      S2->G4: peak ON /DOG =  27.3%
+      S3->G0: peak ON /DOG =  30.4%
+      S3->G1: peak ON /CAT =  28.9%
+      S3->G2: peak OFF/DOG =  29.6%
+      S3->G3: peak OFF/DOG =  31.3%
+      S3->G4: peak ON /CAT =  30.6%
+      S4->G0: peak OFF/DOG =  31.4%
+      S4->G1: peak OFF/CAT =  37.0%
+      S4->G2: peak OFF/DOG =  29.2%
+      S4->G3: peak OFF/DOG =  29.2%
+      S4->G4: peak OFF/DOG =  39.0%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k5x5/action_response_independent.png
+
+########################################################################
+# K6x6  (6 signallers, 6 guessers, 36 edges)
+#   training schedule: 12000 episodes, epsilon decay over 8000
+#   output directory: /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k6x6
+########################################################################
+  topology saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k6x6/graph_topology.png
+
+  --- K6x6 / random ---
+      12000 live episodes tallied (exploration on) in    1.3s
+      team reward: 0.4955  [at floor (no convention)]
+      S0->G0: peak ON /DOG =  25.3%
+      S0->G1: peak ON /DOG =  25.3%
+      S0->G2: peak ON /DOG =  25.4%
+      S0->G3: peak ON /CAT =  25.6%
+      S0->G4: peak ON /CAT =  25.6%
+      S0->G5: peak ON /DOG =  25.5%
+      S1->G0: peak OFF/CAT =  25.3%
+      S1->G1: peak OFF/CAT =  25.7%
+      S1->G2: peak OFF/CAT =  25.5%
+      S1->G3: peak OFF/CAT =  25.8%
+      S1->G4: peak OFF/CAT =  25.4%
+      S1->G5: peak OFF/DOG =  25.8%
+      S2->G0: peak ON /CAT =  25.5%
+      S2->G1: peak ON /CAT =  25.4%
+      S2->G2: peak ON /CAT =  25.3%
+      S2->G3: peak ON /CAT =  25.8%
+      S2->G4: peak ON /DOG =  25.3%
+      S2->G5: peak ON /CAT =  25.4%
+      S3->G0: peak ON /DOG =  25.3%
+      S3->G1: peak ON /CAT =  25.4%
+      S3->G2: peak ON /CAT =  25.4%
+      S3->G3: peak ON /CAT =  25.6%
+      S3->G4: peak ON /DOG =  25.3%
+      S3->G5: peak ON /DOG =  25.6%
+      S4->G0: peak OFF/DOG =  25.8%
+      S4->G1: peak OFF/DOG =  25.7%
+      S4->G2: peak OFF/CAT =  25.6%
+      S4->G3: peak OFF/CAT =  25.8%
+      S4->G4: peak OFF/CAT =  25.7%
+      S4->G5: peak OFF/DOG =  25.5%
+      S5->G0: peak ON /DOG =  25.7%
+      S5->G1: peak ON /DOG =  25.5%
+      S5->G2: peak ON /CAT =  25.4%
+      S5->G3: peak ON /CAT =  25.8%
+      S5->G4: peak ON /CAT =  25.2%
+      S5->G5: peak ON /CAT =  25.5%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k6x6/action_response_random.png
+
+  --- K6x6 / shared ---
+      12000 live episodes tallied (exploration on) in   25.4s
+      settled greedy team reward: 0.8458  [exploiting joint channel]
+      S0->G0: peak ON /CAT =  29.8%
+      S0->G1: peak ON /DOG =  28.3%
+      S0->G2: peak ON /CAT =  26.3%
+      S0->G3: peak ON /DOG =  29.6%
+      S0->G4: peak ON /DOG =  26.3%
+      S0->G5: peak ON /DOG =  34.6%
+      S1->G0: peak ON /DOG =  30.8%
+      S1->G1: peak ON /CAT =  34.5%
+      S1->G2: peak ON /DOG =  33.4%
+      S1->G3: peak ON /DOG =  34.5%
+      S1->G4: peak ON /DOG =  33.6%
+      S1->G5: peak ON /DOG =  36.6%
+      S2->G0: peak OFF/DOG =  27.7%
+      S2->G1: peak ON /DOG =  28.0%
+      S2->G2: peak OFF/CAT =  33.4%
+      S2->G3: peak OFF/CAT =  32.6%
+      S2->G4: peak OFF/CAT =  27.3%
+      S2->G5: peak OFF/CAT =  28.0%
+      S3->G0: peak OFF/CAT =  29.8%
+      S3->G1: peak ON /DOG =  29.4%
+      S3->G2: peak OFF/CAT =  31.6%
+      S3->G3: peak OFF/CAT =  35.5%
+      S3->G4: peak OFF/CAT =  33.9%
+      S3->G5: peak OFF/CAT =  29.5%
+      S4->G0: peak ON /CAT =  29.4%
+      S4->G1: peak OFF/DOG =  28.1%
+      S4->G2: peak ON /DOG =  27.2%
+      S4->G3: peak ON /DOG =  28.4%
+      S4->G4: peak ON /DOG =  28.2%
+      S4->G5: peak ON /DOG =  37.9%
+      S5->G0: peak OFF/CAT =  37.8%
+      S5->G1: peak OFF/CAT =  31.6%
+      S5->G2: peak OFF/CAT =  33.3%
+      S5->G3: peak OFF/CAT =  29.5%
+      S5->G4: peak OFF/CAT =  36.9%
+      S5->G5: peak OFF/CAT =  29.2%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k6x6/action_response_shared.png
+
+  --- K6x6 / two_brain ---
+      12000 live episodes tallied (exploration on) in   36.1s
+      settled greedy team reward: 0.8110  [exploiting joint channel]
+      S0->G0: peak ON /DOG =  30.0%
+      S0->G1: peak ON /DOG =  35.4%
+      S0->G2: peak OFF/CAT =  35.4%
+      S0->G3: peak ON /DOG =  32.7%
+      S0->G4: peak ON /DOG =  29.5%
+      S0->G5: peak ON /DOG =  30.6%
+      S1->G0: peak OFF/DOG =  36.0%
+      S1->G1: peak OFF/CAT =  28.0%
+      S1->G2: peak OFF/CAT =  30.2%
+      S1->G3: peak OFF/CAT =  27.2%
+      S1->G4: peak OFF/DOG =  29.4%
+      S1->G5: peak OFF/CAT =  30.8%
+      S2->G0: peak OFF/DOG =  29.6%
+      S2->G1: peak ON /CAT =  27.1%
+      S2->G2: peak ON /CAT =  30.1%
+      S2->G3: peak ON /DOG =  35.3%
+      S2->G4: peak ON /DOG =  34.3%
+      S2->G5: peak ON /DOG =  28.0%
+      S3->G0: peak OFF/DOG =  35.7%
+      S3->G1: peak ON /DOG =  25.9%
+      S3->G2: peak ON /CAT =  27.5%
+      S3->G3: peak OFF/DOG =  27.7%
+      S3->G4: peak ON /DOG =  28.7%
+      S3->G5: peak ON /DOG =  34.1%
+      S4->G0: peak OFF/DOG =  35.6%
+      S4->G1: peak OFF/DOG =  28.5%
+      S4->G2: peak OFF/DOG =  30.1%
+      S4->G3: peak OFF/CAT =  32.1%
+      S4->G4: peak OFF/CAT =  33.2%
+      S4->G5: peak OFF/DOG =  28.7%
+      S5->G0: peak OFF/DOG =  31.1%
+      S5->G1: peak ON /DOG =  33.1%
+      S5->G2: peak OFF/CAT =  27.4%
+      S5->G3: peak ON /DOG =  30.5%
+      S5->G4: peak ON /DOG =  26.8%
+      S5->G5: peak ON /DOG =  37.3%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k6x6/action_response_two_brain.png
+
+  --- K6x6 / independent ---
+      12000 live episodes tallied (exploration on) in  160.1s
+      settled greedy team reward: 0.8332  [exploiting joint channel]
+      S0->G0: peak OFF/CAT =  26.6%
+      S0->G1: peak ON /CAT =  32.8%
+      S0->G2: peak OFF/CAT =  30.9%
+      S0->G3: peak OFF/CAT =  27.7%
+      S0->G4: peak OFF/CAT =  28.1%
+      S0->G5: peak ON /CAT =  28.8%
+      S1->G0: peak ON /DOG =  26.0%
+      S1->G1: peak ON /CAT =  29.9%
+      S1->G2: peak OFF/CAT =  25.7%
+      S1->G3: peak OFF/CAT =  32.7%
+      S1->G4: peak ON /CAT =  27.7%
+      S1->G5: peak OFF/CAT =  31.1%
+      S2->G0: peak OFF/DOG =  28.6%
+      S2->G1: peak OFF/CAT =  30.1%
+      S2->G2: peak OFF/CAT =  28.4%
+      S2->G3: peak OFF/CAT =  30.9%
+      S2->G4: peak OFF/DOG =  31.1%
+      S2->G5: peak OFF/DOG =  29.3%
+      S3->G0: peak OFF/CAT =  25.7%
+      S3->G1: peak ON /CAT =  27.3%
+      S3->G2: peak OFF/CAT =  26.5%
+      S3->G3: peak ON /CAT =  32.2%
+      S3->G4: peak OFF/CAT =  29.4%
+      S3->G5: peak ON /CAT =  29.3%
+      S4->G0: peak ON /CAT =  32.3%
+      S4->G1: peak ON /CAT =  35.7%
+      S4->G2: peak ON /CAT =  28.4%
+      S4->G3: peak ON /CAT =  27.7%
+      S4->G4: peak ON /CAT =  29.4%
+      S4->G5: peak ON /DOG =  29.4%
+      S5->G0: peak ON /CAT =  27.8%
+      S5->G1: peak ON /CAT =  28.9%
+      S5->G2: peak ON /CAT =  31.5%
+      S5->G3: peak ON /CAT =  33.7%
+      S5->G4: peak ON /DOG =  30.0%
+      S5->G5: peak ON /CAT =  28.7%
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k6x6/action_response_independent.png
+
+========================================================================
+sweep complete: 4 graphs x 4 variants in 9.4 min
+figures in: /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/k{m}x{m}/
+========================================================================
+
+WEEEE DONEEEE
+Done at:      Tue Sep 15 01:02:44 PM UTC 2026
+Figures:      /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/
+Full log:     /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/logs/action_response_sweep_20260915_125222.log
