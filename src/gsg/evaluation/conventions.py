@@ -121,6 +121,35 @@ def canonical_id(policy: Dict[Observation, int], action_range: int, value_range:
     return total
 
 
+def joint_signaller_convention_id(
+    graph: SignallingGraph,
+    num_item_values: int,
+    signaller_agents: Dict[int, object],
+) -> Tuple[int, ...]:
+    """A single hashable id for the *whole population's* signaller-side
+    convention: one :func:`canonical_id` per signaller, in ``graph.signallers``
+    order.
+
+    Where :func:`canonical_id` answers "which of the 16 (or more, at higher
+    item counts) possible mappings did *this one* signaller find", this is
+    the generalisation to an entire population: two independently-trained
+    runs get the *same* joint id iff every signaller found the literal same
+    greedy mapping, not merely an equally-rewarding one. This is what makes
+    "how many distinct conventions did P runs land on, and how often does
+    each recur" (Section~4.6.3's O1.4 consistency question) a well-posed,
+    countable question rather than a matter of eyeballing reward numbers or
+    heatmaps one run at a time.
+    """
+    ids = []
+    for s in graph.signallers:
+        k = graph.out_degree(s)
+        policy = greedy_policy(signaller_agents[s], num_item_values, k)
+        ids.append(
+            canonical_id(policy, action_range=2, value_range=num_item_values, neighbourhood_size=k)
+        )
+    return tuple(ids)
+
+
 @dataclass
 class WorldOutcome:
     """One fully-enumerated possible episode, played through fixed (greedy)
