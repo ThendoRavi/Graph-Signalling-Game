@@ -20,3 +20,7 @@ results/**/*
 .DS_Store
 .idea/
 .vscode/
+
+# Thesis Paper (Overleaf project: LaTeX source, generated PDF, figures) --
+# not tracked in this code repo
+Thesis Paper/
