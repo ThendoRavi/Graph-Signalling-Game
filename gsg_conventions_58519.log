@@ -1,0 +1,362 @@
+Started at:   Wed Sep 23 01:33:00 PM UTC 2026
+Repo root:    /home-mscluster/travhengani/Graph-Signalling-Game
+Python:       Python 3.13.5 (/home-mscluster/travhengani/miniconda3/bin/python3)
+Run log:      results/question1/logs/convention_diversity_20260923_133300.log
+
+========================================================================
+PHASE 1: convention-quality + information-theoretic metrics
+30 seeds x 3 variants, K_2,2, 4000 training episodes each
+========================================================================
+
+########################################################################
+# shared
+########################################################################
+/home-mscluster/travhengani/miniconda3/lib/python3.13/site-packages/torch/autograd/graph.py:829: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:109.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+  seed  0  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (52.4s)
+  seed  1  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (5.6s)
+  seed  2  R=0.750  single-bit ceiling (0.750)           conv_id=(12, 0)  (5.5s)
+  seed  3  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (5.6s)
+  seed  4  R=0.875  exploiting joint channel (0.875)     conv_id=(13, 10)  (5.5s)
+  seed  5  R=0.750  single-bit ceiling (0.750)           conv_id=(1, 6)  (5.5s)
+  seed  6  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (5.5s)
+  seed  7  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (5.5s)
+  seed  8  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (5.5s)
+  seed  9  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (5.5s)
+  seed 10  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (5.6s)
+  seed 11  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (5.5s)
+  seed 12  R=0.875  exploiting joint channel (0.875)     conv_id=(8, 11)  (5.6s)
+  seed 13  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (5.5s)
+  seed 14  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (5.5s)
+  seed 15  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (5.5s)
+  seed 16  R=0.875  exploiting joint channel (0.875)     conv_id=(10, 14)  (5.5s)
+  seed 17  R=0.875  exploiting joint channel (0.875)     conv_id=(5, 1)  (5.5s)
+  seed 18  R=0.875  exploiting joint channel (0.875)     conv_id=(13, 1)  (5.6s)
+  seed 19  R=0.875  exploiting joint channel (0.875)     conv_id=(13, 7)  (5.5s)
+  seed 20  R=0.750  single-bit ceiling (0.750)           conv_id=(0, 3)  (5.6s)
+  seed 21  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (5.5s)
+  seed 22  R=0.875  exploiting joint channel (0.875)     conv_id=(3, 13)  (5.5s)
+  seed 23  R=0.875  exploiting joint channel (0.875)     conv_id=(3, 5)  (5.5s)
+  seed 24  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (5.5s)
+  seed 25  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (5.5s)
+  seed 26  R=0.875  exploiting joint channel (0.875)     conv_id=(7, 11)  (5.5s)
+  seed 27  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (5.6s)
+  seed 28  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (5.6s)
+  seed 29  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (5.7s)
+
+  --- shared: joint convention distribution (n=30) ---
+      (10, 12): 4/30 (13.3%)
+      (5, 3): 3/30 (10.0%)
+      (12, 5): 3/30 (10.0%)
+      (5, 12): 3/30 (10.0%)
+      (3, 10): 3/30 (10.0%)
+      (12, 10): 2/30 (6.7%)
+      (12, 0): 1/30 (3.3%)
+      (13, 10): 1/30 (3.3%)
+      (1, 6): 1/30 (3.3%)
+      (8, 11): 1/30 (3.3%)
+      (10, 14): 1/30 (3.3%)
+      (5, 1): 1/30 (3.3%)
+      (13, 1): 1/30 (3.3%)
+      (13, 7): 1/30 (3.3%)
+      (0, 3): 1/30 (3.3%)
+      (3, 13): 1/30 (3.3%)
+      (3, 5): 1/30 (3.3%)
+      (7, 11): 1/30 (3.3%)
+      distinct conventions found : 18
+      dominant convention        : (10, 12) (4/30 = 13.3%)
+      convention entropy H       : 3.940 bits (0 = always the same convention, higher = more spread)
+      complementarity rate       : 60.0% of seeds reached a perfect (complementary) convention
+
+  --- shared: information-theoretic metrics (mean over 30 seeds) ---
+      S0: channel utilisation H(M0)=0.929 bits | I(M0;x0)=0.429, I(M0;x1)=0.462
+      S1: channel utilisation H(M1)=0.923 bits | I(M1;x0)=0.439, I(M1;x1)=0.406
+      G0: entropy reduction I(o0;x0)=0.917 bits (out of 1.000 max)
+      G1: entropy reduction I(o1;x1)=0.850 bits (out of 1.000 max)
+
+########################################################################
+# two_brain
+########################################################################
+  seed  0  R=0.875  exploiting joint channel (0.875)     conv_id=(11, 1)  (9.1s)
+  seed  1  R=0.875  exploiting joint channel (0.875)     conv_id=(11, 10)  (9.1s)
+  seed  2  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (9.0s)
+  seed  3  R=0.875  exploiting joint channel (0.875)     conv_id=(8, 12)  (9.0s)
+  seed  4  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (9.0s)
+  seed  5  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (9.1s)
+  seed  6  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (9.2s)
+  seed  7  R=0.875  exploiting joint channel (0.875)     conv_id=(10, 2)  (9.1s)
+  seed  8  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (9.1s)
+  seed  9  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (9.1s)
+  seed 10  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (9.0s)
+  seed 11  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (9.1s)
+  seed 12  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.0s)
+  seed 13  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.1s)
+  seed 14  R=0.875  exploiting joint channel (0.875)     conv_id=(11, 3)  (9.0s)
+  seed 15  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.2s)
+  seed 16  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (9.1s)
+  seed 17  R=0.875  exploiting joint channel (0.875)     conv_id=(12, 11)  (9.2s)
+  seed 18  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.0s)
+  seed 19  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (9.1s)
+  seed 20  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (9.2s)
+  seed 21  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (9.1s)
+  seed 22  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (9.1s)
+  seed 23  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.2s)
+  seed 24  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (9.8s)
+  seed 25  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (9.1s)
+  seed 26  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.0s)
+  seed 27  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (9.1s)
+  seed 28  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (9.1s)
+  seed 29  R=0.750  single-bit ceiling (0.750)           conv_id=(5, 13)  (9.1s)
+
+  --- two_brain: joint convention distribution (n=30) ---
+      (10, 3): 6/30 (20.0%)
+      (5, 3): 5/30 (16.7%)
+      (12, 10): 3/30 (10.0%)
+      (5, 12): 3/30 (10.0%)
+      (3, 5): 2/30 (6.7%)
+      (10, 12): 2/30 (6.7%)
+      (11, 1): 1/30 (3.3%)
+      (11, 10): 1/30 (3.3%)
+      (3, 10): 1/30 (3.3%)
+      (8, 12): 1/30 (3.3%)
+      (12, 5): 1/30 (3.3%)
+      (10, 2): 1/30 (3.3%)
+      (11, 3): 1/30 (3.3%)
+      (12, 11): 1/30 (3.3%)
+      (5, 13): 1/30 (3.3%)
+      distinct conventions found : 15
+      dominant convention        : (10, 3) (6/30 = 20.0%)
+      convention entropy H       : 3.553 bits (0 = always the same convention, higher = more spread)
+      complementarity rate       : 76.7% of seeds reached a perfect (complementary) convention
+
+  --- two_brain: information-theoretic metrics (mean over 30 seeds) ---
+      S0: channel utilisation H(M0)=0.975 bits | I(M0;x0)=0.308, I(M0;x1)=0.642
+      S1: channel utilisation H(M1)=0.975 bits | I(M1;x0)=0.642, I(M1;x1)=0.308
+      G0: entropy reduction I(o0;x0)=0.933 bits (out of 1.000 max)
+      G1: entropy reduction I(o1;x1)=0.950 bits (out of 1.000 max)
+
+########################################################################
+# independent
+########################################################################
+  seed  0  R=0.875  exploiting joint channel (0.875)     conv_id=(12, 1)  (16.6s)
+  seed  1  R=0.875  exploiting joint channel (0.875)     conv_id=(13, 14)  (16.7s)
+  seed  2  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (16.5s)
+  seed  3  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (16.5s)
+  seed  4  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (16.5s)
+  seed  5  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (16.5s)
+  seed  6  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (16.6s)
+  seed  7  R=0.750  single-bit ceiling (0.750)           conv_id=(3, 15)  (16.4s)
+  seed  8  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (16.6s)
+  seed  9  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (16.7s)
+  seed 10  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (16.6s)
+  seed 11  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (16.6s)
+  seed 12  R=0.750  single-bit ceiling (0.750)           conv_id=(12, 12)  (16.5s)
+  seed 13  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (16.5s)
+  seed 14  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (16.5s)
+  seed 15  R=0.875  exploiting joint channel (0.875)     conv_id=(10, 8)  (16.5s)
+  seed 16  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (16.5s)
+  seed 17  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (16.6s)
+  seed 18  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (16.6s)
+  seed 19  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (16.6s)
+  seed 20  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (16.6s)
+  seed 21  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (16.5s)
+  seed 22  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (16.5s)
+  seed 23  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (16.5s)
+  seed 24  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (16.5s)
+  seed 25  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (16.5s)
+  seed 26  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (16.7s)
+  seed 27  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (16.5s)
+  seed 28  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (16.5s)
+  seed 29  R=0.875  exploiting joint channel (0.875)     conv_id=(8, 5)  (16.5s)
+
+  --- independent: joint convention distribution (n=30) ---
+      (3, 5): 5/30 (16.7%)
+      (3, 10): 4/30 (13.3%)
+      (10, 3): 4/30 (13.3%)
+      (10, 12): 3/30 (10.0%)
+      (12, 10): 3/30 (10.0%)
+      (12, 5): 2/30 (6.7%)
+      (5, 3): 2/30 (6.7%)
+      (12, 1): 1/30 (3.3%)
+      (13, 14): 1/30 (3.3%)
+      (3, 15): 1/30 (3.3%)
+      (12, 12): 1/30 (3.3%)
+      (10, 8): 1/30 (3.3%)
+      (5, 12): 1/30 (3.3%)
+      (8, 5): 1/30 (3.3%)
+      distinct conventions found : 14
+      dominant convention        : (3, 5) (5/30 = 16.7%)
+      convention entropy H       : 3.536 bits (0 = always the same convention, higher = more spread)
+      complementarity rate       : 80.0% of seeds reached a perfect (complementary) convention
+
+  --- independent: information-theoretic metrics (mean over 30 seeds) ---
+      S0: channel utilisation H(M0)=0.987 bits | I(M0;x0)=0.587, I(M0;x1)=0.387
+      S1: channel utilisation H(M1)=0.948 bits | I(M1;x0)=0.398, I(M1;x1)=0.531
+      G0: entropy reduction I(o0;x0)=0.967 bits (out of 1.000 max)
+      G1: entropy reduction I(o1;x1)=0.900 bits (out of 1.000 max)
+
+
+========================================================================
+PHASE 2: what decides which convention a run finds?
+12 repeats x 4 conditions x 3 variants, K_2,2
+Note: the graph itself is held fixed at K_2,2 throughout -- this phase
+cannot attribute variance to *topology* (that needs cross-graph
+comparison, Question 2). What it tests is which of the three RNG
+streams a *single fixed topology's* training run draws on is actually
+responsible for which of K_2,2's several equally-rewarding, mirror-
+symmetric conventions gets found.
+========================================================================
+
+########################################################################
+# shared
+########################################################################
+
+  coupled (torch=random=env=r, the standard protocol)
+      (10, 12): 3/12
+      (12, 10): 2/12
+      (12, 5): 2/12
+      (5, 3): 1/12
+      (12, 0): 1/12
+      (13, 10): 1/12
+      (1, 6): 1/12
+      (5, 12): 1/12
+      distinct conventions: 8/12 repeats
+
+  vary init only (torch=r, random=0, env=0)
+      (5, 3): 12/12
+      distinct conventions: 1/12 repeats
+
+  vary explore/replay only (torch=0, random=r, env=0)
+      (3, 10): 2/12
+      (5, 3): 1/12
+      (1, 7): 1/12
+      (5, 13): 1/12
+      (12, 10): 1/12
+      (10, 12): 1/12
+      (13, 11): 1/12
+      (12, 5): 1/12
+      (5, 12): 1/12
+      (12, 8): 1/12
+      (1, 13): 1/12
+      distinct conventions: 11/12 repeats
+
+  vary env item-order only (torch=0, random=0, env=r)
+      (3, 5): 6/12
+      (5, 3): 1/12
+      (10, 12): 1/12
+      (4, 5): 1/12
+      (11, 3): 1/12
+      (12, 5): 1/12
+      (9, 5): 1/12
+      distinct conventions: 7/12 repeats
+
+  --- shared: summary (distinct conventions per condition) ---
+      coupled (torch=random=env=r, the standard protocol): 8 distinct
+      vary init only (torch=r, random=0, env=0): 1 distinct
+      vary explore/replay only (torch=0, random=r, env=0): 11 distinct
+      vary env item-order only (torch=0, random=0, env=r): 7 distinct
+
+########################################################################
+# two_brain
+########################################################################
+
+  coupled (torch=random=env=r, the standard protocol)
+      (5, 3): 4/12
+      (12, 10): 2/12
+      (11, 1): 1/12
+      (11, 10): 1/12
+      (3, 10): 1/12
+      (8, 12): 1/12
+      (12, 5): 1/12
+      (10, 2): 1/12
+      distinct conventions: 8/12 repeats
+
+  vary init only (torch=r, random=0, env=0)
+      (10, 1): 6/12
+      (11, 1): 2/12
+      (10, 12): 2/12
+      (3, 1): 2/12
+      distinct conventions: 4/12 repeats
+
+  vary explore/replay only (torch=0, random=r, env=0)
+      (10, 12): 3/12
+      (12, 10): 2/12
+      (5, 12): 2/12
+      (3, 10): 2/12
+      (11, 1): 1/12
+      (5, 3): 1/12
+      (10, 3): 1/12
+      distinct conventions: 7/12 repeats
+
+  vary env item-order only (torch=0, random=0, env=r)
+      (5, 3): 3/12
+      (3, 10): 2/12
+      (11, 1): 1/12
+      (3, 15): 1/12
+      (2, 10): 1/12
+      (11, 12): 1/12
+      (12, 4): 1/12
+      (3, 5): 1/12
+      (1, 3): 1/12
+      distinct conventions: 9/12 repeats
+
+  --- two_brain: summary (distinct conventions per condition) ---
+      coupled (torch=random=env=r, the standard protocol): 8 distinct
+      vary init only (torch=r, random=0, env=0): 4 distinct
+      vary explore/replay only (torch=0, random=r, env=0): 7 distinct
+      vary env item-order only (torch=0, random=0, env=r): 9 distinct
+
+########################################################################
+# independent
+########################################################################
+
+  coupled (torch=random=env=r, the standard protocol)
+      (3, 10): 4/12
+      (10, 3): 2/12
+      (12, 1): 1/12
+      (13, 14): 1/12
+      (10, 12): 1/12
+      (3, 5): 1/12
+      (3, 15): 1/12
+      (12, 5): 1/12
+      distinct conventions: 8/12 repeats
+
+  vary init only (torch=r, random=0, env=0)
+      (12, 1): 5/12
+      (4, 1): 5/12
+      (12, 5): 2/12
+      distinct conventions: 3/12 repeats
+
+  vary explore/replay only (torch=0, random=r, env=0)
+      (12, 10): 4/12
+      (5, 3): 2/12
+      (12, 1): 1/12
+      (5, 9): 1/12
+      (12, 6): 1/12
+      (6, 3): 1/12
+      (1, 2): 1/12
+      (11, 5): 1/12
+      distinct conventions: 8/12 repeats
+
+  vary env item-order only (torch=0, random=0, env=r)
+      (5, 3): 6/12
+      (3, 5): 2/12
+      (12, 1): 1/12
+      (10, 3): 1/12
+      (12, 10): 1/12
+      (5, 4): 1/12
+      distinct conventions: 6/12 repeats
+
+  --- independent: summary (distinct conventions per condition) ---
+      coupled (torch=random=env=r, the standard protocol): 8 distinct
+      vary init only (torch=r, random=0, env=0): 3 distinct
+      vary explore/replay only (torch=0, random=r, env=0): 8 distinct
+      vary env item-order only (torch=0, random=0, env=r): 6 distinct
+
+
+========================================================================
+convention_diversity_k22.py complete in 41.3 min
+========================================================================
+
+Done at:      Wed Sep 23 02:17:27 PM UTC 2026
+Full log:     /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/logs/convention_diversity_20260923_133300.log
