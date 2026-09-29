@@ -70,7 +70,12 @@ from gsg.evaluation.information_theory import (
     guesser_info_metrics,
     signaller_info_metrics,
 )
-from gsg.training.trainer import train_independent_iql, train_shared_iql, train_two_brain_iql
+from gsg.training.trainer import (
+    play_greedy_example,
+    train_independent_iql,
+    train_shared_iql,
+    train_two_brain_iql,
+)
 
 # --- configuration -----------------------------------------------------
 
@@ -91,6 +96,99 @@ GRAPH = lambda: SignallingGraph.complete_bipartite(2, 2)
 
 def make_env(seed=None) -> GraphSignallingParallelEnv:
     return GraphSignallingParallelEnv(GRAPH(), seed=seed)
+
+
+# --- K_2,2 convention catalogue (matches the 24 perfect conventions listed
+#     in the Results chapter) ------------------------------------------------
+# A single signaller's canonical id (0..15) is exactly
+# conventions.canonical_id(policy, action_range=2, value_range=2,
+# neighbourhood_size=2) -- i.e. digit 2^k over observations in the order
+# (0,0),(0,1),(1,0),(1,1). This block turns that id, and a joint (S0,S1) pair,
+# into a plain-English description, and numbers the 24 perfect conventions
+# 1..24 in the same order as the thesis table.
+ITEM_NAME = {0: "CAT", 1: "DOG"}
+SIGNAL_NAME = {0: "OFF", 1: "ON"}
+_INPUTS = [(0, 0), (0, 1), (1, 0), (1, 1)]  # (x0, x1)
+
+
+def _policy_from_id(cid: int):
+    return tuple((cid >> k) & 1 for k in range(4))
+
+
+def _emit(policy, x0, x1) -> int:
+    return policy[_INPUTS.index((x0, x1))]
+
+
+def signaller_rule_name(cid: int) -> str:
+    """Plain-English name for one signaller's canonical id, K_2,2."""
+    outputs = tuple(_emit(_policy_from_id(cid), x0, x1) for (x0, x1) in _INPUTS)
+    names = {
+        (0, 0, 1, 1): "track x0 (ON iff G0=DOG)",
+        (1, 1, 0, 0): "track NOT x0 (ON iff G0=CAT)",
+        (0, 1, 0, 1): "track x1 (ON iff G1=DOG)",
+        (1, 0, 1, 0): "track NOT x1 (ON iff G1=CAT)",
+        (0, 1, 1, 0): "XOR (ON iff items DIFFER)",
+        (1, 0, 0, 1): "XNOR (ON iff items SAME)",
+        (0, 0, 0, 0): "constant OFF (pooling)",
+        (1, 1, 1, 1): "constant ON (pooling)",
+    }
+    return names.get(outputs, f"other[{''.join(map(str, outputs))}]")
+
+
+def _best_reward(id_a: int, id_b: int) -> float:
+    """Team reward of signaller pair (id_a, id_b) with Bayes-optimal guessers."""
+    from collections import defaultdict
+    pa, pb = _policy_from_id(id_a), _policy_from_id(id_b)
+    buckets = defaultdict(list)
+    for (x0, x1) in _INPUTS:
+        buckets[(_emit(pa, x0, x1), _emit(pb, x0, x1))].append((x0, x1))
+    total = 0.0
+    for (x0, x1) in _INPUTS:
+        worlds = buckets[(_emit(pa, x0, x1), _emit(pb, x0, x1))]
+        g0 = round(sum(w[0] for w in worlds) / len(worlds))
+        g1 = round(sum(w[1] for w in worlds) / len(worlds))
+        total += ((g0 == x0) + (g1 == x1)) / 2
+    return total / len(_INPUTS)
+
+
+# {(id0, id1): (number 1..24, "tracking"|"XOR-type")} for the 24 perfect
+# conventions, numbered in sorted-pair order to match the thesis table.
+_PERFECT_CATALOGUE = {}
+for _num, (_a, _b) in enumerate(
+    sorted((a, b) for a in range(16) for b in range(16) if _best_reward(a, b) == 1.0), start=1
+):
+    _la, _lb = signaller_rule_name(_a), signaller_rule_name(_b)
+    _kind = "tracking" if ("track" in _la and "track" in _lb) else "XOR-type"
+    _PERFECT_CATALOGUE[(_a, _b)] = (_num, _kind)
+
+
+def describe_convention(conv_id, is_perfect: bool) -> str:
+    """One-line description of a joint (S0, S1) convention id for the log."""
+    id0, id1 = conv_id
+    desc = f"S0: {signaller_rule_name(id0)} | S1: {signaller_rule_name(id1)}"
+    if is_perfect and conv_id in _PERFECT_CATALOGUE:
+        num, kind = _PERFECT_CATALOGUE[conv_id]
+        return f"{desc}  ->  PERFECT #{num}/24 ({kind})"
+    if is_perfect:
+        return f"{desc}  ->  perfect (not in catalogue?!)"
+    return f"{desc}  ->  not perfect"
+
+
+def format_episode(graph, record) -> str:
+    """Compact one-line render of one played episode, CAT/DOG + light ON/OFF."""
+    items = ", ".join(f"G{g}={ITEM_NAME[record.items[g]]}" for g in graph.guessers)
+    signals = ", ".join(f"S{s}={SIGNAL_NAME[record.signals[s]]}" for s in graph.signallers)
+    guesses = ", ".join(
+        f"G{g}={ITEM_NAME[record.guesses[g]]}{'ok' if record.correct[g] else 'XX'}"
+        for g in graph.guessers
+    )
+    return (f"items({items}) -> lights({signals}) -> guesses({guesses})  "
+            f"R={record.reward:.2f}")
+
+
+def example_episodes(env, signaller_agents, guesser_agents, n=5):
+    """Play ``n`` fully-greedy example episodes (no exploration, not recorded)."""
+    return [play_greedy_example(env, signaller_agents, guesser_agents) for _ in range(n)]
 
 
 def _train(variant: str, env, num_episodes: int, decay: int, seed):
@@ -122,6 +220,7 @@ def _analyse(env, signaller_agents, guesser_agents) -> dict:
         "sig_info": signaller_info_metrics(env.graph, outcomes),
         "gue_info": guesser_info_metrics(env.graph, outcomes),
         "mean_reward": mean_reward,
+        "is_perfect": mean_reward == 1.0,
     }
 
 
@@ -149,25 +248,47 @@ def run_phase1() -> None:
             results.append(r)
             print(f"  seed {seed:2d}  R={r['mean_reward']:.3f}  {r['summary']:35s}  "
                   f"conv_id={r['conv_id']}  ({time.time() - t0:.1f}s)", flush=True)
+            print(f"           convention: {describe_convention(r['conv_id'], r['is_perfect'])}")
+            # 5 example greedy episodes, so the reader can verify by eye which
+            # of the 24 conventions this seed actually plays out.
+            for i, rec in enumerate(example_episodes(env, sig, gue, n=5), start=1):
+                print(f"             ex{i}: {format_episode(env.graph, rec)}")
 
-        # --- joint convention distribution / entropy / complementarity ---
-        ids = [r["conv_id"] for r in results]
-        counter = Counter(ids)
-        total = len(ids)
-        H = entropy_bits(counter, total)
-        dominant_id, dominant_count = counter.most_common(1)[0]
-        complementarity = sum(1 for r in results if r["summary"].startswith("perfect")) / total
+        # --- PERFECT convention distribution (only R=1.0 seeds counted) ---
+        # Non-perfect seeds have not settled on a working coordination
+        # convention, so they are excluded from the convention count/entropy;
+        # they are summarised separately below.
+        total = len(results)
+        perfect = [r for r in results if r["is_perfect"]]
+        n_perfect = len(perfect)
+        pcounter = Counter(r["conv_id"] for r in perfect)
 
-        print(f"\n  --- {variant}: joint convention distribution (n={total}) ---")
-        for conv_id, count in counter.most_common():
-            print(f"      {conv_id}: {count}/{total} ({100 * count / total:.1f}%)")
-        print(f"      distinct conventions found : {len(counter)}")
-        print(f"      dominant convention        : {dominant_id} "
-              f"({dominant_count}/{total} = {100 * dominant_count / total:.1f}%)")
-        print(f"      convention entropy H       : {H:.3f} bits "
-              f"(0 = always the same convention, higher = more spread)")
-        print(f"      complementarity rate       : {complementarity * 100:.1f}% of seeds "
-              f"reached a perfect (complementary) convention")
+        print(f"\n  --- {variant}: PERFECT convention distribution "
+              f"({n_perfect}/{total} seeds reached a perfect convention) ---")
+        if n_perfect:
+            for conv_id, count in pcounter.most_common():
+                print(f"      {conv_id}  {describe_convention(conv_id, True)}"
+                      f"  : {count}/{n_perfect}")
+            H = entropy_bits(pcounter, n_perfect)
+            dominant_id, dominant_count = pcounter.most_common(1)[0]
+            kinds = Counter(_PERFECT_CATALOGUE[cid][1] for cid in pcounter)
+            print(f"      distinct PERFECT conventions found : {len(pcounter)} / 24 possible")
+            print(f"        (of which {kinds.get('tracking', 0)} tracking, "
+                  f"{kinds.get('XOR-type', 0)} XOR-type)")
+            print(f"      dominant perfect convention        : {dominant_id} "
+                  f"({dominant_count}/{n_perfect} = {100 * dominant_count / n_perfect:.1f}%)")
+            print(f"      convention entropy H (perfect only): {H:.3f} bits "
+                  f"(0 = always the same convention, higher = more spread)")
+        else:
+            print("      (no seed reached a perfect convention)")
+        print(f"      complementarity rate               : "
+              f"{100 * n_perfect / total:.1f}% of seeds perfect")
+
+        nonperfect = [r for r in results if not r["is_perfect"]]
+        if nonperfect:
+            bands = Counter(round(r["mean_reward"], 3) for r in nonperfect)
+            band_str = ", ".join(f"R={b}: {c}" for b, c in sorted(bands.items(), reverse=True))
+            print(f"      non-perfect seeds ({len(nonperfect)}), by reward : {band_str}")
 
         # --- information-theoretic metrics, averaged across the 30 seeds ---
         graph = GRAPH()
@@ -220,7 +341,8 @@ def run_phase2() -> None:
 
         condition_counters = {}
         for cond_name, seed_fn in ABLATION_CONDITIONS.items():
-            ids = []
+            perfect_ids = []
+            n_perfect = 0
             for r in range(ABLATION_REPEATS):
                 torch_seed, random_seed, env_seed = seed_fn(r)
                 torch.manual_seed(torch_seed)
@@ -229,19 +351,26 @@ def run_phase2() -> None:
                 # seed=None: skip the trainer's own seeding entirely -- the
                 # manual seeding above is what actually controls this run.
                 sig, gue = _train(variant, env, NUM_EPISODES, EPSILON_DECAY_EPISODES, seed=None)
-                conv_id = joint_signaller_convention_id(env.graph, env.item_space.n, sig)
-                ids.append(conv_id)
+                res = _analyse(env, sig, gue)
+                # Only perfect (R=1.0) runs land on a genuine coordination
+                # convention; count distinct conventions among those only.
+                if res["is_perfect"]:
+                    n_perfect += 1
+                    perfect_ids.append(res["conv_id"])
 
-            counter = Counter(ids)
-            condition_counters[cond_name] = counter
-            print(f"\n  {cond_name}")
+            counter = Counter(perfect_ids)
+            condition_counters[cond_name] = (counter, n_perfect)
+            print(f"\n  {cond_name}  ({n_perfect}/{ABLATION_REPEATS} repeats perfect)")
             for conv_id, count in counter.most_common():
-                print(f"      {conv_id}: {count}/{ABLATION_REPEATS}")
-            print(f"      distinct conventions: {len(counter)}/{ABLATION_REPEATS} repeats")
+                print(f"      {conv_id}  {describe_convention(conv_id, True)}"
+                      f"  : {count}/{n_perfect}")
+            print(f"      distinct PERFECT conventions: {len(counter)} "
+                  f"(from {n_perfect} perfect repeats)")
 
-        print(f"\n  --- {variant}: summary (distinct conventions per condition) ---")
-        for cond_name, counter in condition_counters.items():
-            print(f"      {cond_name}: {len(counter)} distinct")
+        print(f"\n  --- {variant}: summary (distinct PERFECT conventions per condition) ---")
+        for cond_name, (counter, n_perfect) in condition_counters.items():
+            print(f"      {cond_name}: {len(counter)} distinct "
+                  f"({n_perfect}/{ABLATION_REPEATS} perfect)")
 
 
 def main() -> None:
