@@ -1,0 +1,848 @@
+Started at:   Tue Sep 29 03:09:28 PM UTC 2026
+Repo root:    /home-mscluster/travhengani/Graph-Signalling-Game
+Python:       Python 3.13.5 (/home-mscluster/travhengani/miniconda3/bin/python3)
+Run log:      results/question1/logs/convention_diversity_20260929_150928.log
+
+========================================================================
+PHASE 1: convention-quality + information-theoretic metrics
+30 seeds x 3 variants, K_2,2, 4000 training episodes each
+========================================================================
+
+########################################################################
+# shared
+########################################################################
+/home-mscluster/travhengani/miniconda3/lib/python3.13/site-packages/torch/autograd/graph.py:829: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:109.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+  seed  0  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (20.0s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed  1  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (5.5s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed  2  R=0.750  single-bit ceiling (0.750)           conv_id=(12, 0)  (5.5s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: constant OFF (pooling)  ->  not perfect
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+  seed  3  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (5.6s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed  4  R=0.875  exploiting joint channel (0.875)     conv_id=(13, 10)  (5.5s)
+           convention: S0: other[1011] | S1: track x1 (ON iff G1=DOG)  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGXX, G1=CATok)  R=0.50
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed  5  R=0.750  single-bit ceiling (0.750)           conv_id=(1, 6)  (5.6s)
+           convention: S0: other[1000] | S1: XOR (ON iff items DIFFER)  ->  not perfect
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGXX)  R=0.50
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGXX, G1=DOGok)  R=0.50
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGXX)  R=0.50
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed  6  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (5.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed  7  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (5.5s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed  8  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (5.5s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)
+             ex1: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed  9  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (5.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 10  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (5.5s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 11  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (5.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 12  R=0.875  exploiting joint channel (0.875)     conv_id=(8, 11)  (5.6s)
+           convention: S0: other[0001] | S1: other[1101]  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 13  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (5.5s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 14  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (5.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 15  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (5.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 16  R=0.875  exploiting joint channel (0.875)     conv_id=(10, 14)  (5.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: other[0111]  ->  not perfect
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 17  R=0.875  exploiting joint channel (0.875)     conv_id=(5, 1)  (5.5s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: other[1000]  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGXX, G1=DOGok)  R=0.50
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 18  R=0.875  exploiting joint channel (0.875)     conv_id=(13, 1)  (5.5s)
+           convention: S0: other[1011] | S1: other[1000]  ->  not perfect
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 19  R=0.875  exploiting joint channel (0.875)     conv_id=(13, 7)  (5.5s)
+           convention: S0: other[1011] | S1: other[1110]  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATXX, G1=CATok)  R=0.50
+  seed 20  R=0.750  single-bit ceiling (0.750)           conv_id=(0, 3)  (5.6s)
+           convention: S0: constant OFF (pooling) | S1: track NOT x0 (ON iff G0=CAT)  ->  not perfect
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 21  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (5.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 22  R=0.875  exploiting joint channel (0.875)     conv_id=(3, 13)  (5.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: other[1011]  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 23  R=0.875  exploiting joint channel (0.875)     conv_id=(3, 5)  (5.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGXX, G1=DOGok)  R=0.50
+  seed 24  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (5.5s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 25  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (5.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 26  R=0.875  exploiting joint channel (0.875)     conv_id=(7, 11)  (5.5s)
+           convention: S0: other[1110] | S1: other[1101]  ->  not perfect
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+  seed 27  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (5.6s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)
+             ex1: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed 28  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (5.6s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 29  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (5.5s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)
+             ex1: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+
+  --- shared: PERFECT convention distribution (18/30 seeds reached a perfect convention) ---
+      (10, 12)  S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)  : 4/18
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 3/18
+      (12, 5)  S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)  : 3/18
+      (5, 12)  S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)  : 3/18
+      (3, 10)  S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)  : 3/18
+      (12, 10)  S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)  : 2/18
+      distinct PERFECT conventions found : 6 / 24 possible
+        (of which 6 tracking, 0 XOR-type)
+      dominant perfect convention        : (10, 12) (4/18 = 22.2%)
+      convention entropy H (perfect only): 2.558 bits (0 = always the same convention, higher = more spread)
+      complementarity rate               : 60.0% of seeds perfect
+      non-perfect seeds (12), by reward : R=0.875: 9, R=0.75: 3
+
+  --- shared: information-theoretic metrics (mean over 30 seeds) ---
+      S0: channel utilisation H(M0)=0.929 bits | I(M0;x0)=0.429, I(M0;x1)=0.462
+      S1: channel utilisation H(M1)=0.923 bits | I(M1;x0)=0.439, I(M1;x1)=0.406
+      G0: entropy reduction I(o0;x0)=0.917 bits (out of 1.000 max)
+      G1: entropy reduction I(o1;x1)=0.850 bits (out of 1.000 max)
+
+########################################################################
+# two_brain
+########################################################################
+  seed  0  R=0.875  exploiting joint channel (0.875)     conv_id=(11, 1)  (9.1s)
+           convention: S0: other[1101] | S1: other[1000]  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATXX, G1=DOGok)  R=0.50
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATXX, G1=DOGok)  R=0.50
+  seed  1  R=0.875  exploiting joint channel (0.875)     conv_id=(11, 10)  (9.0s)
+           convention: S0: other[1101] | S1: track x1 (ON iff G1=DOG)  ->  not perfect
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATXX, G1=DOGok)  R=0.50
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed  2  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (9.0s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed  3  R=0.875  exploiting joint channel (0.875)     conv_id=(8, 12)  (9.0s)
+           convention: S0: other[0001] | S1: track x0 (ON iff G0=DOG)  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed  4  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (9.0s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed  5  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (9.0s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed  6  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (9.2s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed  7  R=0.875  exploiting joint channel (0.875)     conv_id=(10, 2)  (9.1s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: other[0100]  ->  not perfect
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGXX, G1=CATok)  R=0.50
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGXX, G1=CATok)  R=0.50
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed  8  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (9.1s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)
+             ex1: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed  9  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (9.1s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 10  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (9.0s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 11  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (9.1s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 12  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.0s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 13  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.0s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 14  R=0.875  exploiting joint channel (0.875)     conv_id=(11, 3)  (9.1s)
+           convention: S0: other[1101] | S1: track NOT x0 (ON iff G0=CAT)  ->  not perfect
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 15  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.2s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 16  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (9.1s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 17  R=0.875  exploiting joint channel (0.875)     conv_id=(12, 11)  (9.1s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: other[1101]  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 18  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.0s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 19  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (9.0s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 20  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (9.1s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 21  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (9.1s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 22  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (9.1s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 23  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.2s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed 24  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (9.1s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 25  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (9.1s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 26  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (9.0s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed 27  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (9.1s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)
+             ex1: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed 28  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (9.1s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 29  R=0.750  single-bit ceiling (0.750)           conv_id=(5, 13)  (9.1s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: other[1011]  ->  not perfect
+             ex1: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGXX, G1=DOGok)  R=0.50
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATXX, G1=CATok)  R=0.50
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATXX, G1=CATok)  R=0.50
+
+  --- two_brain: PERFECT convention distribution (23/30 seeds reached a perfect convention) ---
+      (10, 3)  S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)  : 6/23
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 5/23
+      (12, 10)  S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)  : 3/23
+      (5, 12)  S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)  : 3/23
+      (3, 5)  S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)  : 2/23
+      (10, 12)  S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)  : 2/23
+      (3, 10)  S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)  : 1/23
+      (12, 5)  S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)  : 1/23
+      distinct PERFECT conventions found : 8 / 24 possible
+        (of which 8 tracking, 0 XOR-type)
+      dominant perfect convention        : (10, 3) (6/23 = 26.1%)
+      convention entropy H (perfect only): 2.757 bits (0 = always the same convention, higher = more spread)
+      complementarity rate               : 76.7% of seeds perfect
+      non-perfect seeds (7), by reward : R=0.875: 6, R=0.75: 1
+
+  --- two_brain: information-theoretic metrics (mean over 30 seeds) ---
+      S0: channel utilisation H(M0)=0.975 bits | I(M0;x0)=0.308, I(M0;x1)=0.642
+      S1: channel utilisation H(M1)=0.975 bits | I(M1;x0)=0.642, I(M1;x1)=0.308
+      G0: entropy reduction I(o0;x0)=0.933 bits (out of 1.000 max)
+      G1: entropy reduction I(o1;x1)=0.950 bits (out of 1.000 max)
+
+########################################################################
+# independent
+########################################################################
+  seed  0  R=0.875  exploiting joint channel (0.875)     conv_id=(12, 1)  (16.5s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: other[1000]  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+  seed  1  R=0.875  exploiting joint channel (0.875)     conv_id=(13, 14)  (16.6s)
+           convention: S0: other[1011] | S1: other[0111]  ->  not perfect
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed  2  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (16.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed  3  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (16.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed  4  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (16.4s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed  5  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (16.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed  6  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (16.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed  7  R=0.750  single-bit ceiling (0.750)           conv_id=(3, 15)  (16.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: constant ON (pooling)  ->  not perfect
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+  seed  8  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (16.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)
+             ex1: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed  9  R=1.000  perfect (complementary conventions)  conv_id=(3, 10)  (16.6s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 10  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (16.5s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 11  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (16.6s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 12  R=0.750  single-bit ceiling (0.750)           conv_id=(12, 12)  (16.5s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track x0 (ON iff G0=DOG)  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGXX)  R=0.50
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGXX)  R=0.50
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGXX)  R=0.50
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 13  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (16.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 14  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (16.5s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 15  R=0.875  exploiting joint channel (0.875)     conv_id=(10, 8)  (16.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: other[0001]  ->  not perfect
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGXX, G1=CATok)  R=0.50
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGXX, G1=CATok)  R=0.50
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 16  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (16.4s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)
+             ex1: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 17  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (16.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 18  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (16.6s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 19  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (16.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 20  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (16.6s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 21  R=1.000  perfect (complementary conventions)  conv_id=(5, 12)  (16.5s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 22  R=1.000  perfect (complementary conventions)  conv_id=(10, 12)  (16.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 23  R=1.000  perfect (complementary conventions)  conv_id=(5, 3)  (16.5s)
+           convention: S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed 24  R=1.000  perfect (complementary conventions)  conv_id=(10, 3)  (16.5s)
+           convention: S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex4: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex5: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+  seed 25  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (16.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex3: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+  seed 26  R=1.000  perfect (complementary conventions)  conv_id=(12, 10)  (16.7s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)
+             ex1: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed 27  R=1.000  perfect (complementary conventions)  conv_id=(3, 5)  (16.5s)
+           convention: S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)
+             ex1: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex2: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex5: items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+  seed 28  R=1.000  perfect (complementary conventions)  conv_id=(12, 5)  (16.5s)
+           convention: S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)
+             ex1: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex4: items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+  seed 29  R=0.875  exploiting joint channel (0.875)     conv_id=(8, 5)  (16.4s)
+           convention: S0: other[0001] | S1: track NOT x1 (ON iff G1=CAT)  ->  not perfect
+             ex1: items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+             ex2: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex3: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+             ex4: items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+             ex5: items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+
+  --- independent: PERFECT convention distribution (24/30 seeds reached a perfect convention) ---
+      (3, 5)  S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)  : 5/24
+      (3, 10)  S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)  : 4/24
+      (10, 3)  S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)  : 4/24
+      (10, 12)  S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)  : 3/24
+      (12, 10)  S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)  : 3/24
+      (12, 5)  S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)  : 2/24
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 2/24
+      (5, 12)  S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)  : 1/24
+      distinct PERFECT conventions found : 8 / 24 possible
+        (of which 8 tracking, 0 XOR-type)
+      dominant perfect convention        : (3, 5) (5/24 = 20.8%)
+      convention entropy H (perfect only): 2.872 bits (0 = always the same convention, higher = more spread)
+      complementarity rate               : 80.0% of seeds perfect
+      non-perfect seeds (6), by reward : R=0.875: 4, R=0.75: 2
+
+  --- independent: information-theoretic metrics (mean over 30 seeds) ---
+      S0: channel utilisation H(M0)=0.987 bits | I(M0;x0)=0.587, I(M0;x1)=0.387
+      S1: channel utilisation H(M1)=0.948 bits | I(M1;x0)=0.398, I(M1;x1)=0.531
+      G0: entropy reduction I(o0;x0)=0.967 bits (out of 1.000 max)
+      G1: entropy reduction I(o1;x1)=0.900 bits (out of 1.000 max)
+
+
+========================================================================
+PHASE 2: what decides which convention a run finds?
+12 repeats x 4 conditions x 3 variants, K_2,2
+Note: the graph itself is held fixed at K_2,2 throughout -- this phase
+cannot attribute variance to *topology* (that needs cross-graph
+comparison, Question 2). What it tests is which of the three RNG
+streams a *single fixed topology's* training run draws on is actually
+responsible for which of K_2,2's several equally-rewarding, mirror-
+symmetric conventions gets found.
+========================================================================
+
+########################################################################
+# shared
+########################################################################
+
+  coupled (torch=random=env=r, the standard protocol)  (9/12 repeats perfect)
+      (10, 12)  S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)  : 3/9
+      (12, 10)  S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)  : 2/9
+      (12, 5)  S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)  : 2/9
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 1/9
+      (5, 12)  S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)  : 1/9
+      distinct PERFECT conventions: 5 (from 9 perfect repeats)
+
+  vary init only (torch=r, random=0, env=0)  (12/12 repeats perfect)
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 12/12
+      distinct PERFECT conventions: 1 (from 12 perfect repeats)
+
+  vary explore/replay only (torch=0, random=r, env=0)  (7/12 repeats perfect)
+      (3, 10)  S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)  : 2/7
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 1/7
+      (12, 10)  S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)  : 1/7
+      (10, 12)  S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)  : 1/7
+      (12, 5)  S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)  : 1/7
+      (5, 12)  S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)  : 1/7
+      distinct PERFECT conventions: 6 (from 7 perfect repeats)
+
+  vary env item-order only (torch=0, random=0, env=r)  (9/12 repeats perfect)
+      (3, 5)  S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)  : 6/9
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 1/9
+      (10, 12)  S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)  : 1/9
+      (12, 5)  S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)  : 1/9
+      distinct PERFECT conventions: 4 (from 9 perfect repeats)
+
+  --- shared: summary (distinct PERFECT conventions per condition) ---
+      coupled (torch=random=env=r, the standard protocol): 5 distinct (9/12 perfect)
+      vary init only (torch=r, random=0, env=0): 1 distinct (12/12 perfect)
+      vary explore/replay only (torch=0, random=r, env=0): 6 distinct (7/12 perfect)
+      vary env item-order only (torch=0, random=0, env=r): 4 distinct (9/12 perfect)
+
+########################################################################
+# two_brain
+########################################################################
+
+  coupled (torch=random=env=r, the standard protocol)  (8/12 repeats perfect)
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 4/8
+      (12, 10)  S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)  : 2/8
+      (3, 10)  S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)  : 1/8
+      (12, 5)  S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)  : 1/8
+      distinct PERFECT conventions: 4 (from 8 perfect repeats)
+
+  vary init only (torch=r, random=0, env=0)  (2/12 repeats perfect)
+      (10, 12)  S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)  : 2/2
+      distinct PERFECT conventions: 1 (from 2 perfect repeats)
+
+  vary explore/replay only (torch=0, random=r, env=0)  (11/12 repeats perfect)
+      (10, 12)  S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)  : 3/11
+      (12, 10)  S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)  : 2/11
+      (5, 12)  S0: track NOT x1 (ON iff G1=CAT) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #8/24 (tracking)  : 2/11
+      (3, 10)  S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)  : 2/11
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 1/11
+      (10, 3)  S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)  : 1/11
+      distinct PERFECT conventions: 6 (from 11 perfect repeats)
+
+  vary env item-order only (torch=0, random=0, env=r)  (6/12 repeats perfect)
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 3/6
+      (3, 10)  S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)  : 2/6
+      (3, 5)  S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)  : 1/6
+      distinct PERFECT conventions: 3 (from 6 perfect repeats)
+
+  --- two_brain: summary (distinct PERFECT conventions per condition) ---
+      coupled (torch=random=env=r, the standard protocol): 4 distinct (8/12 perfect)
+      vary init only (torch=r, random=0, env=0): 1 distinct (2/12 perfect)
+      vary explore/replay only (torch=0, random=r, env=0): 6 distinct (11/12 perfect)
+      vary env item-order only (torch=0, random=0, env=r): 3 distinct (6/12 perfect)
+
+########################################################################
+# independent
+########################################################################
+
+  coupled (torch=random=env=r, the standard protocol)  (9/12 repeats perfect)
+      (3, 10)  S0: track NOT x0 (ON iff G0=CAT) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #4/24 (tracking)  : 4/9
+      (10, 3)  S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)  : 2/9
+      (10, 12)  S0: track x1 (ON iff G1=DOG) | S1: track x0 (ON iff G0=DOG)  ->  PERFECT #20/24 (tracking)  : 1/9
+      (3, 5)  S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)  : 1/9
+      (12, 5)  S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)  : 1/9
+      distinct PERFECT conventions: 5 (from 9 perfect repeats)
+
+  vary init only (torch=r, random=0, env=0)  (2/12 repeats perfect)
+      (12, 5)  S0: track x0 (ON iff G0=DOG) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #21/24 (tracking)  : 2/2
+      distinct PERFECT conventions: 1 (from 2 perfect repeats)
+
+  vary explore/replay only (torch=0, random=r, env=0)  (9/12 repeats perfect)
+      (12, 10)  S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)  : 4/9
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 2/9
+      (5, 9)  S0: track NOT x1 (ON iff G1=CAT) | S1: XNOR (ON iff items SAME)  ->  PERFECT #7/24 (XOR-type)  : 1/9
+      (12, 6)  S0: track x0 (ON iff G0=DOG) | S1: XOR (ON iff items DIFFER)  ->  PERFECT #22/24 (XOR-type)  : 1/9
+      (6, 3)  S0: XOR (ON iff items DIFFER) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #9/24 (XOR-type)  : 1/9
+      distinct PERFECT conventions: 5 (from 9 perfect repeats)
+
+  vary env item-order only (torch=0, random=0, env=r)  (10/12 repeats perfect)
+      (5, 3)  S0: track NOT x1 (ON iff G1=CAT) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #5/24 (tracking)  : 6/10
+      (3, 5)  S0: track NOT x0 (ON iff G0=CAT) | S1: track NOT x1 (ON iff G1=CAT)  ->  PERFECT #1/24 (tracking)  : 2/10
+      (10, 3)  S0: track x1 (ON iff G1=DOG) | S1: track NOT x0 (ON iff G0=CAT)  ->  PERFECT #17/24 (tracking)  : 1/10
+      (12, 10)  S0: track x0 (ON iff G0=DOG) | S1: track x1 (ON iff G1=DOG)  ->  PERFECT #24/24 (tracking)  : 1/10
+      distinct PERFECT conventions: 4 (from 10 perfect repeats)
+
+  --- independent: summary (distinct PERFECT conventions per condition) ---
+      coupled (torch=random=env=r, the standard protocol): 5 distinct (9/12 perfect)
+      vary init only (torch=r, random=0, env=0): 1 distinct (2/12 perfect)
+      vary explore/replay only (torch=0, random=r, env=0): 5 distinct (9/12 perfect)
+      vary env item-order only (torch=0, random=0, env=r): 4 distinct (10/12 perfect)
+
+
+========================================================================
+convention_diversity_k22.py complete in 40.7 min
+========================================================================
+
+Done at:      Tue Sep 29 03:51:01 PM UTC 2026
+Full log:     /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/logs/convention_diversity_20260929_150928.log
