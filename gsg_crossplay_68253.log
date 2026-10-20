@@ -1,0 +1,103 @@
+Started at:   Wed Oct 14 09:10:26 PM UTC 2026
+Repo root:    /home-mscluster/travhengani/Graph-Signalling-Game
+Python:       Python 3.13.5 (/home-mscluster/travhengani/miniconda3/bin/python3)
+Run log:      results/question1/logs/crossplay_20261014_211026.log
+
+========================================================================
+Cross-play evaluation, K_2,2
+15 runs/variant, 4000 train episodes, 400 eval episodes/pairing
+========================================================================
+
+########################################################################
+# shared
+########################################################################
+/home-mscluster/travhengani/miniconda3/lib/python3.13/site-packages/torch/autograd/graph.py:829: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:109.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+  trained 15 populations (99s)
+    guesser run 1/15 paired against all signaller runs (106s)
+    guesser run 2/15 paired against all signaller runs (113s)
+    guesser run 3/15 paired against all signaller runs (121s)
+    guesser run 4/15 paired against all signaller runs (128s)
+    guesser run 5/15 paired against all signaller runs (135s)
+    guesser run 6/15 paired against all signaller runs (142s)
+    guesser run 7/15 paired against all signaller runs (150s)
+    guesser run 8/15 paired against all signaller runs (157s)
+    guesser run 9/15 paired against all signaller runs (164s)
+    guesser run 10/15 paired against all signaller runs (171s)
+    guesser run 11/15 paired against all signaller runs (179s)
+    guesser run 12/15 paired against all signaller runs (186s)
+    guesser run 13/15 paired against all signaller runs (193s)
+    guesser run 14/15 paired against all signaller runs (201s)
+    guesser run 15/15 paired against all signaller runs (208s)
+
+  --- shared: cross-play summary ---
+      mean self-play (diagonal)   : 0.947
+      mean cross-play (off-diag)  : 0.500
+      cross-play gap Delta        : 0.448
+      (gap near 0 = shareable convention; near self-0.5 = private code)
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_population_shared.png
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_edges_shared.png
+
+########################################################################
+# two_brain
+########################################################################
+  trained 15 populations (345s)
+    guesser run 1/15 paired against all signaller runs (351s)
+    guesser run 2/15 paired against all signaller runs (357s)
+    guesser run 3/15 paired against all signaller runs (363s)
+    guesser run 4/15 paired against all signaller runs (369s)
+    guesser run 5/15 paired against all signaller runs (375s)
+    guesser run 6/15 paired against all signaller runs (381s)
+    guesser run 7/15 paired against all signaller runs (387s)
+    guesser run 8/15 paired against all signaller runs (393s)
+    guesser run 9/15 paired against all signaller runs (399s)
+    guesser run 10/15 paired against all signaller runs (405s)
+    guesser run 11/15 paired against all signaller runs (411s)
+    guesser run 12/15 paired against all signaller runs (417s)
+    guesser run 13/15 paired against all signaller runs (423s)
+    guesser run 14/15 paired against all signaller runs (429s)
+    guesser run 15/15 paired against all signaller runs (435s)
+
+  --- two_brain: cross-play summary ---
+      mean self-play (diagonal)   : 0.958
+      mean cross-play (off-diag)  : 0.544
+      cross-play gap Delta        : 0.414
+      (gap near 0 = shareable convention; near self-0.5 = private code)
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_population_two_brain.png
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_edges_two_brain.png
+
+########################################################################
+# independent
+########################################################################
+  trained 15 populations (683s)
+    guesser run 1/15 paired against all signaller runs (689s)
+    guesser run 2/15 paired against all signaller runs (695s)
+    guesser run 3/15 paired against all signaller runs (701s)
+    guesser run 4/15 paired against all signaller runs (707s)
+    guesser run 5/15 paired against all signaller runs (714s)
+    guesser run 6/15 paired against all signaller runs (720s)
+    guesser run 7/15 paired against all signaller runs (726s)
+    guesser run 8/15 paired against all signaller runs (732s)
+    guesser run 9/15 paired against all signaller runs (738s)
+    guesser run 10/15 paired against all signaller runs (744s)
+    guesser run 11/15 paired against all signaller runs (750s)
+    guesser run 12/15 paired against all signaller runs (756s)
+    guesser run 13/15 paired against all signaller runs (762s)
+    guesser run 14/15 paired against all signaller runs (768s)
+    guesser run 15/15 paired against all signaller runs (774s)
+
+  --- independent: cross-play summary ---
+      mean self-play (diagonal)   : 0.952
+      mean cross-play (off-diag)  : 0.494
+      cross-play gap Delta        : 0.458
+      (gap near 0 = shareable convention; near self-0.5 = private code)
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_population_independent.png
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_edges_independent.png
+
+========================================================================
+crossplay_k22.py complete in 12.9 min
+figures in: /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay
+========================================================================
+
+Done at:      Wed Oct 14 09:24:21 PM UTC 2026
+Full log:     /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/logs/crossplay_20261014_211026.log
