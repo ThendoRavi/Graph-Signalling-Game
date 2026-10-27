@@ -21,6 +21,14 @@
 #     S_a -> G_b), isolating how tolerant each edge is to a foreign partner;
 #   * the cross-play gap Delta = (mean self-play) - (mean off-diagonal).
 #
+# The log (saved via tee below) additionally records, for every run: its
+# self-play reward and band, its joint convention id, its per-signaller rule,
+# and the full enumerated rule (all four worlds); then the convention
+# equivalence classes (which runs share a convention), a convention-vs-
+# convention cross-play table, and example pairings grouped by outcome
+# (COMPATIBLE / ANTI-COMPATIBLE / ORTHOGONAL / PARTIAL) -- so which conventions
+# coordinate with which, and why, is explicit in the text log.
+#
 # Works both under SLURM (`sbatch crossplay.sh`) and as a plain script
 # (`bash crossplay.sh`) on any SSH box. Submit it FROM the repo root
 # (`cd <repo> && sbatch crossplay.sh`); under SLURM that submit dir is how the

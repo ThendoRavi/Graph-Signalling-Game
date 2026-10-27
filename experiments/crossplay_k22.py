@@ -46,8 +46,18 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from gsg.environment.graphs import SignallingGraph
 from gsg.environment.pettingzoo_env import GraphSignallingParallelEnv
+from gsg.evaluation.boolean_analysis import analyse_signaller_policy
+from gsg.evaluation.conventions import (
+    exhaustive_joint_table,
+    extract_all_policies,
+    joint_signaller_convention_id,
+)
 from gsg.evaluation.metrics import evaluate
+from gsg.training.checkpoint import load_population, save_population
 from gsg.training.trainer import train_independent_iql, train_shared_iql, train_two_brain_iql
+
+ITEM_NAME = {0: "CAT", 1: "DOG"}
+SIGNAL_NAME = {0: "OFF", 1: "ON"}
 
 # --- configuration -----------------------------------------------------
 
@@ -57,6 +67,12 @@ TRAIN_EPISODES = 4_000
 EPSILON_DECAY = 2_500
 EVAL_EPISODES = 400        # episodes per pairing (cross-play is forward-only, cheap)
 EVAL_SEED = 999_983        # fixed item stream shared by every pairing, for fairness
+
+# Trained populations are cached here: the first run trains and saves them,
+# every later run loads them instead of retraining. Delete this directory (or
+# set USE_CACHE = False) to force a fresh retrain.
+USE_CACHE = True
+MODEL_DIR = os.path.join(os.path.dirname(__file__), "..", "results", "question1", "models", "crossplay")
 
 FIG_DIR = os.path.join(os.path.dirname(__file__), "..", "results", "question1", "figures", "crossplay")
 
@@ -73,7 +89,7 @@ def _set_greedy(signaller_agents, guesser_agents):
             a.recording = False
 
 
-def train_run(variant, env, seed):
+def _train_fresh(variant, env, seed):
     if variant == "shared":
         _n, sig, gue, _h = train_shared_iql(
             env, num_episodes=TRAIN_EPISODES, epsilon_decay_episodes=EPSILON_DECAY, seed=seed)
@@ -85,8 +101,132 @@ def train_run(variant, env, seed):
             env, num_episodes=TRAIN_EPISODES, epsilon_decay_episodes=EPSILON_DECAY, seed=seed)
     else:
         raise ValueError(variant)
+    return sig, gue
+
+
+def train_run(variant, env, seed):
+    """Load the cached population for (variant, seed) if present; otherwise
+    train it, save it, and return it. All agents returned greedy (epsilon 0)."""
+    ckpt = os.path.join(MODEL_DIR, variant, f"run{seed}.pt")
+    if USE_CACHE and os.path.isfile(ckpt):
+        sig, gue = load_population(ckpt, env.graph, env.item_space.n)
+        return sig, gue  # load_population already returns epsilon-0 agents
+    sig, gue = _train_fresh(variant, env, seed)
+    if USE_CACHE:
+        save_population(ckpt, variant, sig, gue)
     _set_greedy(sig, gue)
     return sig, gue
+
+
+def describe_run(graph, n_items, sig, gue):
+    """Return (self_reward, conv_id, {signaller_id: rule_name}, outcomes) for one
+    trained population, computed exactly by exhaustive enumeration."""
+    outcomes = exhaustive_joint_table(graph, n_items, sig, gue)
+    self_reward = sum(o.reward for o in outcomes) / len(outcomes)
+    conv_id = joint_signaller_convention_id(graph, n_items, sig)
+    policies = extract_all_policies(graph, n_items, sig, gue)
+    rules = {
+        s: analyse_signaller_policy(policies[f"S{s}"], graph.out_neighbours(s)).name
+        for s in graph.signallers
+    }
+    return self_reward, conv_id, rules, outcomes
+
+
+def format_world(graph, o):
+    """One line for one enumerated world outcome (items -> lights -> guesses)."""
+    items = ", ".join(f"G{g}={ITEM_NAME[o.items[g]]}" for g in graph.guessers)
+    lights = ", ".join(f"S{s}={SIGNAL_NAME[o.signals[s]]}" for s in graph.signallers)
+    guesses = ", ".join(
+        f"G{g}={ITEM_NAME[o.guesses[g]]}{'ok' if o.correct[g] else 'XX'}"
+        for g in graph.guessers
+    )
+    return f"items({items}) -> lights({lights}) -> guesses({guesses})  R={o.reward:.2f}"
+
+
+def band(reward):
+    if reward >= 0.999:
+        return "PERFECT"
+    if abs(reward - 0.875) < 0.02:
+        return "exploiting joint channel (~0.875)"
+    if abs(reward - 0.75) < 0.02:
+        return "single-bit ceiling (~0.75)"
+    if abs(reward - 0.5) < 0.02:
+        return "at floor (~0.50)"
+    return f"partial ({reward:.3f})"
+
+
+def log_run_details(variant, runs, graph, n_items):
+    """Print, per run: self-play reward, its convention (id + signaller rules),
+    and the full enumerated rule (all four worlds). Returns the list of
+    conv_ids and self-rewards, one per run, for the pairwise analysis."""
+    print(f"\n  --- {variant}: per-run conventions ({len(runs)} runs) ---")
+    conv_ids, self_rewards = [], []
+    for k, (sig, gue) in enumerate(runs):
+        r, cid, rules, outcomes = describe_run(graph, n_items, sig, gue)
+        conv_ids.append(cid)
+        self_rewards.append(r)
+        rule_str = ", ".join(f"S{s}: {rules[s]}" for s in graph.signallers)
+        print(f"\n  run {k + 1:2d} (seed {k}): self-play R={r:.3f}  [{band(r)}]")
+        print(f"      convention id {cid}  |  {rule_str}")
+        for o in outcomes:  # all 4 worlds = the complete rule
+            print(f"        {format_world(graph, o)}")
+    return conv_ids, self_rewards
+
+
+def classify_pair(reward):
+    if reward >= 0.95:
+        return "COMPATIBLE"
+    if reward <= 0.05:
+        return "ANTI-COMPATIBLE"
+    if abs(reward - 0.5) < 0.06:
+        return "ORTHOGONAL"
+    return "PARTIAL"
+
+
+def log_pairwise(variant, pop, conv_ids, self_rewards):
+    """Print the convention equivalence classes and a convention-vs-convention
+    cross-play summary, so which conventions coordinate (and which clash) is
+    explicit."""
+    n = len(conv_ids)
+
+    # group runs that found the identical joint signaller convention
+    classes = {}
+    for k, cid in enumerate(conv_ids):
+        classes.setdefault(cid, []).append(k + 1)
+    print(f"\n  --- {variant}: convention equivalence classes ---")
+    for cid, members in sorted(classes.items(), key=lambda kv: (-len(kv[1]), kv[0])):
+        rep = members[0] - 1
+        print(f"      conv {cid}: runs {members}  (self-play R={self_rewards[rep]:.3f})")
+
+    # convention-vs-convention cross reward (mean over member pairings),
+    # row = guesser-run convention, col = signaller-run convention
+    cids = sorted(classes.keys())
+    print(f"\n  --- {variant}: cross-play by convention "
+          f"(guesser conv x signaller conv -> mean reward) ---")
+    for ci in cids:
+        for cj in cids:
+            gi = [m - 1 for m in classes[ci]]
+            sj = [m - 1 for m in classes[cj]]
+            vals = [pop[i, j] for i in gi for j in sj if not (ci == cj and i == j)]
+            if not vals:
+                vals = [pop[gi[0], sj[0]]]  # singleton self-class: use the self cell
+            mean = sum(vals) / len(vals)
+            tag = "self " if ci == cj else classify_pair(mean)
+            print(f"      guesser {ci}  x  signaller {cj}  ->  R={mean:.3f}  [{tag}]")
+
+    # a few representative concrete pairings per outcome category
+    print(f"\n  --- {variant}: example pairings by outcome ---")
+    seen = {"COMPATIBLE": 0, "ANTI-COMPATIBLE": 0, "ORTHOGONAL": 0, "PARTIAL": 0}
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+            cat = classify_pair(pop[i, j])
+            if seen[cat] < 4:
+                seen[cat] += 1
+                print(f"      guesser run {i + 1:2d} (conv {conv_ids[i]})  x  "
+                      f"signaller run {j + 1:2d} (conv {conv_ids[j]})  ->  "
+                      f"R={pop[i, j]:.2f}  [{cat}]")
 
 
 def render_matrix(ax, matrix, title):
@@ -122,12 +262,22 @@ def main():
         print(f"# {variant}")
         print(f"{'#' * 72}", flush=True)
 
-        # --- train NUM_RUNS populations ---
+        # --- obtain NUM_RUNS populations (load from cache or train+save) ---
+        cached = sum(
+            1 for seed in range(NUM_RUNS)
+            if USE_CACHE and os.path.isfile(os.path.join(MODEL_DIR, variant, f"run{seed}.pt"))
+        )
         runs = []
         for seed in range(NUM_RUNS):
             env = make_env(seed=seed)
             runs.append(train_run(variant, env, seed))
-        print(f"  trained {NUM_RUNS} populations ({time.time() - t0:.0f}s)", flush=True)
+        print(f"  {NUM_RUNS} populations ready ({cached} loaded from cache, "
+              f"{NUM_RUNS - cached} trained) ({time.time() - t0:.0f}s)", flush=True)
+
+        # --- log each run's convention (reward, id, signaller rules, full rule) ---
+        _probe = make_env()
+        graph, n_items = _probe.graph, _probe.item_space.n
+        conv_ids, self_rewards = log_run_details(variant, runs, graph, n_items)
 
         n = NUM_RUNS
         pop = np.zeros((n, n))                       # [guesser run i][signaller run j]
@@ -166,6 +316,9 @@ def main():
         print(f"      mean cross-play (off-diag)  : {off_mean:.3f}")
         print(f"      cross-play gap Delta        : {self_mean - off_mean:.3f}")
         print(f"      (gap near 0 = shareable convention; near self-0.5 = private code)")
+
+        # --- which conventions coordinate with which (and why) ---
+        log_pairwise(variant, pop, conv_ids, self_rewards)
 
         # --- save raw matrices ---
         np.save(os.path.join(FIG_DIR, f"crossplay_population_{variant}.npy"), pop)

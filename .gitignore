@@ -6,8 +6,17 @@ __pycache__/
 venv/
 .pytest_cache/
 
-# Results / artifacts (keep directory structure via .gitkeep)
+# Results / artifacts: ignore everything under results/ EXCEPT figure images
+# (PNG/PDF) and the directory structure. Logs, .npy matrices, large model
+# checkpoints, etc. stay ignored so the repo doesn't bloat.
 results/**/*
+# re-include directories so git descends into them to find the PNGs below
+!results/**/
+# track figure images (and any vector figures)
+!results/**/*.png
+!results/**/*.pdf
+# small per-run / summary tables (q1_hypothesis.sh) for the write-up
+!results/**/*.csv
 !results/**/.gitkeep
 *.ckpt
 *.pt
