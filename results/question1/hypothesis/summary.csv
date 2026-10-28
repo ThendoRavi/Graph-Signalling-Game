@@ -1,0 +1,129 @@
+variant,metric,value,ci_low,ci_high,p_value,note
+all,determinism_reruns_identical,1.0,,,,15/15
+all,instrumentation_noninvasive,1.0,,,,15/15
+shared,convergence_rate,0.73,0.6645656480133157,0.7867655018531416,,146/200; Wilson 95% CI
+shared,mean_reward,0.96125,0.951875,0.970625,,bootstrap 95% CI
+shared,band:perfect (1.000),0.73,0.6645656480133157,0.7867655018531416,,146/200
+shared,band:joint-channel (0.875),0.23,0.17709343259068805,0.2930830436530359,,46/200
+shared,band:single-bit (0.750),0.04,0.020405632066152306,0.07693206820093293,,8/200
+shared,band:floor (0.500),0.0,1.734723475976807e-18,0.018845326377266575,,0/200
+shared,block_homogeneity_chi2,2.13089802130898,,,0.7315268473152685,H0: same convergence rate in every seed block
+shared,median_lockin_episode,2000.0,2000.0,2250.0,,perfect runs
+shared,stability_perfect_runs,1.0,0.9743631779153262,1.0,,same convention through ep 6000
+shared,late_convergence_4000_6000,13,,,,of 54 non-perfect runs
+shared,distinct_perfect_conventions,13,,,,of 24; 146 perfect runs
+shared,dominant_convention_freq,0.17123287671232876,0.11875807430501018,0.2405647676136795,,"#24 (12, 10)"
+shared,convention_entropy_bits,3.176142479003755,3.0965189648750684,3.3933154391306113,4.999750012499375e-05,p = P(H_uniform <= H_obs)
+shared,convention_entropy_normalised,0.692730306628285,,,,H / log2(24)
+shared,tracking_fraction,0.952054794520548,0.9043471170702695,0.9765839752915324,6.967617905453543e-57,H0: 1/3 (uniform over 24)
+shared,test:A2 uniform over 24 (chi2),,,,4.999750012499375e-05,holm p = 0.0006; 
+shared,test:A2 entropy below uniform,,,,4.999750012499375e-05,holm p = 0.0006; 
+shared,test:A2 dominant above uniform,,,,4.999750012499375e-05,holm p = 0.0006; 
+shared,test:A3 P(tracking) = 1/3,,,,6.967617905453543e-57,holm p = 9.1e-56; 
+shared,test:A2 uniform within tracking,,,,0.0839458027098645,"holm p = 0.6716; chi2 = 12.42, n = 139, 8/8 members seen"
+shared,test:A2 uniform within XOR-type,,,,0.33643317834108294,"holm p = 1.0000; chi2 = 18.14, n = 7, 5/16 members seen"
+shared,test:A4 tracking: S0 tracks x0 (vs x1),,,,0.30875256919284766,"holm p = 1.0000; S0 relays G0's item (direct wiring) rather than G1's: 76/139 = 54.7% [46.4%, 62.7%]"
+shared,test:A5 tracking: S0 polarity ON=DOG,,,,0.865373510902786,"holm p = 1.0000; S0 lights ON for DOG: 68/139 = 48.9% [40.8%, 57.1%]"
+shared,test:A6 tracking: S1 polarity ON=DOG,,,,1.0,"holm p = 1.0000; S1 lights ON for DOG: 70/139 = 50.4% [42.2%, 58.5%]"
+shared,test:A7 XOR-type: parity on S1 (vs S0),,,,0.4531249999999999,"holm p = 1.0000; the parity (XOR/XNOR) bit is carried by S1: 5/7 = 71.4% [35.9%, 91.8%]"
+shared,test:A8 XOR-type: dictator tracks x0,,,,0.4531249999999999,"holm p = 1.0000; the tracking signaller relays G0's item: 2/7 = 28.6% [8.2%, 64.1%]"
+shared,test:A9 XOR-type: dictator ON=DOG,,,,0.015625000000000003,"holm p = 0.1406; the tracking signaller lights ON for DOG: 7/7 = 100.0% [64.6%, 100.0%]"
+shared,test:A10 XOR-type: XOR (vs XNOR),,,,1.0,"holm p = 1.0000; parity signaller uses XOR (ON iff items differ): 3/7 = 42.9% [15.8%, 75.0%]"
+shared,chao1_richness,13.993150684931507,,,,bias-corrected; true ceiling 24
+shared,good_turing_coverage,0.9794520547945206,,,,
+two_brain,convergence_rate,0.79,0.7283538314009754,0.8407158793002101,,158/200; Wilson 95% CI
+two_brain,mean_reward,0.970625,0.961875,0.97875,,bootstrap 95% CI
+two_brain,band:perfect (1.000),0.79,0.7283538314009754,0.8407158793002101,,158/200
+two_brain,band:joint-channel (0.875),0.185,0.13730192800616042,0.2445706276115175,,37/200
+two_brain,band:single-bit (0.750),0.025,0.010724719651761264,0.05717834040664198,,5/200
+two_brain,band:floor (0.500),0.0,1.734723475976807e-18,0.018845326377266575,,0/200
+two_brain,block_homogeneity_chi2,4.400241109101868,,,0.38866113388661133,H0: same convergence rate in every seed block
+two_brain,median_lockin_episode,1750.0,1750.0,2000.0,,perfect runs
+two_brain,stability_perfect_runs,1.0,0.9762640620723142,1.0,,same convention through ep 6000
+two_brain,late_convergence_4000_6000,9,,,,of 42 non-perfect runs
+two_brain,distinct_perfect_conventions,16,,,,of 24; 158 perfect runs
+two_brain,dominant_convention_freq,0.13291139240506328,0.08860203737332539,0.19464713224446928,,"#4 (3, 10)"
+two_brain,convention_entropy_bits,3.314944506629229,3.2307994241596485,3.5495889656160857,4.999750012499375e-05,p = P(H_uniform <= H_obs)
+two_brain,convention_entropy_normalised,0.7230036245896952,,,,H / log2(24)
+two_brain,tracking_fraction,0.9367088607594937,0.8874247708885052,0.9652615618075668,8.71907967933875e-58,H0: 1/3 (uniform over 24)
+two_brain,test:A2 uniform over 24 (chi2),,,,4.999750012499375e-05,holm p = 0.0006; 
+two_brain,test:A2 entropy below uniform,,,,4.999750012499375e-05,holm p = 0.0006; 
+two_brain,test:A2 dominant above uniform,,,,9.99950002499875e-05,holm p = 0.0010; 
+two_brain,test:A3 P(tracking) = 1/3,,,,8.71907967933875e-58,holm p = 1.1e-56; 
+two_brain,test:A2 uniform within tracking,,,,0.783660816959152,"holm p = 1.0000; chi2 = 4.00, n = 148, 8/8 members seen"
+two_brain,test:A2 uniform within XOR-type,,,,0.8056097195140243,"holm p = 1.0000; chi2 = 12.40, n = 10, 8/16 members seen"
+two_brain,test:A4 tracking: S0 tracks x0 (vs x1),,,,0.45954104383071814,"holm p = 1.0000; S0 relays G0's item (direct wiring) rather than G1's: 69/148 = 46.6% [38.8%, 54.6%]"
+two_brain,test:A5 tracking: S0 polarity ON=DOG,,,,0.3659440738176085,"holm p = 1.0000; S0 lights ON for DOG: 68/148 = 45.9% [38.1%, 54.0%]"
+two_brain,test:A6 tracking: S1 polarity ON=DOG,,,,0.681217086893959,"holm p = 1.0000; S1 lights ON for DOG: 77/148 = 52.0% [44.0%, 59.9%]"
+two_brain,test:A7 XOR-type: parity on S1 (vs S0),,,,0.9999999999999983,"holm p = 1.0000; the parity (XOR/XNOR) bit is carried by S1: 5/10 = 50.0% [23.7%, 76.3%]"
+two_brain,test:A8 XOR-type: dictator tracks x0,,,,0.753906249999999,"holm p = 1.0000; the tracking signaller relays G0's item: 4/10 = 40.0% [16.8%, 68.7%]"
+two_brain,test:A9 XOR-type: dictator ON=DOG,,,,0.753906249999999,"holm p = 1.0000; the tracking signaller lights ON for DOG: 6/10 = 60.0% [31.3%, 83.2%]"
+two_brain,test:A10 XOR-type: XOR (vs XNOR),,,,0.10937500000000006,"holm p = 0.9844; parity signaller uses XOR (ON iff items differ): 2/10 = 20.0% [5.7%, 51.0%]"
+two_brain,chao1_richness,20.968354430379748,,,,bias-corrected; true ceiling 24
+two_brain,good_turing_coverage,0.9620253164556962,,,,
+independent,convergence_rate,0.77,0.7069169563469642,0.8229065674093119,,154/200; Wilson 95% CI
+independent,mean_reward,0.963125,0.9525,0.973125,,bootstrap 95% CI
+independent,band:perfect (1.000),0.77,0.7069169563469642,0.8229065674093119,,154/200
+independent,band:joint-channel (0.875),0.165,0.11996855328217307,0.2226578153905955,,33/200
+independent,band:single-bit (0.750),0.065,0.03837635464915299,0.10801907929906895,,13/200
+independent,band:floor (0.500),0.0,1.734723475976807e-18,0.018845326377266575,,0/200
+independent,block_homogeneity_chi2,1.5245623941276119,,,0.8582141785821418,H0: same convergence rate in every seed block
+independent,median_lockin_episode,1500.0,1500.0,1750.0,,perfect runs
+independent,stability_perfect_runs,1.0,0.9756625486776705,1.0,,same convention through ep 6000
+independent,late_convergence_4000_6000,9,,,,of 46 non-perfect runs
+independent,distinct_perfect_conventions,11,,,,of 24; 154 perfect runs
+independent,dominant_convention_freq,0.17532467532467533,0.12338255592825187,0.24307033454079335,,"#1 (3, 5)"
+independent,convention_entropy_bits,3.1208150574241973,3.054279557179122,3.2986941614582785,4.999750012499375e-05,p = P(H_uniform <= H_obs)
+independent,convention_entropy_normalised,0.6806631585172905,,,,H / log2(24)
+independent,tracking_fraction,0.961038961038961,0.9176133399821844,0.9820235555517716,3.6583607717606027e-62,H0: 1/3 (uniform over 24)
+independent,test:A2 uniform over 24 (chi2),,,,4.999750012499375e-05,holm p = 0.0006; 
+independent,test:A2 entropy below uniform,,,,4.999750012499375e-05,holm p = 0.0006; 
+independent,test:A2 dominant above uniform,,,,4.999750012499375e-05,holm p = 0.0006; 
+independent,test:A3 P(tracking) = 1/3,,,,3.6583607717606027e-62,holm p = 4.8e-61; 
+independent,test:A2 uniform within tracking,,,,0.09864506774661266,"holm p = 0.7892; chi2 = 12.22, n = 148, 8/8 members seen"
+independent,test:A2 uniform within XOR-type,,,,0.01454927253637318,"holm p = 0.1309; chi2 = 31.33, n = 6, 3/16 members seen"
+independent,test:A4 tracking: S0 tracks x0 (vs x1),,,,0.3659440738176085,"holm p = 1.0000; S0 relays G0's item (direct wiring) rather than G1's: 68/148 = 45.9% [38.1%, 54.0%]"
+independent,test:A5 tracking: S0 polarity ON=DOG,,,,0.8053209566402149,"holm p = 1.0000; S0 lights ON for DOG: 72/148 = 48.6% [40.7%, 56.6%]"
+independent,test:A6 tracking: S1 polarity ON=DOG,,,,0.16207156803057612,"holm p = 1.0000; S1 lights ON for DOG: 65/148 = 43.9% [36.2%, 52.0%]"
+independent,test:A7 XOR-type: parity on S1 (vs S0),,,,0.6875000000000013,"holm p = 1.0000; the parity (XOR/XNOR) bit is carried by S1: 4/6 = 66.7% [30.0%, 90.3%]"
+independent,test:A8 XOR-type: dictator tracks x0,,,,1.0,"holm p = 1.0000; the tracking signaller relays G0's item: 3/6 = 50.0% [18.8%, 81.2%]"
+independent,test:A9 XOR-type: dictator ON=DOG,,,,1.0,"holm p = 1.0000; the tracking signaller lights ON for DOG: 3/6 = 50.0% [18.8%, 81.2%]"
+independent,test:A10 XOR-type: XOR (vs XNOR),,,,0.6875000000000013,"holm p = 1.0000; parity signaller uses XOR (ON iff items differ): 4/6 = 66.7% [30.0%, 90.3%]"
+independent,chao1_richness,11.0,,,,bias-corrected; true ceiling 24
+independent,good_turing_coverage,0.9935064935064936,,,,
+all,variant_rate_homogeneity,2.0665477581647087,,,0.3575642435756424,
+all,fisher_rate:shared vs two_brain,,,,0.19766516724839217,holm p = 0.5930
+all,fisher_rate:shared vs independent,,,,0.41900675639886914,holm p = 0.8380
+all,fisher_rate:two_brain vs independent,,,,0.7174169626473833,holm p = 0.8380
+all,variant_kind_homogeneity,,,,0.6257374262573743,
+all,variant_convention_homogeneity,,,,0.0837916208379162,
+POOLED (all variants),convergence_rate,0.7633333333333333,0.727715735944399,0.7956004348550519,,458/600; Wilson 95% CI
+POOLED (all variants),mean_reward,0.965,0.959375,0.9702083333333333,,bootstrap 95% CI
+POOLED (all variants),band:perfect (1.000),0.7633333333333333,0.727715735944399,0.7956004348550519,,458/600
+POOLED (all variants),band:joint-channel (0.875),0.19333333333333333,0.16372559988686522,0.22684291006820453,,116/600
+POOLED (all variants),band:single-bit (0.750),0.043333333333333335,0.02974099813478266,0.06273602212439733,,26/600
+POOLED (all variants),band:floor (0.500),0.0,4.336808689942018e-19,0.00636170101370071,,0/600
+POOLED (all variants),block_homogeneity_chi2,1.1624331139676487,,,0.8916108389161084,H0: same convergence rate in every seed block
+POOLED (all variants),median_lockin_episode,1750.0,1750.0,2000.0,,perfect runs
+POOLED (all variants),stability_perfect_runs,1.0,0.9916822997430694,1.0,,same convention through ep 6000
+POOLED (all variants),late_convergence_4000_6000,31,,,,of 142 non-perfect runs
+POOLED (all variants),distinct_perfect_conventions,19,,,,of 24; 458 perfect runs
+POOLED (all variants),dominant_convention_freq,0.14192139737991266,0.11293421308231226,0.17686536264754205,,"#1 (3, 5)"
+POOLED (all variants),convention_entropy_bits,3.2851224305472027,3.2190054161139137,3.409686963401657,4.999750012499375e-05,p = P(H_uniform <= H_obs)
+POOLED (all variants),convention_entropy_normalised,0.7164993018002862,,,,H / log2(24)
+POOLED (all variants),tracking_fraction,0.9497816593886463,0.9257742565353394,0.9663067641942341,9.062084080084735e-174,H0: 1/3 (uniform over 24)
+POOLED (all variants),test:A2 uniform over 24 (chi2),,,,4.999750012499375e-05,holm p = 0.0006; 
+POOLED (all variants),test:A2 entropy below uniform,,,,4.999750012499375e-05,holm p = 0.0006; 
+POOLED (all variants),test:A2 dominant above uniform,,,,4.999750012499375e-05,holm p = 0.0006; 
+POOLED (all variants),test:A3 P(tracking) = 1/3,,,,9.062084080084735e-174,holm p = 1.2e-172; 
+POOLED (all variants),test:A2 uniform within tracking,,,,0.35138243087845605,"holm p = 1.0000; chi2 = 7.87, n = 435, 8/8 members seen"
+POOLED (all variants),test:A2 uniform within XOR-type,,,,0.11589420528973551,"holm p = 0.9272; chi2 = 22.22, n = 23, 11/16 members seen"
+POOLED (all variants),test:A4 tracking: S0 tracks x0 (vs x1),,,,0.7013433427064668,"holm p = 1.0000; S0 relays G0's item (direct wiring) rather than G1's: 213/435 = 49.0% [44.3%, 53.7%]"
+POOLED (all variants),test:A5 tracking: S0 polarity ON=DOG,,,,0.3881422932702235,"holm p = 1.0000; S0 lights ON for DOG: 208/435 = 47.8% [43.2%, 52.5%]"
+POOLED (all variants),test:A6 tracking: S1 polarity ON=DOG,,,,0.6316596005460178,"holm p = 1.0000; S1 lights ON for DOG: 212/435 = 48.7% [44.1%, 53.4%]"
+POOLED (all variants),test:A7 XOR-type: parity on S1 (vs S0),,,,0.4048728942871117,"holm p = 1.0000; the parity (XOR/XNOR) bit is carried by S1: 14/23 = 60.9% [40.8%, 77.8%]"
+POOLED (all variants),test:A8 XOR-type: dictator tracks x0,,,,0.4048728942871117,"holm p = 1.0000; the tracking signaller relays G0's item: 9/23 = 39.1% [22.2%, 59.2%]"
+POOLED (all variants),test:A9 XOR-type: dictator ON=DOG,,,,0.09313964843750036,"holm p = 0.8383; the tracking signaller lights ON for DOG: 16/23 = 69.6% [49.1%, 84.4%]"
+POOLED (all variants),test:A10 XOR-type: XOR (vs XNOR),,,,0.4048728942871117,"holm p = 1.0000; parity signaller uses XOR (ON iff items differ): 9/23 = 39.1% [22.2%, 59.2%]"
+POOLED (all variants),chao1_richness,33.967248908296945,,,,bias-corrected; true ceiling 24
+POOLED (all variants),good_turing_coverage,0.9868995633187773,,,,
