@@ -10,24 +10,41 @@
 #
 # Cross-play evaluation on K_{2,2} (Section sec:baseline-crossplay).
 #
-# Runs experiments/crossplay_k22.py, which for each IQL variant (shared-brain,
-# two-brain, independent) trains 15 independent populations and measures
-# cross-play: pairing signallers from one run with guessers from another.
-# Produces, per variant:
-#   * a 15x15 population cross-play matrix (mean team reward; x = signaller run,
-#     y = guesser run, diagonal = self-play) -- the direct analogue of a Hanabi
-#     cross-play matrix, with runs labelled 1..15;
+# Runs experiments/crossplay_k22.py TWICE, once per experiment:
+#
+#   1. --mode all      the normal experiment: seeds 0..14 per variant, exactly
+#                      as trained, so imperfect runs (R = 0.875 / 0.75) are
+#                      included and some self-play cells are below 1.0.
+#   2. --mode perfect  only runs that achieved perfect coordination: seeds are
+#                      scanned from 0 upward and the first 15 whose self-play is
+#                      exactly R = 1.0 are kept (the rest are logged and
+#                      excluded). Every self-play cell is 1.0, so any cross-play
+#                      drop is purely a mismatch between two perfect conventions.
+#
+# Both modes share the trained-model cache, so experiment 2 reuses seeds 0..14
+# from experiment 1 and only trains the extra seeds it needs.
+#
+# For each IQL variant (shared-brain, two-brain, independent) each experiment
+# produces:
+#   * a 15x15 population cross-play matrix (team reward; x = signaller run,
+#     y = guesser run). The diagonal is SELF-PLAY: run i's own signallers
+#     played against run i's own guessers, through exactly the same evaluation
+#     as every off-diagonal cell -- nothing is copied from training;
 #   * a 2x2 grid of per-edge cross-play matrices (one per signalling edge
 #     S_a -> G_b), isolating how tolerant each edge is to a foreign partner;
 #   * the cross-play gap Delta = (mean self-play) - (mean off-diagonal).
+# Every pairing is played exactly over all four equally likely worlds (no
+# sampling noise); self-play is additionally cross-checked on 400 sampled
+# episodes.
 #
-# The log (saved via tee below) additionally records, for every run: its
-# self-play reward and band, its joint convention id, its per-signaller rule,
-# and the full enumerated rule (all four worlds); then the convention
-# equivalence classes (which runs share a convention), a convention-vs-
-# convention cross-play table, and example pairings grouped by outcome
-# (COMPATIBLE / ANTI-COMPATIBLE / ORTHOGONAL / PARTIAL) -- so which conventions
-# coordinate with which, and why, is explicit in the text log.
+# Each log (saved via tee below) records, for every run: its seed, its
+# self-play reward (exact and sampled) and band, its joint convention id, its
+# per-signaller rule, and the full enumerated self-play (all four worlds); then
+# the distribution of cross-play cell values (perfect mode: against the
+# prediction for uniformly drawn tracking conventions), the convention
+# equivalence classes, a convention-vs-convention cross-play table, example
+# pairings grouped by outcome (COMPATIBLE / ANTI-COMPATIBLE / ORTHOGONAL /
+# PARTIAL), and a final per-variant summary table.
 #
 # Works both under SLURM (`sbatch crossplay.sh`) and as a plain script
 # (`bash crossplay.sh`) on any SSH box. Submit it FROM the repo root
@@ -35,11 +52,17 @@
 # repo is located (the script itself runs from a read-only spool copy).
 #
 # Outputs:
-#   results/question1/figures/crossplay/crossplay_population_<variant>.png
-#   results/question1/figures/crossplay/crossplay_edges_<variant>.png
-#   results/question1/figures/crossplay/*.npy                 (raw matrices)
-#   results/question1/logs/crossplay_<timestamp>.log          (tee'd stdout)
-#   gsg_crossplay_<jobid>.log                                 (SLURM only)
+#   results/question1/figures/crossplay/crossplay_population_<variant>.png          (experiment 1)
+#   results/question1/figures/crossplay/crossplay_edges_<variant>.png               (experiment 1)
+#   results/question1/figures/crossplay/crossplay_population_<variant>_perfect.png  (experiment 2)
+#   results/question1/figures/crossplay/crossplay_edges_<variant>_perfect.png       (experiment 2)
+#   results/question1/figures/crossplay/*.npy                 (raw matrices + seeds per run)
+#   results/question1/logs/crossplay_all_<timestamp>.log      (tee'd stdout, experiment 1)
+#   results/question1/logs/crossplay_perfect_<timestamp>.log  (tee'd stdout, experiment 2)
+#   gsg_crossplay_<jobid>.log                                 (SLURM only, both experiments)
+#
+# Override the perfect-mode seed scan limit (default 100) with e.g.
+#   GSG_CROSSPLAY_MAX_SEEDS=200 sbatch crossplay.sh
 
 set -euo pipefail
 
@@ -78,16 +101,24 @@ if [ -z "${VIRTUAL_ENV:-}" ] && [ -f "$REPO_ROOT/.venv/bin/activate" ]; then
 fi
 
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
-RUN_LOG="results/question1/logs/crossplay_${TIMESTAMP}.log"
+LOG_ALL="results/question1/logs/crossplay_all_${TIMESTAMP}.log"
+LOG_PERFECT="results/question1/logs/crossplay_perfect_${TIMESTAMP}.log"
 
 echo "Started at:   $(date)"
 echo "Repo root:    $REPO_ROOT"
 echo "Python:       $($PYTHON --version 2>&1) ($(command -v "$PYTHON" || echo "$PYTHON"))"
-echo "Run log:      $RUN_LOG"
+echo "Logs:         $LOG_ALL"
+echo "              $LOG_PERFECT"
 echo
 
-PYTHONUNBUFFERED=1 "$PYTHON" experiments/crossplay_k22.py 2>&1 | tee "$RUN_LOG"
+echo "=== Experiment 1/2: all runs (seeds 0..14, imperfect included) ==="
+PYTHONUNBUFFERED=1 "$PYTHON" experiments/crossplay_k22.py --mode all 2>&1 | tee "$LOG_ALL"
+
+echo
+echo "=== Experiment 2/2: perfect runs only (self-play R = 1.0) ==="
+PYTHONUNBUFFERED=1 "$PYTHON" experiments/crossplay_k22.py --mode perfect 2>&1 | tee "$LOG_PERFECT"
 
 echo
 echo "Done at:      $(date)"
-echo "Full log:     $REPO_ROOT/$RUN_LOG"
+echo "Logs:         $REPO_ROOT/$LOG_ALL"
+echo "              $REPO_ROOT/$LOG_PERFECT"

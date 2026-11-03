@@ -94,7 +94,7 @@ echo "Started at:   $(date)"
 echo "Repo root:    $REPO_ROOT"
 echo "Python:       $($PYTHON --version 2>&1) ($(command -v "$PYTHON" || echo "$PYTHON"))"
 echo "Workers:      $GSG_WORKERS"
-echo "Seeds:        ${GSG_NUM_SEEDS:-100} per variant, starting at ${GSG_SEED_START:-0}"
+echo "Seeds:        ${GSG_NUM_SEEDS:-200} per variant, starting at ${GSG_SEED_START:-0}"
 echo "Run log:      $RUN_LOG"
 echo
 
