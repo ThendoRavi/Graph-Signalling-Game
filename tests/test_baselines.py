@@ -13,10 +13,15 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from gsg.baselines.oracle_baseline import k22_oracle
+from gsg.baselines.oracle_baseline import (
+    complete_bipartite_optimum,
+    complete_bipartite_oracle,
+    k22_oracle,
+)
 from gsg.baselines.random_baseline import RandomGuesser, RandomSignaller
 from gsg.environment.graph_signalling_game import GraphSignallingGame
 from gsg.environment.graphs import SignallingGraph
+from gsg.evaluation.conventions import exhaustive_joint_table
 from gsg.evaluation.metrics import evaluate
 
 
@@ -43,6 +48,21 @@ def test_k22_random_near_floor():
     guessers = {g: RandomGuesser(num_item_values=2, seed=200 + g) for g in env.graph.guessers}
     result = evaluate(env, signallers, guessers, episodes=20000, seed=101)
     assert abs(result.mean_reward - 0.5) < 0.03, result
+
+
+def test_complete_bipartite_oracle_reaches_covering_optimum():
+    """The K_{m,n} oracle scores exactly the covering-code optimum (Family A)."""
+    expected = {
+        (1, 2): 3 / 4, (2, 1): 1.0, (1, 3): 3 / 4, (3, 1): 1.0, (1, 4): 11 / 16, (4, 1): 1.0,
+        (2, 2): 1.0, (2, 3): 5 / 6, (3, 2): 1.0, (2, 4): 13 / 16, (4, 2): 1.0, (3, 3): 1.0,
+    }
+    for (m, n), reward in expected.items():
+        assert abs(complete_bipartite_optimum(m, n)[0] - reward) < 1e-12, (m, n)
+        graph = SignallingGraph.complete_bipartite(m, n)
+        signallers, guessers = complete_bipartite_oracle(graph)
+        outcomes = exhaustive_joint_table(graph, 2, signallers, guessers)
+        played = sum(o.reward for o in outcomes) / len(outcomes)
+        assert abs(played - reward) < 1e-12, (m, n, played)
 
 
 def _run_all():

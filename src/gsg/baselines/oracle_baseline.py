@@ -15,11 +15,12 @@ copies the bit. That is the ``single_pair_oracle`` helper below.
 
 from __future__ import annotations
 
-from typing import Dict, Tuple
+import itertools
+from typing import Dict, List, Tuple
 
 from ..agents.base_agent import GuesserAgent, SignallerAgent
-from ..agents.guesser import CopySignalGuesser
-from ..agents.signaller import TrackingSignaller
+from ..agents.guesser import CopySignalGuesser, DeterministicGuesser
+from ..agents.signaller import DeterministicSignaller, TrackingSignaller
 from ..environment.graphs import SignallingGraph
 
 
@@ -91,4 +92,72 @@ def matching_oracle(
             )
         guessers[g] = CopySignalGuesser(index=0)
 
+    return signallers, guessers
+
+
+def complete_bipartite_optimum(
+    num_signallers: int, num_guessers: int
+) -> Tuple[float, List[Tuple[int, ...]]]:
+    """Best achievable team reward on K_{m,n} with binary items, and a codebook
+    that achieves it.
+
+    On a complete bipartite graph every signaller sees every item and every
+    guesser hears every light, so the m lights jointly send one of ``2 ** m``
+    messages about the ``2 ** n`` equally likely worlds, and each message can
+    stand for one reconstruction of all n items. Maximising the fraction of
+    correct guesses is therefore the covering-code problem: choose at most
+    ``2 ** m`` codewords minimising the mean Hamming distance from a world to
+    its nearest codeword. With ``m >= n`` every world gets its own codeword and
+    the optimum is 1.0; with ``m < n`` it is found here by exhaustive search,
+    which is cheap for the sizes used (at most C(16, 4) = 1820 codebooks).
+    """
+    worlds = list(itertools.product((0, 1), repeat=num_guessers))
+    size = min(2 ** num_signallers, len(worlds))
+    best_distance, best_code = None, None
+    for code in itertools.combinations(worlds, size):
+        distance = sum(min(_hamming(w, c) for c in code) for w in worlds)
+        if best_distance is None or distance < best_distance:
+            best_distance, best_code = distance, code
+    return 1.0 - best_distance / (len(worlds) * num_guessers), list(best_code)
+
+
+def _hamming(a: Tuple[int, ...], b: Tuple[int, ...]) -> int:
+    return sum(x != y for x, y in zip(a, b))
+
+
+def complete_bipartite_oracle(
+    graph: SignallingGraph,
+) -> Tuple[Dict[int, SignallerAgent], Dict[int, GuesserAgent]]:
+    """Optimal agents for any complete bipartite graph K_{m,n}.
+
+    Implements :func:`complete_bipartite_optimum`'s codebook: the signallers
+    jointly send the index of the world's nearest codeword (signaller ``s``
+    emits bit ``s`` of that index) and each guesser answers with its own
+    position in the indexed codeword. Raises if the graph is not complete
+    bipartite, since the codebook argument relies on full connectivity.
+    """
+    signaller_ids, guesser_ids = graph.signallers, graph.guessers
+    if len(graph.edges) != len(signaller_ids) * len(guesser_ids):
+        raise ValueError("complete_bipartite_oracle requires a complete bipartite graph")
+    _reward, code = complete_bipartite_optimum(len(signaller_ids), len(guesser_ids))
+
+    signaller_policy: Dict[int, Dict[Tuple[int, ...], int]] = {s: {} for s in signaller_ids}
+    for world in itertools.product((0, 1), repeat=len(guesser_ids)):
+        index = min(range(len(code)), key=lambda j: _hamming(world, code[j]))
+        for bit, s in enumerate(signaller_ids):
+            signaller_policy[s][world] = (index >> bit) & 1
+
+    guesser_policy: Dict[int, Dict[Tuple[int, ...], int]] = {g: {} for g in guesser_ids}
+    for lights in itertools.product((0, 1), repeat=len(signaller_ids)):
+        index = sum(light << bit for bit, light in enumerate(lights))
+        for position, g in enumerate(guesser_ids):
+            # light patterns outside the codebook are never sent
+            guesser_policy[g][lights] = code[index][position] if index < len(code) else 0
+
+    signallers: Dict[int, SignallerAgent] = {
+        s: DeterministicSignaller(policy) for s, policy in signaller_policy.items()
+    }
+    guessers: Dict[int, GuesserAgent] = {
+        g: DeterministicGuesser(policy) for g, policy in guesser_policy.items()
+    }
     return signallers, guessers
