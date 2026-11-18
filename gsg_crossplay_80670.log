@@ -1,0 +1,1483 @@
+Started at:   Tue Nov  3 04:17:14 PM UTC 2026
+Repo root:    /home-mscluster/travhengani/Graph-Signalling-Game
+Python:       Python 3.13.5 (/home-mscluster/travhengani/miniconda3/bin/python3)
+Logs:         results/question1/logs/crossplay_all_20261103_161714.log
+              results/question1/logs/crossplay_perfect_20261103_161714.log
+
+=== Experiment 1/2: all runs (seeds 0..14, imperfect included) ===
+========================================================================
+Cross-play evaluation, K_2,2 -- mode: all -- all runs (seeds 0..14, imperfect included)
+15 runs/variant, 4000 train episodes; every pairing played exactly over all 4 worlds
+self-play = diagonal = a run's own signallers played against its own guessers
+========================================================================
+
+########################################################################
+# shared  [all]
+########################################################################
+  15 populations selected from seeds 0..14 (0 loaded from cache, 15 trained) (118s)
+
+  --- shared: per-run conventions and self-play (15 runs) ---
+      self-play = this run's signallers played against this run's guessers
+
+  run 1 (seed 0): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 2 (seed 1): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 3 (seed 2): self-play R=0.750 exact (all worlds), 0.735 over 400 sampled episodes  [single-bit ceiling (~0.75)]
+      convention id (12, 0)  |  S0: track G0, S1: constant OFF (pooling)
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGXX)  R=0.50
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 4 (seed 3): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 5)  |  S0: track G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 5 (seed 4): self-play R=0.875 exact (all worlds), 0.877 over 400 sampled episodes  [exploiting joint channel (~0.875)]
+      convention id (13, 10)  |  S0: general(G0,G1) [nonlinear], S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGXX, G1=CATok)  R=0.50
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 6 (seed 5): self-play R=0.750 exact (all worlds), 0.735 over 400 sampled episodes  [single-bit ceiling (~0.75)]
+      convention id (1, 6)  |  S0: general(G0,G1) [nonlinear], S1: XOR(G0,G1)
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGXX, G1=DOGok)  R=0.50
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGXX)  R=0.50
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 7 (seed 6): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 8 (seed 7): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 12)  |  S0: track NOT G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 9 (seed 8): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 5)  |  S0: track G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 10 (seed 9): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 11 (seed 10): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 12 (seed 11): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 13 (seed 12): self-play R=0.875 exact (all worlds), 0.859 over 400 sampled episodes  [exploiting joint channel (~0.875)]
+      convention id (8, 11)  |  S0: general(G0,G1) [nonlinear], S1: general(G0,G1) [nonlinear]
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 14 (seed 13): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 15 (seed 14): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  15x15 pairings played (121s)
+
+  --- shared: cross-play summary [all] ---
+      self-play (diagonal: own signallers x own guessers), per run: 1.000 1.000 0.750 1.000 0.875 0.750 1.000 1.000 1.000 1.000 1.000 1.000 0.875 1.000 1.000
+      self-play runs at R = 1.0       : 11/15
+      mean self-play (diagonal)       : 0.950
+      mean cross-play (off-diagonal)  : 0.500
+      cross-play gap Delta            : 0.450
+      (gap near 0 = shareable convention; near self-0.5 = private code)
+
+  --- shared: distribution of the 210 off-diagonal (cross-play) cells ---
+      R = 1.000:  12 cells = 0.057  [COMPATIBLE]
+      R = 0.875:   4 cells = 0.019  [PARTIAL]
+      R = 0.750:  19 cells = 0.090  [PARTIAL]
+      R = 0.625:  21 cells = 0.100  [PARTIAL]
+      R = 0.500: 101 cells = 0.481  [ORTHOGONAL]
+      R = 0.375:  20 cells = 0.095  [PARTIAL]
+      R = 0.250:  16 cells = 0.076  [PARTIAL]
+      R = 0.125:   1 cells = 0.005  [PARTIAL]
+      R = 0.000:  16 cells = 0.076  [ANTI-COMPATIBLE]
+
+  --- shared: convention equivalence classes ---
+      conv (10, 12): runs [7, 10, 12]  (self-play R=1.000)
+      conv (5, 3): runs [1, 14]  (self-play R=1.000)
+      conv (12, 5): runs [4, 9]  (self-play R=1.000)
+      conv (12, 10): runs [2, 11]  (self-play R=1.000)
+      conv (1, 6): runs [6]  (self-play R=0.750)
+      conv (3, 10): runs [15]  (self-play R=1.000)
+      conv (5, 12): runs [8]  (self-play R=1.000)
+      conv (8, 11): runs [13]  (self-play R=0.875)
+      conv (12, 0): runs [3]  (self-play R=0.750)
+      conv (13, 10): runs [5]  (self-play R=0.875)
+
+  --- shared: cross-play by convention (guesser conv x signaller conv -> mean reward) ---
+      guesser (1, 6)  x  signaller (1, 6)  ->  R=0.750  [self ]
+      guesser (1, 6)  x  signaller (3, 10)  ->  R=0.750  [PARTIAL]
+      guesser (1, 6)  x  signaller (5, 3)  ->  R=0.750  [PARTIAL]
+      guesser (1, 6)  x  signaller (5, 12)  ->  R=0.750  [PARTIAL]
+      guesser (1, 6)  x  signaller (8, 11)  ->  R=0.250  [PARTIAL]
+      guesser (1, 6)  x  signaller (10, 12)  ->  R=0.250  [PARTIAL]
+      guesser (1, 6)  x  signaller (12, 0)  ->  R=0.250  [PARTIAL]
+      guesser (1, 6)  x  signaller (12, 5)  ->  R=0.250  [PARTIAL]
+      guesser (1, 6)  x  signaller (12, 10)  ->  R=0.250  [PARTIAL]
+      guesser (1, 6)  x  signaller (13, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (1, 6)  ->  R=0.625  [PARTIAL]
+      guesser (3, 10)  x  signaller (3, 10)  ->  R=1.000  [self ]
+      guesser (3, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (5, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (8, 11)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (12, 0)  ->  R=0.250  [PARTIAL]
+      guesser (3, 10)  x  signaller (12, 5)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (3, 10)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (13, 10)  ->  R=0.625  [PARTIAL]
+      guesser (5, 3)  x  signaller (1, 6)  ->  R=0.625  [PARTIAL]
+      guesser (5, 3)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (5, 3)  ->  R=1.000  [self ]
+      guesser (5, 3)  x  signaller (5, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (8, 11)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (10, 12)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (5, 3)  x  signaller (12, 0)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (13, 10)  ->  R=0.625  [PARTIAL]
+      guesser (5, 12)  x  signaller (1, 6)  ->  R=0.625  [PARTIAL]
+      guesser (5, 12)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (5, 12)  ->  R=1.000  [self ]
+      guesser (5, 12)  x  signaller (8, 11)  ->  R=0.250  [PARTIAL]
+      guesser (5, 12)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (12, 0)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (13, 10)  ->  R=0.625  [PARTIAL]
+      guesser (8, 11)  x  signaller (1, 6)  ->  R=0.375  [PARTIAL]
+      guesser (8, 11)  x  signaller (3, 10)  ->  R=0.375  [PARTIAL]
+      guesser (8, 11)  x  signaller (5, 3)  ->  R=0.375  [PARTIAL]
+      guesser (8, 11)  x  signaller (5, 12)  ->  R=0.125  [PARTIAL]
+      guesser (8, 11)  x  signaller (8, 11)  ->  R=0.875  [self ]
+      guesser (8, 11)  x  signaller (10, 12)  ->  R=0.625  [PARTIAL]
+      guesser (8, 11)  x  signaller (12, 0)  ->  R=0.500  [ORTHOGONAL]
+      guesser (8, 11)  x  signaller (12, 5)  ->  R=0.625  [PARTIAL]
+      guesser (8, 11)  x  signaller (12, 10)  ->  R=0.625  [PARTIAL]
+      guesser (8, 11)  x  signaller (13, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (1, 6)  ->  R=0.375  [PARTIAL]
+      guesser (10, 12)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (5, 3)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (10, 12)  x  signaller (5, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (8, 11)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (10, 12)  ->  R=1.000  [self ]
+      guesser (10, 12)  x  signaller (12, 0)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (13, 10)  ->  R=0.375  [PARTIAL]
+      guesser (12, 0)  x  signaller (1, 6)  ->  R=0.250  [PARTIAL]
+      guesser (12, 0)  x  signaller (3, 10)  ->  R=0.250  [PARTIAL]
+      guesser (12, 0)  x  signaller (5, 3)  ->  R=0.250  [PARTIAL]
+      guesser (12, 0)  x  signaller (5, 12)  ->  R=0.250  [PARTIAL]
+      guesser (12, 0)  x  signaller (8, 11)  ->  R=0.750  [PARTIAL]
+      guesser (12, 0)  x  signaller (10, 12)  ->  R=0.750  [PARTIAL]
+      guesser (12, 0)  x  signaller (12, 0)  ->  R=0.750  [self ]
+      guesser (12, 0)  x  signaller (12, 5)  ->  R=0.750  [PARTIAL]
+      guesser (12, 0)  x  signaller (12, 10)  ->  R=0.750  [PARTIAL]
+      guesser (12, 0)  x  signaller (13, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (1, 6)  ->  R=0.375  [PARTIAL]
+      guesser (12, 5)  x  signaller (3, 10)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (12, 5)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (5, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (8, 11)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (12, 0)  ->  R=0.750  [PARTIAL]
+      guesser (12, 5)  x  signaller (12, 5)  ->  R=1.000  [self ]
+      guesser (12, 5)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (13, 10)  ->  R=0.375  [PARTIAL]
+      guesser (12, 10)  x  signaller (1, 6)  ->  R=0.375  [PARTIAL]
+      guesser (12, 10)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (5, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (8, 11)  ->  R=0.750  [PARTIAL]
+      guesser (12, 10)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 0)  ->  R=0.750  [PARTIAL]
+      guesser (12, 10)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 10)  ->  R=1.000  [self ]
+      guesser (12, 10)  x  signaller (13, 10)  ->  R=0.875  [PARTIAL]
+      guesser (13, 10)  x  signaller (1, 6)  ->  R=0.500  [ORTHOGONAL]
+      guesser (13, 10)  x  signaller (3, 10)  ->  R=0.375  [PARTIAL]
+      guesser (13, 10)  x  signaller (5, 3)  ->  R=0.625  [PARTIAL]
+      guesser (13, 10)  x  signaller (5, 12)  ->  R=0.625  [PARTIAL]
+      guesser (13, 10)  x  signaller (8, 11)  ->  R=0.625  [PARTIAL]
+      guesser (13, 10)  x  signaller (10, 12)  ->  R=0.375  [PARTIAL]
+      guesser (13, 10)  x  signaller (12, 0)  ->  R=0.750  [PARTIAL]
+      guesser (13, 10)  x  signaller (12, 5)  ->  R=0.625  [PARTIAL]
+      guesser (13, 10)  x  signaller (12, 10)  ->  R=0.875  [PARTIAL]
+      guesser (13, 10)  x  signaller (13, 10)  ->  R=0.875  [self ]
+
+  --- shared: example pairings by outcome ---
+      guesser run  1 (conv (5, 3))  x  signaller run  2 (conv (12, 10))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (5, 3))  x  signaller run  3 (conv (12, 0))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (5, 3))  x  signaller run  4 (conv (12, 5))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (5, 3))  x  signaller run  5 (conv (13, 10))  ->  R=0.62  [PARTIAL]
+      guesser run  1 (conv (5, 3))  x  signaller run  6 (conv (1, 6))  ->  R=0.62  [PARTIAL]
+      guesser run  1 (conv (5, 3))  x  signaller run  7 (conv (10, 12))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  1 (conv (5, 3))  x  signaller run  8 (conv (5, 12))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (5, 3))  x  signaller run 10 (conv (10, 12))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  1 (conv (5, 3))  x  signaller run 12 (conv (10, 12))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  1 (conv (5, 3))  x  signaller run 14 (conv (5, 3))  ->  R=1.00  [COMPATIBLE]
+      guesser run  2 (conv (12, 10))  x  signaller run  3 (conv (12, 0))  ->  R=0.75  [PARTIAL]
+      guesser run  2 (conv (12, 10))  x  signaller run  5 (conv (13, 10))  ->  R=0.88  [PARTIAL]
+      guesser run  2 (conv (12, 10))  x  signaller run 11 (conv (12, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  4 (conv (12, 5))  x  signaller run  9 (conv (12, 5))  ->  R=1.00  [COMPATIBLE]
+      guesser run  4 (conv (12, 5))  x  signaller run 15 (conv (3, 10))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  7 (conv (10, 12))  x  signaller run 10 (conv (10, 12))  ->  R=1.00  [COMPATIBLE]
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_population_shared.png
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_edges_shared.png
+
+########################################################################
+# two_brain  [all]
+########################################################################
+  15 populations selected from seeds 0..14 (0 loaded from cache, 15 trained) (267s)
+
+  --- two_brain: per-run conventions and self-play (15 runs) ---
+      self-play = this run's signallers played against this run's guessers
+
+  run 1 (seed 0): self-play R=0.875 exact (all worlds), 0.887 over 400 sampled episodes  [exploiting joint channel (~0.875)]
+      convention id (11, 1)  |  S0: general(G0,G1) [nonlinear], S1: general(G0,G1) [nonlinear]
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATXX, G1=DOGok)  R=0.50
+
+  run 2 (seed 1): self-play R=0.875 exact (all worlds), 0.887 over 400 sampled episodes  [exploiting joint channel (~0.875)]
+      convention id (11, 10)  |  S0: general(G0,G1) [nonlinear], S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATXX, G1=DOGok)  R=0.50
+
+  run 3 (seed 2): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 4 (seed 3): self-play R=0.875 exact (all worlds), 0.859 over 400 sampled episodes  [exploiting joint channel (~0.875)]
+      convention id (8, 12)  |  S0: general(G0,G1) [nonlinear], S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 5 (seed 4): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 6 (seed 5): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 7 (seed 6): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 5)  |  S0: track G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 8 (seed 7): self-play R=0.875 exact (all worlds), 0.877 over 400 sampled episodes  [exploiting joint channel (~0.875)]
+      convention id (10, 2)  |  S0: track G1, S1: general(G0,G1) [nonlinear]
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGXX, G1=CATok)  R=0.50
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 9 (seed 8): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 10 (seed 9): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 11 (seed 10): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 12 (seed 11): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 13 (seed 12): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 14 (seed 13): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 15 (seed 14): self-play R=0.875 exact (all worlds), 0.859 over 400 sampled episodes  [exploiting joint channel (~0.875)]
+      convention id (11, 3)  |  S0: general(G0,G1) [nonlinear], S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  15x15 pairings played (270s)
+
+  --- two_brain: cross-play summary [all] ---
+      self-play (diagonal: own signallers x own guessers), per run: 0.875 0.875 1.000 0.875 1.000 1.000 1.000 0.875 1.000 1.000 1.000 1.000 1.000 1.000 0.875
+      self-play runs at R = 1.0       : 10/15
+      mean self-play (diagonal)       : 0.958
+      mean cross-play (off-diagonal)  : 0.542
+      cross-play gap Delta            : 0.416
+      (gap near 0 = shareable convention; near self-0.5 = private code)
+
+  --- two_brain: distribution of the 210 off-diagonal (cross-play) cells ---
+      R = 1.000:  17 cells = 0.081  [COMPATIBLE]
+      R = 0.875:   9 cells = 0.043  [PARTIAL]
+      R = 0.750:  11 cells = 0.052  [PARTIAL]
+      R = 0.625:  29 cells = 0.138  [PARTIAL]
+      R = 0.500: 103 cells = 0.490  [ORTHOGONAL]
+      R = 0.375:  22 cells = 0.105  [PARTIAL]
+      R = 0.250:   7 cells = 0.033  [PARTIAL]
+      R = 0.125:   9 cells = 0.043  [PARTIAL]
+      R = 0.000:   3 cells = 0.014  [ANTI-COMPATIBLE]
+
+  --- two_brain: convention equivalence classes ---
+      conv (5, 3): runs [6, 9, 10, 12]  (self-play R=1.000)
+      conv (10, 3): runs [13, 14]  (self-play R=1.000)
+      conv (12, 10): runs [5, 11]  (self-play R=1.000)
+      conv (3, 10): runs [3]  (self-play R=1.000)
+      conv (8, 12): runs [4]  (self-play R=0.875)
+      conv (10, 2): runs [8]  (self-play R=0.875)
+      conv (11, 1): runs [1]  (self-play R=0.875)
+      conv (11, 3): runs [15]  (self-play R=0.875)
+      conv (11, 10): runs [2]  (self-play R=0.875)
+      conv (12, 5): runs [7]  (self-play R=1.000)
+
+  --- two_brain: cross-play by convention (guesser conv x signaller conv -> mean reward) ---
+      guesser (3, 10)  x  signaller (3, 10)  ->  R=1.000  [self ]
+      guesser (3, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (8, 12)  ->  R=0.375  [PARTIAL]
+      guesser (3, 10)  x  signaller (10, 2)  ->  R=0.625  [PARTIAL]
+      guesser (3, 10)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (11, 1)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (11, 3)  ->  R=0.625  [PARTIAL]
+      guesser (3, 10)  x  signaller (11, 10)  ->  R=0.875  [PARTIAL]
+      guesser (3, 10)  x  signaller (12, 5)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (3, 10)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (5, 3)  ->  R=1.000  [self ]
+      guesser (5, 3)  x  signaller (8, 12)  ->  R=0.125  [PARTIAL]
+      guesser (5, 3)  x  signaller (10, 2)  ->  R=0.375  [PARTIAL]
+      guesser (5, 3)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (11, 1)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (11, 3)  ->  R=0.625  [PARTIAL]
+      guesser (5, 3)  x  signaller (11, 10)  ->  R=0.375  [PARTIAL]
+      guesser (5, 3)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (8, 12)  x  signaller (3, 10)  ->  R=0.375  [PARTIAL]
+      guesser (8, 12)  x  signaller (5, 3)  ->  R=0.125  [PARTIAL]
+      guesser (8, 12)  x  signaller (8, 12)  ->  R=0.875  [self ]
+      guesser (8, 12)  x  signaller (10, 2)  ->  R=0.750  [PARTIAL]
+      guesser (8, 12)  x  signaller (10, 3)  ->  R=0.625  [PARTIAL]
+      guesser (8, 12)  x  signaller (11, 1)  ->  R=0.500  [ORTHOGONAL]
+      guesser (8, 12)  x  signaller (11, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (8, 12)  x  signaller (11, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (8, 12)  x  signaller (12, 5)  ->  R=0.625  [PARTIAL]
+      guesser (8, 12)  x  signaller (12, 10)  ->  R=0.625  [PARTIAL]
+      guesser (10, 2)  x  signaller (3, 10)  ->  R=0.750  [PARTIAL]
+      guesser (10, 2)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 2)  x  signaller (8, 12)  ->  R=0.375  [PARTIAL]
+      guesser (10, 2)  x  signaller (10, 2)  ->  R=0.875  [self ]
+      guesser (10, 2)  x  signaller (10, 3)  ->  R=0.750  [PARTIAL]
+      guesser (10, 2)  x  signaller (11, 1)  ->  R=0.750  [PARTIAL]
+      guesser (10, 2)  x  signaller (11, 3)  ->  R=0.875  [PARTIAL]
+      guesser (10, 2)  x  signaller (11, 10)  ->  R=0.625  [PARTIAL]
+      guesser (10, 2)  x  signaller (12, 5)  ->  R=0.250  [PARTIAL]
+      guesser (10, 2)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (8, 12)  ->  R=0.375  [PARTIAL]
+      guesser (10, 3)  x  signaller (10, 2)  ->  R=0.875  [PARTIAL]
+      guesser (10, 3)  x  signaller (10, 3)  ->  R=1.000  [self ]
+      guesser (10, 3)  x  signaller (11, 1)  ->  R=0.750  [PARTIAL]
+      guesser (10, 3)  x  signaller (11, 3)  ->  R=0.875  [PARTIAL]
+      guesser (10, 3)  x  signaller (11, 10)  ->  R=0.625  [PARTIAL]
+      guesser (10, 3)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (11, 1)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (11, 1)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (11, 1)  x  signaller (8, 12)  ->  R=0.250  [PARTIAL]
+      guesser (11, 1)  x  signaller (10, 2)  ->  R=0.625  [PARTIAL]
+      guesser (11, 1)  x  signaller (10, 3)  ->  R=0.750  [PARTIAL]
+      guesser (11, 1)  x  signaller (11, 1)  ->  R=0.875  [self ]
+      guesser (11, 1)  x  signaller (11, 3)  ->  R=0.750  [PARTIAL]
+      guesser (11, 1)  x  signaller (11, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (11, 1)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (11, 1)  x  signaller (12, 10)  ->  R=0.250  [PARTIAL]
+      guesser (11, 3)  x  signaller (3, 10)  ->  R=0.375  [PARTIAL]
+      guesser (11, 3)  x  signaller (5, 3)  ->  R=0.625  [PARTIAL]
+      guesser (11, 3)  x  signaller (8, 12)  ->  R=0.250  [PARTIAL]
+      guesser (11, 3)  x  signaller (10, 2)  ->  R=0.750  [PARTIAL]
+      guesser (11, 3)  x  signaller (10, 3)  ->  R=0.875  [PARTIAL]
+      guesser (11, 3)  x  signaller (11, 1)  ->  R=0.875  [PARTIAL]
+      guesser (11, 3)  x  signaller (11, 3)  ->  R=0.875  [self ]
+      guesser (11, 3)  x  signaller (11, 10)  ->  R=0.375  [PARTIAL]
+      guesser (11, 3)  x  signaller (12, 5)  ->  R=0.625  [PARTIAL]
+      guesser (11, 3)  x  signaller (12, 10)  ->  R=0.375  [PARTIAL]
+      guesser (11, 10)  x  signaller (3, 10)  ->  R=1.000  [COMPATIBLE]
+      guesser (11, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (11, 10)  x  signaller (8, 12)  ->  R=0.375  [PARTIAL]
+      guesser (11, 10)  x  signaller (10, 2)  ->  R=0.625  [PARTIAL]
+      guesser (11, 10)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (11, 10)  x  signaller (11, 1)  ->  R=0.500  [ORTHOGONAL]
+      guesser (11, 10)  x  signaller (11, 3)  ->  R=0.625  [PARTIAL]
+      guesser (11, 10)  x  signaller (11, 10)  ->  R=0.875  [self ]
+      guesser (11, 10)  x  signaller (12, 5)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (11, 10)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (3, 10)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (12, 5)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (8, 12)  ->  R=0.625  [PARTIAL]
+      guesser (12, 5)  x  signaller (10, 2)  ->  R=0.375  [PARTIAL]
+      guesser (12, 5)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (11, 1)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (11, 3)  ->  R=0.375  [PARTIAL]
+      guesser (12, 5)  x  signaller (11, 10)  ->  R=0.125  [PARTIAL]
+      guesser (12, 5)  x  signaller (12, 5)  ->  R=1.000  [self ]
+      guesser (12, 5)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (8, 12)  ->  R=0.625  [PARTIAL]
+      guesser (12, 10)  x  signaller (10, 2)  ->  R=0.625  [PARTIAL]
+      guesser (12, 10)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (11, 1)  ->  R=0.250  [PARTIAL]
+      guesser (12, 10)  x  signaller (11, 3)  ->  R=0.375  [PARTIAL]
+      guesser (12, 10)  x  signaller (11, 10)  ->  R=0.625  [PARTIAL]
+      guesser (12, 10)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 10)  ->  R=1.000  [self ]
+
+  --- two_brain: example pairings by outcome ---
+      guesser run  1 (conv (11, 1))  x  signaller run  2 (conv (11, 10))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (11, 1))  x  signaller run  3 (conv (3, 10))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (11, 1))  x  signaller run  4 (conv (8, 12))  ->  R=0.25  [PARTIAL]
+      guesser run  1 (conv (11, 1))  x  signaller run  5 (conv (12, 10))  ->  R=0.25  [PARTIAL]
+      guesser run  1 (conv (11, 1))  x  signaller run  6 (conv (5, 3))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (11, 1))  x  signaller run  7 (conv (12, 5))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (11, 1))  x  signaller run  8 (conv (10, 2))  ->  R=0.62  [PARTIAL]
+      guesser run  1 (conv (11, 1))  x  signaller run 11 (conv (12, 10))  ->  R=0.25  [PARTIAL]
+      guesser run  2 (conv (11, 10))  x  signaller run  3 (conv (3, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  2 (conv (11, 10))  x  signaller run  7 (conv (12, 5))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  3 (conv (3, 10))  x  signaller run  7 (conv (12, 5))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  5 (conv (12, 10))  x  signaller run 11 (conv (12, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  6 (conv (5, 3))  x  signaller run  9 (conv (5, 3))  ->  R=1.00  [COMPATIBLE]
+      guesser run  6 (conv (5, 3))  x  signaller run 10 (conv (5, 3))  ->  R=1.00  [COMPATIBLE]
+      guesser run  7 (conv (12, 5))  x  signaller run  3 (conv (3, 10))  ->  R=0.00  [ANTI-COMPATIBLE]
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_population_two_brain.png
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_edges_two_brain.png
+
+########################################################################
+# independent  [all]
+########################################################################
+  15 populations selected from seeds 0..14 (0 loaded from cache, 15 trained) (533s)
+
+  --- independent: per-run conventions and self-play (15 runs) ---
+      self-play = this run's signallers played against this run's guessers
+
+  run 1 (seed 0): self-play R=0.875 exact (all worlds), 0.887 over 400 sampled episodes  [exploiting joint channel (~0.875)]
+      convention id (12, 1)  |  S0: track G0, S1: general(G0,G1) [nonlinear]
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+
+  run 2 (seed 1): self-play R=0.875 exact (all worlds), 0.887 over 400 sampled episodes  [exploiting joint channel (~0.875)]
+      convention id (13, 14)  |  S0: general(G0,G1) [nonlinear], S1: general(G0,G1) [nonlinear]
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+
+  run 3 (seed 2): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 4 (seed 3): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 5 (seed 4): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 6 (seed 5): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 5)  |  S0: track NOT G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 7 (seed 6): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 8 (seed 7): self-play R=0.750 exact (all worlds), 0.746 over 400 sampled episodes  [single-bit ceiling (~0.75)]
+      convention id (3, 15)  |  S0: track NOT G0, S1: constant ON (pooling)
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATXX)  R=0.50
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATXX)  R=0.50
+
+  run 9 (seed 8): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 10 (seed 9): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 11 (seed 10): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 5)  |  S0: track G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 12 (seed 11): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 13 (seed 12): self-play R=0.750 exact (all worlds), 0.754 over 400 sampled episodes  [single-bit ceiling (~0.75)]
+      convention id (12, 12)  |  S0: track G0, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGXX)  R=0.50
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGXX)  R=0.50
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 14 (seed 13): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 15 (seed 14): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  15x15 pairings played (536s)
+
+  --- independent: cross-play summary [all] ---
+      self-play (diagonal: own signallers x own guessers), per run: 0.875 0.875 1.000 1.000 1.000 1.000 1.000 0.750 1.000 1.000 1.000 1.000 0.750 1.000 1.000
+      self-play runs at R = 1.0       : 11/15
+      mean self-play (diagonal)       : 0.950
+      mean cross-play (off-diagonal)  : 0.492
+      cross-play gap Delta            : 0.458
+      (gap near 0 = shareable convention; near self-0.5 = private code)
+
+  --- independent: distribution of the 210 off-diagonal (cross-play) cells ---
+      R = 1.000:  18 cells = 0.086  [COMPATIBLE]
+      R = 0.875:   2 cells = 0.010  [PARTIAL]
+      R = 0.750:  17 cells = 0.081  [PARTIAL]
+      R = 0.625:   9 cells = 0.043  [PARTIAL]
+      R = 0.500: 105 cells = 0.500  [ORTHOGONAL]
+      R = 0.375:  15 cells = 0.071  [PARTIAL]
+      R = 0.250:  23 cells = 0.110  [PARTIAL]
+      R = 0.125:  11 cells = 0.052  [PARTIAL]
+      R = 0.000:  10 cells = 0.048  [ANTI-COMPATIBLE]
+
+  --- independent: convention equivalence classes ---
+      conv (3, 10): runs [3, 7, 9, 10]  (self-play R=1.000)
+      conv (10, 3): runs [5, 12, 14]  (self-play R=1.000)
+      conv (3, 5): runs [6]  (self-play R=1.000)
+      conv (3, 15): runs [8]  (self-play R=0.750)
+      conv (10, 12): runs [4]  (self-play R=1.000)
+      conv (12, 1): runs [1]  (self-play R=0.875)
+      conv (12, 5): runs [11]  (self-play R=1.000)
+      conv (12, 10): runs [15]  (self-play R=1.000)
+      conv (12, 12): runs [13]  (self-play R=0.750)
+      conv (13, 14): runs [2]  (self-play R=0.875)
+
+  --- independent: cross-play by convention (guesser conv x signaller conv -> mean reward) ---
+      guesser (3, 5)  x  signaller (3, 5)  ->  R=1.000  [self ]
+      guesser (3, 5)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (3, 15)  ->  R=0.750  [PARTIAL]
+      guesser (3, 5)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (12, 1)  ->  R=0.375  [PARTIAL]
+      guesser (3, 5)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (12, 10)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (3, 5)  x  signaller (12, 12)  ->  R=0.250  [PARTIAL]
+      guesser (3, 5)  x  signaller (13, 14)  ->  R=0.250  [PARTIAL]
+      guesser (3, 10)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (3, 10)  ->  R=1.000  [self ]
+      guesser (3, 10)  x  signaller (3, 15)  ->  R=0.750  [PARTIAL]
+      guesser (3, 10)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (12, 1)  ->  R=0.125  [PARTIAL]
+      guesser (3, 10)  x  signaller (12, 5)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (3, 10)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (12, 12)  ->  R=0.250  [PARTIAL]
+      guesser (3, 10)  x  signaller (13, 14)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 15)  x  signaller (3, 5)  ->  R=0.750  [PARTIAL]
+      guesser (3, 15)  x  signaller (3, 10)  ->  R=0.750  [PARTIAL]
+      guesser (3, 15)  x  signaller (3, 15)  ->  R=0.750  [self ]
+      guesser (3, 15)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 15)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 15)  x  signaller (12, 1)  ->  R=0.250  [PARTIAL]
+      guesser (3, 15)  x  signaller (12, 5)  ->  R=0.250  [PARTIAL]
+      guesser (3, 15)  x  signaller (12, 10)  ->  R=0.250  [PARTIAL]
+      guesser (3, 15)  x  signaller (12, 12)  ->  R=0.250  [PARTIAL]
+      guesser (3, 15)  x  signaller (13, 14)  ->  R=0.375  [PARTIAL]
+      guesser (10, 3)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (3, 15)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (10, 3)  ->  R=1.000  [self ]
+      guesser (10, 3)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (12, 1)  ->  R=0.625  [PARTIAL]
+      guesser (10, 3)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (12, 12)  ->  R=0.250  [PARTIAL]
+      guesser (10, 3)  x  signaller (13, 14)  ->  R=0.250  [PARTIAL]
+      guesser (10, 12)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (3, 15)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (10, 12)  ->  R=1.000  [self ]
+      guesser (10, 12)  x  signaller (12, 1)  ->  R=0.375  [PARTIAL]
+      guesser (10, 12)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (12, 12)  ->  R=0.750  [PARTIAL]
+      guesser (10, 12)  x  signaller (13, 14)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 1)  x  signaller (3, 5)  ->  R=0.375  [PARTIAL]
+      guesser (12, 1)  x  signaller (3, 10)  ->  R=0.125  [PARTIAL]
+      guesser (12, 1)  x  signaller (3, 15)  ->  R=0.250  [PARTIAL]
+      guesser (12, 1)  x  signaller (10, 3)  ->  R=0.375  [PARTIAL]
+      guesser (12, 1)  x  signaller (10, 12)  ->  R=0.375  [PARTIAL]
+      guesser (12, 1)  x  signaller (12, 1)  ->  R=0.875  [self ]
+      guesser (12, 1)  x  signaller (12, 5)  ->  R=0.875  [PARTIAL]
+      guesser (12, 1)  x  signaller (12, 10)  ->  R=0.625  [PARTIAL]
+      guesser (12, 1)  x  signaller (12, 12)  ->  R=0.750  [PARTIAL]
+      guesser (12, 1)  x  signaller (13, 14)  ->  R=0.625  [PARTIAL]
+      guesser (12, 5)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (3, 10)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (12, 5)  x  signaller (3, 15)  ->  R=0.250  [PARTIAL]
+      guesser (12, 5)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (12, 1)  ->  R=0.875  [PARTIAL]
+      guesser (12, 5)  x  signaller (12, 5)  ->  R=1.000  [self ]
+      guesser (12, 5)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (12, 12)  ->  R=0.750  [PARTIAL]
+      guesser (12, 5)  x  signaller (13, 14)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (3, 5)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (12, 10)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (3, 15)  ->  R=0.250  [PARTIAL]
+      guesser (12, 10)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 1)  ->  R=0.625  [PARTIAL]
+      guesser (12, 10)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 10)  ->  R=1.000  [self ]
+      guesser (12, 10)  x  signaller (12, 12)  ->  R=0.750  [PARTIAL]
+      guesser (12, 10)  x  signaller (13, 14)  ->  R=0.750  [PARTIAL]
+      guesser (12, 12)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 12)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 12)  x  signaller (3, 15)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 12)  x  signaller (10, 3)  ->  R=0.250  [PARTIAL]
+      guesser (12, 12)  x  signaller (10, 12)  ->  R=0.750  [PARTIAL]
+      guesser (12, 12)  x  signaller (12, 1)  ->  R=0.375  [PARTIAL]
+      guesser (12, 12)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 12)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 12)  x  signaller (12, 12)  ->  R=0.750  [self ]
+      guesser (12, 12)  x  signaller (13, 14)  ->  R=0.625  [PARTIAL]
+      guesser (13, 14)  x  signaller (3, 5)  ->  R=0.375  [PARTIAL]
+      guesser (13, 14)  x  signaller (3, 10)  ->  R=0.375  [PARTIAL]
+      guesser (13, 14)  x  signaller (3, 15)  ->  R=0.250  [PARTIAL]
+      guesser (13, 14)  x  signaller (10, 3)  ->  R=0.125  [PARTIAL]
+      guesser (13, 14)  x  signaller (10, 12)  ->  R=0.375  [PARTIAL]
+      guesser (13, 14)  x  signaller (12, 1)  ->  R=0.500  [ORTHOGONAL]
+      guesser (13, 14)  x  signaller (12, 5)  ->  R=0.625  [PARTIAL]
+      guesser (13, 14)  x  signaller (12, 10)  ->  R=0.625  [PARTIAL]
+      guesser (13, 14)  x  signaller (12, 12)  ->  R=0.750  [PARTIAL]
+      guesser (13, 14)  x  signaller (13, 14)  ->  R=0.875  [self ]
+
+  --- independent: example pairings by outcome ---
+      guesser run  1 (conv (12, 1))  x  signaller run  2 (conv (13, 14))  ->  R=0.62  [PARTIAL]
+      guesser run  1 (conv (12, 1))  x  signaller run  3 (conv (3, 10))  ->  R=0.12  [PARTIAL]
+      guesser run  1 (conv (12, 1))  x  signaller run  4 (conv (10, 12))  ->  R=0.38  [PARTIAL]
+      guesser run  1 (conv (12, 1))  x  signaller run  5 (conv (10, 3))  ->  R=0.38  [PARTIAL]
+      guesser run  2 (conv (13, 14))  x  signaller run  1 (conv (12, 1))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  3 (conv (3, 10))  x  signaller run  2 (conv (13, 14))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  3 (conv (3, 10))  x  signaller run  4 (conv (10, 12))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  3 (conv (3, 10))  x  signaller run  5 (conv (10, 3))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  3 (conv (3, 10))  x  signaller run  7 (conv (3, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  3 (conv (3, 10))  x  signaller run  9 (conv (3, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  3 (conv (3, 10))  x  signaller run 10 (conv (3, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  3 (conv (3, 10))  x  signaller run 11 (conv (12, 5))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  5 (conv (10, 3))  x  signaller run 12 (conv (10, 3))  ->  R=1.00  [COMPATIBLE]
+      guesser run  6 (conv (3, 5))  x  signaller run 15 (conv (12, 10))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  7 (conv (3, 10))  x  signaller run 11 (conv (12, 5))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  9 (conv (3, 10))  x  signaller run 11 (conv (12, 5))  ->  R=0.00  [ANTI-COMPATIBLE]
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_population_independent.png
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_edges_independent.png
+
+========================================================================
+SUMMARY [all: all runs (seeds 0..14, imperfect included)]
+  variant      runs self=1.0 self-play   cross     gap
+  shared         15    11/15     0.950   0.500   0.450
+  two_brain      15    10/15     0.958   0.542   0.416
+  independent    15    11/15     0.950   0.492   0.458
+
+crossplay_k22.py --mode all complete in 9.0 min
+figures in: /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay  (suffix 'none')
+========================================================================
+
+=== Experiment 2/2: perfect runs only (self-play R = 1.0) ===
+========================================================================
+Cross-play evaluation, K_2,2 -- mode: perfect -- perfect runs only (self-play R = 1.0)
+15 runs/variant, 4000 train episodes; every pairing played exactly over all 4 worlds
+self-play = diagonal = a run's own signallers played against its own guessers
+========================================================================
+
+########################################################################
+# shared  [perfect]
+########################################################################
+  15 populations selected from seeds 0..25 (15 loaded from cache, 11 trained) (79s)
+  perfect-only selection: 15/26 scanned seeds reached R = 1.0; skipped 11:
+      seed   2: self-play R=0.750  [single-bit ceiling (~0.75)]  -> excluded
+      seed   4: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed   5: self-play R=0.750  [single-bit ceiling (~0.75)]  -> excluded
+      seed  12: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed  16: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed  17: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed  18: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed  19: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed  20: self-play R=0.750  [single-bit ceiling (~0.75)]  -> excluded
+      seed  22: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed  23: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+
+  --- shared: per-run conventions and self-play (15 runs) ---
+      self-play = this run's signallers played against this run's guessers
+
+  run 1 (seed 0): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 2 (seed 1): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 3 (s3) (seed 3): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 5)  |  S0: track G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 4 (s6) (seed 6): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 5 (s7) (seed 7): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 12)  |  S0: track NOT G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 6 (s8) (seed 8): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 5)  |  S0: track G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 7 (s9) (seed 9): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 8 (s10) (seed 10): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 9 (s11) (seed 11): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 10 (s13) (seed 13): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 11 (s14) (seed 14): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 12 (s15) (seed 15): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 13 (s21) (seed 21): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 14 (s24) (seed 24): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 15 (s25) (seed 25): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  15x15 pairings played (82s)
+
+  --- shared: cross-play summary [perfect] ---
+      self-play (diagonal: own signallers x own guessers), per run: 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000
+      self-play runs at R = 1.0       : 15/15
+      mean self-play (diagonal)       : 1.000
+      mean cross-play (off-diagonal)  : 0.481
+      cross-play gap Delta            : 0.519
+      (gap near 0 = shareable convention; near self-0.5 = private code)
+
+  --- shared: distribution of the 210 off-diagonal (cross-play) cells ---
+      R = 1.000:  28 cells = 0.133  [COMPATIBLE]   (uniform-tracking prediction 0.125)
+      R = 0.500: 146 cells = 0.695  [ORTHOGONAL]   (uniform-tracking prediction 0.750)
+      R = 0.000:  36 cells = 0.171  [ANTI-COMPATIBLE]   (uniform-tracking prediction 0.125)
+      prediction assumes both runs drawn uniformly from the 8 tracking conventions:
+      P(1.0) = 1/8 (same convention), P(0.0) = 1/8 (same pairing, both polarities flipped),
+      P(0.5) = 3/4 (one polarity flipped, or different pairing); expected mean exactly 0.500.
+      Values other than 1.0 / 0.5 / 0.0 involve an XOR-type run.
+
+  --- shared: convention equivalence classes ---
+      conv (10, 12): runs [4, 7, 9, 12]  (self-play R=1.000)
+      conv (3, 10): runs [11, 13, 15]  (self-play R=1.000)
+      conv (5, 3): runs [1, 10, 14]  (self-play R=1.000)
+      conv (12, 5): runs [3, 6]  (self-play R=1.000)
+      conv (12, 10): runs [2, 8]  (self-play R=1.000)
+      conv (5, 12): runs [5]  (self-play R=1.000)
+
+  --- shared: cross-play by convention (guesser conv x signaller conv -> mean reward) ---
+      guesser (3, 10)  x  signaller (3, 10)  ->  R=1.000  [self ]
+      guesser (3, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (5, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (12, 5)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (3, 10)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (5, 3)  ->  R=1.000  [self ]
+      guesser (5, 3)  x  signaller (5, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (10, 12)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (5, 3)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (5, 12)  ->  R=1.000  [self ]
+      guesser (5, 12)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 12)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (5, 3)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (10, 12)  x  signaller (5, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (10, 12)  ->  R=1.000  [self ]
+      guesser (10, 12)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (3, 10)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (12, 5)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (5, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (12, 5)  ->  R=1.000  [self ]
+      guesser (12, 5)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (5, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 10)  ->  R=1.000  [self ]
+
+  --- shared: example pairings by outcome ---
+      guesser run  1 (conv (5, 3))  x  signaller run  2 (conv (12, 10))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (5, 3))  x  signaller run  3 (conv (12, 5))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (5, 3))  x  signaller run  4 (conv (10, 12))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  1 (conv (5, 3))  x  signaller run  5 (conv (5, 12))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (5, 3))  x  signaller run  6 (conv (12, 5))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (5, 3))  x  signaller run  7 (conv (10, 12))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  1 (conv (5, 3))  x  signaller run  9 (conv (10, 12))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  1 (conv (5, 3))  x  signaller run 10 (conv (5, 3))  ->  R=1.00  [COMPATIBLE]
+      guesser run  1 (conv (5, 3))  x  signaller run 12 (conv (10, 12))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  1 (conv (5, 3))  x  signaller run 14 (conv (5, 3))  ->  R=1.00  [COMPATIBLE]
+      guesser run  2 (conv (12, 10))  x  signaller run  8 (conv (12, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  3 (conv (12, 5))  x  signaller run  6 (conv (12, 5))  ->  R=1.00  [COMPATIBLE]
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_population_shared_perfect.png
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_edges_shared_perfect.png
+
+########################################################################
+# two_brain  [perfect]
+########################################################################
+  15 populations selected from seeds 0..20 (15 loaded from cache, 6 trained) (142s)
+  perfect-only selection: 15/21 scanned seeds reached R = 1.0; skipped 6:
+      seed   0: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed   1: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed   3: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed   7: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed  14: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed  17: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+
+  --- two_brain: per-run conventions and self-play (15 runs) ---
+      self-play = this run's signallers played against this run's guessers
+
+  run 1 (s2) (seed 2): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 2 (s4) (seed 4): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 3 (s5) (seed 5): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 4 (s6) (seed 6): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 5)  |  S0: track G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 5 (s8) (seed 8): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 6 (s9) (seed 9): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 7 (s10) (seed 10): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 8 (s11) (seed 11): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 9 (s12) (seed 12): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 10 (s13) (seed 13): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 11 (s15) (seed 15): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 12 (s16) (seed 16): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 13 (s18) (seed 18): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 14 (s19) (seed 19): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 5)  |  S0: track NOT G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 15 (s20) (seed 20): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  15x15 pairings played (144s)
+
+  --- two_brain: cross-play summary [perfect] ---
+      self-play (diagonal: own signallers x own guessers), per run: 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000
+      self-play runs at R = 1.0       : 15/15
+      mean self-play (diagonal)       : 1.000
+      mean cross-play (off-diagonal)  : 0.533
+      cross-play gap Delta            : 0.467
+      (gap near 0 = shareable convention; near self-0.5 = private code)
+
+  --- two_brain: distribution of the 210 off-diagonal (cross-play) cells ---
+      R = 1.000:  30 cells = 0.143  [COMPATIBLE]   (uniform-tracking prediction 0.125)
+      R = 0.500: 164 cells = 0.781  [ORTHOGONAL]   (uniform-tracking prediction 0.750)
+      R = 0.000:  16 cells = 0.076  [ANTI-COMPATIBLE]   (uniform-tracking prediction 0.125)
+      prediction assumes both runs drawn uniformly from the 8 tracking conventions:
+      P(1.0) = 1/8 (same convention), P(0.0) = 1/8 (same pairing, both polarities flipped),
+      P(0.5) = 3/4 (one polarity flipped, or different pairing); expected mean exactly 0.500.
+      Values other than 1.0 / 0.5 / 0.0 involve an XOR-type run.
+
+  --- two_brain: convention equivalence classes ---
+      conv (5, 3): runs [3, 5, 6, 8]  (self-play R=1.000)
+      conv (10, 3): runs [9, 10, 11, 13]  (self-play R=1.000)
+      conv (12, 10): runs [2, 7, 12]  (self-play R=1.000)
+      conv (3, 5): runs [14]  (self-play R=1.000)
+      conv (3, 10): runs [1]  (self-play R=1.000)
+      conv (10, 12): runs [15]  (self-play R=1.000)
+      conv (12, 5): runs [4]  (self-play R=1.000)
+
+  --- two_brain: cross-play by convention (guesser conv x signaller conv -> mean reward) ---
+      guesser (3, 5)  x  signaller (3, 5)  ->  R=1.000  [self ]
+      guesser (3, 5)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (12, 10)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (3, 10)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (3, 10)  ->  R=1.000  [self ]
+      guesser (3, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (12, 5)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (3, 10)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (5, 3)  ->  R=1.000  [self ]
+      guesser (5, 3)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (10, 12)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (5, 3)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (10, 3)  ->  R=1.000  [self ]
+      guesser (10, 3)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (5, 3)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (10, 12)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (10, 12)  ->  R=1.000  [self ]
+      guesser (10, 12)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (3, 10)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (12, 5)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (12, 5)  ->  R=1.000  [self ]
+      guesser (12, 5)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (3, 5)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (12, 10)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 10)  ->  R=1.000  [self ]
+
+  --- two_brain: example pairings by outcome ---
+      guesser run  1 (conv (3, 10))  x  signaller run  2 (conv (12, 10))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (3, 10))  x  signaller run  3 (conv (5, 3))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (3, 10))  x  signaller run  4 (conv (12, 5))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  1 (conv (3, 10))  x  signaller run  5 (conv (5, 3))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (3, 10))  x  signaller run  6 (conv (5, 3))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  2 (conv (12, 10))  x  signaller run  7 (conv (12, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  2 (conv (12, 10))  x  signaller run 12 (conv (12, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  2 (conv (12, 10))  x  signaller run 14 (conv (3, 5))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  3 (conv (5, 3))  x  signaller run  5 (conv (5, 3))  ->  R=1.00  [COMPATIBLE]
+      guesser run  3 (conv (5, 3))  x  signaller run  6 (conv (5, 3))  ->  R=1.00  [COMPATIBLE]
+      guesser run  3 (conv (5, 3))  x  signaller run 15 (conv (10, 12))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  4 (conv (12, 5))  x  signaller run  1 (conv (3, 10))  ->  R=0.00  [ANTI-COMPATIBLE]
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_population_two_brain_perfect.png
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_edges_two_brain_perfect.png
+
+########################################################################
+# independent  [perfect]
+########################################################################
+  15 populations selected from seeds 0..19 (15 loaded from cache, 5 trained) (233s)
+  perfect-only selection: 15/20 scanned seeds reached R = 1.0; skipped 5:
+      seed   0: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed   1: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+      seed   7: self-play R=0.750  [single-bit ceiling (~0.75)]  -> excluded
+      seed  12: self-play R=0.750  [single-bit ceiling (~0.75)]  -> excluded
+      seed  15: self-play R=0.875  [exploiting joint channel (~0.875)]  -> excluded
+
+  --- independent: per-run conventions and self-play (15 runs) ---
+      self-play = this run's signallers played against this run's guessers
+
+  run 1 (s2) (seed 2): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 2 (s3) (seed 3): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 3 (s4) (seed 4): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 4 (s5) (seed 5): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 5)  |  S0: track NOT G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 5 (s6) (seed 6): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 6 (s8) (seed 8): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 7 (s9) (seed 9): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 10)  |  S0: track NOT G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 8 (s10) (seed 10): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 5)  |  S0: track G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 9 (s11) (seed 11): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 10 (s13) (seed 13): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 3)  |  S0: track G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 11 (s14) (seed 14): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 12 (s16) (seed 16): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (12, 10)  |  S0: track G0, S1: track G1
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 13 (s17) (seed 17): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (10, 12)  |  S0: track G1, S1: track G0
+        items(G0=CAT, G1=CAT) -> lights(S0=OFF, S1=OFF) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=ON, S1=ON) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 14 (s18) (seed 18): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (5, 3)  |  S0: track NOT G1, S1: track NOT G0
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=OFF, S1=ON) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=ON, S1=OFF) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  run 15 (s19) (seed 19): self-play R=1.000 exact (all worlds), 1.000 over 400 sampled episodes  [PERFECT]
+      convention id (3, 5)  |  S0: track NOT G0, S1: track NOT G1
+        items(G0=CAT, G1=CAT) -> lights(S0=ON, S1=ON) -> guesses(G0=CATok, G1=CATok)  R=1.00
+        items(G0=CAT, G1=DOG) -> lights(S0=ON, S1=OFF) -> guesses(G0=CATok, G1=DOGok)  R=1.00
+        items(G0=DOG, G1=CAT) -> lights(S0=OFF, S1=ON) -> guesses(G0=DOGok, G1=CATok)  R=1.00
+        items(G0=DOG, G1=DOG) -> lights(S0=OFF, S1=OFF) -> guesses(G0=DOGok, G1=DOGok)  R=1.00
+
+  15x15 pairings played (236s)
+
+  --- independent: cross-play summary [perfect] ---
+      self-play (diagonal: own signallers x own guessers), per run: 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000
+      self-play runs at R = 1.0       : 15/15
+      mean self-play (diagonal)       : 1.000
+      mean cross-play (off-diagonal)  : 0.510
+      cross-play gap Delta            : 0.490
+      (gap near 0 = shareable convention; near self-0.5 = private code)
+
+  --- independent: distribution of the 210 off-diagonal (cross-play) cells ---
+      R = 1.000:  24 cells = 0.114  [COMPATIBLE]   (uniform-tracking prediction 0.125)
+      R = 0.500: 166 cells = 0.790  [ORTHOGONAL]   (uniform-tracking prediction 0.750)
+      R = 0.000:  20 cells = 0.095  [ANTI-COMPATIBLE]   (uniform-tracking prediction 0.125)
+      prediction assumes both runs drawn uniformly from the 8 tracking conventions:
+      P(1.0) = 1/8 (same convention), P(0.0) = 1/8 (same pairing, both polarities flipped),
+      P(0.5) = 3/4 (one polarity flipped, or different pairing); expected mean exactly 0.500.
+      Values other than 1.0 / 0.5 / 0.0 involve an XOR-type run.
+
+  --- independent: convention equivalence classes ---
+      conv (3, 10): runs [1, 5, 6, 7]  (self-play R=1.000)
+      conv (10, 3): runs [3, 9, 10]  (self-play R=1.000)
+      conv (3, 5): runs [4, 15]  (self-play R=1.000)
+      conv (10, 12): runs [2, 13]  (self-play R=1.000)
+      conv (12, 10): runs [11, 12]  (self-play R=1.000)
+      conv (5, 3): runs [14]  (self-play R=1.000)
+      conv (12, 5): runs [8]  (self-play R=1.000)
+
+  --- independent: cross-play by convention (guesser conv x signaller conv -> mean reward) ---
+      guesser (3, 5)  x  signaller (3, 5)  ->  R=1.000  [self ]
+      guesser (3, 5)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 5)  x  signaller (12, 10)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (3, 10)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (3, 10)  ->  R=1.000  [self ]
+      guesser (3, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (3, 10)  x  signaller (12, 5)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (3, 10)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (5, 3)  ->  R=1.000  [self ]
+      guesser (5, 3)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (10, 12)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (5, 3)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (5, 3)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (10, 3)  ->  R=1.000  [self ]
+      guesser (10, 3)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 3)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (5, 3)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (10, 12)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (10, 12)  ->  R=1.000  [self ]
+      guesser (10, 12)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (10, 12)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (3, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (3, 10)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (12, 5)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 5)  x  signaller (12, 5)  ->  R=1.000  [self ]
+      guesser (12, 5)  x  signaller (12, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (3, 5)  ->  R=0.000  [ANTI-COMPATIBLE]
+      guesser (12, 10)  x  signaller (3, 10)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (5, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (10, 3)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (10, 12)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 5)  ->  R=0.500  [ORTHOGONAL]
+      guesser (12, 10)  x  signaller (12, 10)  ->  R=1.000  [self ]
+
+  --- independent: example pairings by outcome ---
+      guesser run  1 (conv (3, 10))  x  signaller run  2 (conv (10, 12))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (3, 10))  x  signaller run  3 (conv (10, 3))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (3, 10))  x  signaller run  4 (conv (3, 5))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  1 (conv (3, 10))  x  signaller run  5 (conv (3, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  1 (conv (3, 10))  x  signaller run  6 (conv (3, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  1 (conv (3, 10))  x  signaller run  7 (conv (3, 10))  ->  R=1.00  [COMPATIBLE]
+      guesser run  1 (conv (3, 10))  x  signaller run  8 (conv (12, 5))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  1 (conv (3, 10))  x  signaller run  9 (conv (10, 3))  ->  R=0.50  [ORTHOGONAL]
+      guesser run  2 (conv (10, 12))  x  signaller run 13 (conv (10, 12))  ->  R=1.00  [COMPATIBLE]
+      guesser run  2 (conv (10, 12))  x  signaller run 14 (conv (5, 3))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  4 (conv (3, 5))  x  signaller run 11 (conv (12, 10))  ->  R=0.00  [ANTI-COMPATIBLE]
+      guesser run  4 (conv (3, 5))  x  signaller run 12 (conv (12, 10))  ->  R=0.00  [ANTI-COMPATIBLE]
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_population_independent_perfect.png
+      saved -> /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay/crossplay_edges_independent_perfect.png
+
+========================================================================
+SUMMARY [perfect: perfect runs only (self-play R = 1.0)]
+  variant      runs self=1.0 self-play   cross     gap seeds skipped
+  shared         15    15/15     1.000   0.481   0.519            11
+  two_brain      15    15/15     1.000   0.533   0.467             6
+  independent    15    15/15     1.000   0.510   0.490             5
+
+crossplay_k22.py --mode perfect complete in 4.0 min
+figures in: /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/figures/crossplay  (suffix '_perfect')
+========================================================================
+
+Done at:      Tue Nov  3 04:33:04 PM UTC 2026
+Logs:         /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/logs/crossplay_all_20261103_161714.log
+              /home-mscluster/travhengani/Graph-Signalling-Game/results/question1/logs/crossplay_perfect_20261103_161714.log
